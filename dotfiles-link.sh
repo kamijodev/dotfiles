@@ -1,5 +1,5 @@
-ln -sf ~/dotfiles/nvim ~/.config/nvim
-ln -sf ~/dotfiles/.wrap ~/.wrap
-ln -sf ~/dotfiles/.tmux.conf ~/.tmux.conf
-ln -sf ~/dotfiles/.zshrc ~/.zshrc
+ln -s ~/dotfiles/nvim ~/.config/nvim
+ln -s ~/dotfiles/.warp ~/.warp
+ln -s ~/dotfiles/.tmux.conf ~/.tmux.conf
+ln -s ~/dotfiles/.zshrc ~/.zshrc
 
