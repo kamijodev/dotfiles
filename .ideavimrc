@@ -1,0 +1,49 @@
+set ignorecase
+set scrolloff=5
+set incsearch
+
+set highlightedyank
+set easymotion
+set commentary
+set surround
+set NERDTree
+set ReplaceWithRegister
+
+
+" ヤンクでクリップボードにコピー
+set clipboard+=unnamed
+
+" leaderをスペースに
+let mapleader = " "
+
+nmap <leader>k :action GotoImplementation<CR>
+
+" xでレジスタに入れない
+nnoremap x "_x
+
+" インデント調整簡易に
+nnoremap > >>
+nnoremap < << 
+
+" $ 0
+nnoremap L $
+nnoremap H 0
+
+" easymotion
+nmap <silent> <Leader>s <Plug>(easymotion-s)
+vmap <silent> <Leader>s <Plug>(easymotion-s)
+
+" ReplaceWithRegister
+nmap <silent> <Leader>r gr
+
+" Y (行末yank)
+nnoremap Y y$
+
+" yankの際カーソル戻さない
+vnoremap y ygv<Esc>
+
+" 直近ハイライト解除
+nnoremap <silent> <Leader>/ :noh<CR>
+
+nnoremap <c-o> :action Back<CR>
+nnoremap <c-i> :action Forward<CR>
