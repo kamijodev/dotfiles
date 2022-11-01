@@ -8,3 +8,5 @@ set smarttab
 set ignorecase
 set autoindent
 set smartindent
+set langmenu=en_US
+let $LANG = 'en_US'
