@@ -1,24 +1,24 @@
 " -- map --
-nnoremap x "_x
+" nnoremap x "_x
 vnoremap x "_x
-nnoremap s "_s
+" nnoremap s "_s
 vnoremap s "_s
-nnoremap Y y$
-nnoremap > >>
-nnoremap < <<
-nnoremap <C-j> "zdd"zp
-nnoremap <C-k> "zdd<Up>"zP
+" nnoremap Y y$
+" nnoremap > >>
+" nnoremap < <<
+" nnoremap <C-j> "zdd"zp
+" nnoremap <C-k> "zdd<Up>"zP
 vnoremap <C-k> "zx<Up>"zP`[V`]
 vnoremap <C-j> "zx"zp`[V`]`]]`
 vnoremap > >gvll
 vnoremap < <gvhh
-nnoremap <silent> <Leader>/ :noh<CR>
+" nnoremap <silent> <Leader>/ :noh<CR>
 nnoremap L $
 nnoremap H ^
 nnoremap <silent><leader>p :e ~/.config/nvim/init.vim<CR>
 nnoremap <silent> <leader>, :bprevious<CR>
 nnoremap <silent> <leader>. :bn<CR>
-nnoremap <silent> <Leader>w :bp\|bd #<CR>
+" nnoremap <silent> <Leader>w :bp\|bd #<CR>
 vmap y ygv<Esc>
 
 " -- plug-map --
