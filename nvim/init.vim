@@ -9,10 +9,3 @@ runtime set.vim
 
 colorschem monokai
 
-function! SourceInitVim()
-  source ~/.config/nvim/init.vim
-  echo "load init vim!"
-endfunction
-
-autocmd! BufWritePost ~/.config/nvim/* :call SourceInitVim()
-

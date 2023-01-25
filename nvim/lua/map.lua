@@ -1,17 +1,19 @@
 local keymap = vim.keymap
 
 local normalSettingList = {
-  {'x', '"_x', {}},
-  {'s', '"_s'},
-  {'Y', 'y$'},
-  {'>', '>>'},
-  {'<', '<<'},
-  {'<c-j>', '"zdd"zp'},
-  {'<c-k>', '"zdd<up>"zP'},
-  {'<c-k>', '"zdd<up>"zP'},
-  {'<leader>/', ':noh<cr>', {silent=true}},
+  { 'x', '"_x', {} },
+  { 's', '"_s' },
+  { 'Y', 'y$' },
+  { '>', '>>' },
+  { '<', '<<' },
+  { '<c-j>', '"zdd"zp' },
+  { '<c-k>', '"zdd<up>"zP' },
+  { '<c-k>', '"zdd<up>"zP' },
+  { '<leader>/', ':noh<cr>', { silent = true } },
+  { '<c-f>', ':Telescope live_grep<cr>', { silent = true } },
+  { '<c-p>', ':Telescope find_files<cr>', { silent = true } },
 }
 
-for i = 1 , #normalSettingList do
+for i = 1, #normalSettingList do
   keymap.set('n', normalSettingList[i][1], normalSettingList[i][2], normalSettingList[i][3])
 end

@@ -16,6 +16,7 @@ vnoremap < <gvhh
 nnoremap L $
 nnoremap H ^
 nnoremap <silent><leader>p :e ~/.config/nvim/init.vim<CR>
+nnoremap <silent><leader>l :source ~/.config/nvim/init.vim<CR>
 nnoremap <silent> <leader>, :bprevious<CR>
 nnoremap <silent> <leader>. :bn<CR>
 " nnoremap <silent> <Leader>w :bp\|bd #<CR>
@@ -29,15 +30,6 @@ vmap <silent> <Leader>t <Plug>TranslateWV
 " kyazdani42/nvim-tree.lua
 nnoremap <c-n> <cmd>NvimTreeToggle<cr>
 
-" neoclide/coc.nvim
-function! ShowDocumentation()
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
-  else
-    call feedkeys('K', 'in')
-  endif
-endfunction
-nmap <silent> <leader>k <Plug>(coc-definition)
 nnoremap <silent> <leader>h :call ShowDocumentation()<cr>
 
 " svermeulen/vim-subversive
