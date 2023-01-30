@@ -3,6 +3,9 @@
 export PATH=/opt/homebrew/bin:$PATH
 
 export PATH=$HOME/.local/bin:$PATH
+
+export PATH=$HOME/my_bin:$PATH
+
 # asdf
 . /opt/homebrew/opt/asdf/libexec/asdf.sh
 # zinit

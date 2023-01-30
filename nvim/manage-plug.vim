@@ -6,6 +6,7 @@ call plug#begin('~/.vim/plugged')
   Plug 'tanvirtin/monokai.nvim'
   Plug 'catppuccin/nvim'
   Plug 'kyazdani42/nvim-web-devicons'
+  Plug 'lukas-reineke/indent-blankline.nvim'
   " etc
   Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
   Plug 'kyazdani42/nvim-tree.lua'
@@ -15,6 +16,8 @@ call plug#begin('~/.vim/plugged')
   Plug 'svermeulen/vim-subversive'
   Plug 'easymotion/vim-easymotion'
   Plug 'tpope/vim-surround'
+  Plug 'tpope/vim-repeat'
+  Plug 'tpope/vim-speeddating'
   Plug 'voldikss/vim-translator'
 
   " telescope
@@ -36,5 +39,7 @@ call plug#begin('~/.vim/plugged')
   " git
   Plug 'vim-denops/denops.vim'
   Plug 'lambdalisue/gin.vim'
+  Plug 'tpope/vim-fugitive'
+  Plug 'lewis6991/gitsigns.nvim'
 
 call plug#end()
