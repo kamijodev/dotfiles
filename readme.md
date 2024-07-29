@@ -1,1 +1,1 @@
-AUR使ってるのでarchしか動きません
+cloneしてスクリプト叩くだけでzsh, starship, asdf等のセットアップが完了するやつ=

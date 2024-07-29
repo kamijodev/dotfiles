@@ -1,19 +1,30 @@
 #!/bin/bash
 
-CURRENT_DIR=$(pwd)
+# sheldon install
+curl https://sh.rustup.rs -sSf | sh
+. "$HOME/.cargo/env"
+cargo install sheldon
 
-curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}/nvim/site/autoload/plug.vim" --create-dirs \
-  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+# starship install
+curl -sS https://starship.rs/install.sh | sh
 
-yay -S sheldon starship
+# asdf install
+git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.14.0
 
-mkdir -p "$HOME/.config/sheldon"
-ln -s "${CURRENT_DIR}/nvim" "$HOME/.config/nvim"
-ln -s "${CURRENT_DIR}/.zshrc" "$HOME/.zshrc"
-ln -s "${CURRENT_DIR}/.config/sheldon/plugins.toml" "$HOME/.config/sheldon/plugins.toml"
-ln -s "${CURRENT_DIR}/.config/starship.toml" "$HOME/.config/starshop.toml"
+# リポジトリのディレクトリ（スクリプトが実行されるディレクトリ）
+REPO_DIR=$(pwd)
 
-nvim --headless +PlugInstall +qa
+# ホームディレクトリ
+HOME_DIR=$HOME
 
-echo "setup done"
+# リポジトリ内の全てのディレクトリとファイルに対してシンボリックリンクを作成
+cd $REPO_DIR
+find . -type d | while read DIR; do
+  mkdir -p "$HOME_DIR/${DIR#./}"
+done
 
+find . -type f | while read FILE; do
+  ln -s "$REPO_DIR/$FILE" "$HOME_DIR/${FILE#./}"
+done
+
+echo "シンボリックリンクの作成が完了しました。"
