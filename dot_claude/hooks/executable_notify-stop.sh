@@ -10,7 +10,7 @@ body="完了"
 
 # transcript_pathから最後のレスポンスを取得
 if [ -n "$transcript_path" ] && [ -f "$transcript_path" ]; then
-  last_msg=$(tac "$transcript_path" | grep -m1 '"role":"assistant"' | jq -r '.message.content[0].text // empty' 2>/dev/null | cut -c1-100)
+  last_msg=$(tac "$transcript_path" | grep -m1 '"role":"assistant"' | jq -r '.message.content[0].text // empty' 2>/dev/null | tr -cd '[:print:][:space:]' | cut -c1-100)
   if [ -n "$last_msg" ]; then
     body="$last_msg"
   fi
