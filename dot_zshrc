@@ -12,6 +12,8 @@ else
   echo "sheldon not found: https://sheldon.cli.rs"
 fi
 
+command -v claude &> /dev/null || echo "claude not found: https://docs.anthropic.com/en/docs/claude-code"
+
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
