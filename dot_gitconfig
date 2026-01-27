@@ -1,0 +1,19 @@
+[user]
+	name = kamijodev
+	email = f.kamijodev@gmail.com
+[push]
+  default = current
+[alias]
+  st = status
+  com = commit
+  ame = commit --amend
+  co = checkout
+  sw = switch
+  br = branch
+  l1 = log --oneline
+  back = reset --hard HEAD^
+  cp = cherry-pick
+[core]
+  editor = nvim
+[init]
+	defaultBranch = main
