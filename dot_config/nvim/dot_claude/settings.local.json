@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Bash(node --version:*)",
+      "Bash(curl:*)",
+      "Bash(/home/emacs/.asdf/shims/node --version)",
+      "Bash(env)",
+      "Bash(nvim:*)",
+      "Bash(asdf list:*)"
+    ]
+  }
+}

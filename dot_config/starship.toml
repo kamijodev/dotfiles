@@ -1,0 +1,32 @@
+format = """
+$time\
+$memory_usage\
+$python
+$directory\
+$git_branch\
+$git_status\
+"""
+
+[directory]
+format = "[ $path > ](fg:#AE81FF)"
+
+[git_branch]
+format = "[ $branch](fg:#FD971F)"
+#F92672
+#A6E22E
+#FD971F
+#AE81FF
+[git_status]
+format = "[\\($all_status\\) > ](fg:#FD971F)"
+
+[time]
+format = "[【$time】](fg:#F92672)"
+disabled = false
+
+[memory_usage]
+format = "[Ram \\[$ram_pct\\] ](fg:#A6E22E)"
+disabled = false
+threshold = 0
+
+[python]
+format = "[$virtualenv](fg:#FD971F)"
