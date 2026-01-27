@@ -2,18 +2,8 @@
 
 ## Dotfiles管理
 
-以下のファイルを変更した場合は、chezmoiへの追加とgit pushを行う:
-
-- `~/.zshrc`, `~/.zshenv`
-- `~/.config/nvim/`
-- `~/.config/starship.toml`
-- `~/.config/sheldon/`
-- `~/.config/wezterm/`
-- `~/.gitconfig`
-- `~/.ssh/config`
-- `~/.claude/settings.json`
-- `~/.claude/hooks/`
-- `~/.claude/skills/`
+`chezmoi managed` で管理対象ファイルを確認できる。
+管理対象のファイルを変更した場合は、以下を実行:
 
 ```bash
 chezmoi add <変更したファイル>
