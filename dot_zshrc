@@ -1,4 +1,3 @@
-# source /usr/share/cachyos-zsh-config/cachyos-config.zsh
 autoload -Uz compinit && compinit
 
 if command -v starship &> /dev/null; then
