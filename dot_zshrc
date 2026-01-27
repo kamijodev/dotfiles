@@ -1,8 +1,8 @@
 # source /usr/share/cachyos-zsh-config/cachyos-config.zsh
 autoload -Uz compinit && compinit
 
-eval "$(starship init zsh)"
-eval "$(sheldon source)"
+command -v starship &> /dev/null && eval "$(starship init zsh)"
+command -v sheldon &> /dev/null && eval "$(sheldon source)"
 
 
 HISTFILE=~/.zsh_history
