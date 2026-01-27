@@ -19,8 +19,10 @@ fi
 # 通知送信
 if command -v notify-send >/dev/null 2>&1; then
   notify-send "$title" "$body"
+  paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga 2>/dev/null &
 elif command -v kdialog >/dev/null 2>&1; then
   kdialog --title "$title" --passivepopup "$body" 5
+  paplay /usr/share/sounds/freedesktop/stereo/message-new-instant.oga 2>/dev/null &
 else
   printf '\a%s: %s\n' "$title" "$body" >&2
 fi
