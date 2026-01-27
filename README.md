@@ -19,3 +19,8 @@ chezmoi update               # リモートから更新
 chezmoi diff                 # 差分確認
 chezmoi cd                   # ソースディレクトリに移動
 ```
+
+## Naming
+
+- `dot_` → `.`
+- `private_` → パーミッション 0600
