@@ -1,0 +1,10 @@
+{
+  "trustedDirectories": [
+    "/home/emacs/.config",
+    "/home/emacs/WorkSpace"
+  ],
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  }
+}
