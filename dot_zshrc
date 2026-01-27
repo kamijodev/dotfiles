@@ -1,19 +1,28 @@
 autoload -Uz compinit && compinit
 
+typeset -A MISSING_TOOLS
+MISSING_TOOLS=()
+
 if command -v starship &> /dev/null; then
   eval "$(starship init zsh)"
 else
-  echo "starship not found: https://starship.rs"
+  MISSING_TOOLS[starship]="https://starship.rs"
 fi
 
 if command -v sheldon &> /dev/null; then
   eval "$(sheldon source)"
 else
-  echo "sheldon not found: https://sheldon.cli.rs"
+  MISSING_TOOLS[sheldon]="https://sheldon.cli.rs"
 fi
 
-command -v claude &> /dev/null || echo "claude not found: https://docs.anthropic.com/en/docs/claude-code"
+command -v claude &> /dev/null || MISSING_TOOLS[claude]="https://docs.anthropic.com/en/docs/claude-code"
 
+if (( ${#MISSING_TOOLS[@]} > 0 )); then
+  echo "Missing tools:"
+  for tool url in ${(kv)MISSING_TOOLS}; do
+    echo "  $tool: $url"
+  done
+fi
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
