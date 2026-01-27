@@ -1,8 +1,17 @@
 # source /usr/share/cachyos-zsh-config/cachyos-config.zsh
 autoload -Uz compinit && compinit
 
-command -v starship &> /dev/null && eval "$(starship init zsh)"
-command -v sheldon &> /dev/null && eval "$(sheldon source)"
+if command -v starship &> /dev/null; then
+  eval "$(starship init zsh)"
+else
+  echo "starship not found: https://starship.rs"
+fi
+
+if command -v sheldon &> /dev/null; then
+  eval "$(sheldon source)"
+else
+  echo "sheldon not found: https://sheldon.cli.rs"
+fi
 
 
 HISTFILE=~/.zsh_history
