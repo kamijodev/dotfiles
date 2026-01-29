@@ -1,8 +1,48 @@
 local wezterm = require("wezterm")
+local mux = wezterm.mux
 local config = wezterm.config_builder()
 
+----------------------------------------------------
+-- IDE Mode (初回起動時のレイアウト)
+----------------------------------------------------
+-- レイアウト:
+-- +------------------+--------+
+-- |                  |   AI   |
+-- |      Main        |  Chat  |
+-- |                  |        |
+-- +--------+---------+--------+
+-- | Term 1 | Term 2  |
+-- +--------+---------+
+
+wezterm.on("gui-startup", function(cmd)
+  local tab, main_pane, window = mux.spawn_window(cmd or {})
+
+  -- 下部にTerminal領域 (高さ20%)
+  local term1_pane = main_pane:split({
+    direction = "Bottom",
+    size = 0.2,
+  })
+
+  -- 上部の右側にAI Chat用pane (幅25%)
+  local ai_pane = main_pane:split({
+    direction = "Right",
+    size = 0.25,
+  })
+
+  -- 下部paneを左右に分割 (50%/50%)
+  local term2_pane = term1_pane:split({
+    direction = "Right",
+    size = 0.5,
+  })
+
+  -- メインpaneにフォーカス
+  main_pane:activate()
+
+  -- ウィンドウを最大化
+  window:gui_window():maximize()
+end)
+
 config.automatically_reload_config = true
-config.default_prog = { "/usr/bin/zsh" }
 config.font_size = 12.0
 config.font = wezterm.font('Hack Nerd Font')
 config.use_ime = true
@@ -73,6 +113,23 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
     { Text = SOLID_RIGHT_ARROW },
   }
 end)
+
+----------------------------------------------------
+-- Mouse
+----------------------------------------------------
+local act = wezterm.action
+config.mouse_bindings = {
+  {
+    event = { Down = { streak = 1, button = { WheelUp = 1 } } },
+    mods = "NONE",
+    action = act.ScrollByLine(-2),
+  },
+  {
+    event = { Down = { streak = 1, button = { WheelDown = 1 } } },
+    mods = "NONE",
+    action = act.ScrollByLine(2),
+  },
+}
 
 ----------------------------------------------------
 -- keybinds

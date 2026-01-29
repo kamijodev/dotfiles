@@ -69,7 +69,7 @@ bodyの後、1行空けて記述。git trailer形式に従う。
 
 破壊的変更がある場合、以下のいずれかで示す:
 
-1. type/scopeの直後に ! を付ける（例: feat!: または feat(api)!:）
+1. type/scopeの直後に`!`を付ける: `feat!:` または `feat(api)!:`
 2. footerに `BREAKING CHANGE: <説明>` を記述
 3. 両方を併用可
 

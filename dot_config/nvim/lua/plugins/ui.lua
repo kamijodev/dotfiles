@@ -1,16 +1,12 @@
 return {
   {
-    "navarasu/onedark.nvim",
+    "cpea2506/one_monokai.nvim",
     priority = 1000,
     config = function()
-      require('onedark').setup {
-        style = 'deep',
+      require("one_monokai").setup({
         transparent = true,
-        lualine = {
-          transparent = true,
-        },
-      }
-      require('onedark').load()
+      })
+      vim.cmd([[colorscheme one_monokai]])
     end
   },
   {
@@ -91,6 +87,7 @@ return {
     keys = {
       { "<C-,>", "<Cmd>BufferPrevious<CR>" },
       { "<C-.>", "<Cmd>BufferNext<CR>" },
+      { "<C-/>", "<Cmd>BufferClose<CR>", desc = "バッファを閉じる" },
     },
     config = function(_, opts)
       local function brighten_barbar_current_text()
