@@ -106,6 +106,10 @@ return {
     -- ついでに Ctrl+C でコピーも（任意）
     -- { key = "c", mods = "CTRL", action = act.CopyTo("Clipboard") },
 
+    -- スクロール
+    { key = "j", mods = "ALT", action = act.ScrollByLine(2) },
+    { key = "k", mods = "ALT", action = act.ScrollByLine(-2) },
+
     -- コマンドパレット
     { key = "p", mods = "SHIFT|CTRL", action = act.ActivateCommandPalette },
     -- 設定再読み込み
