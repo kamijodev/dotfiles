@@ -11,6 +11,8 @@ fi
 
 function zvm_after_lazy_keybindings() {
   bindkey -M vicmd 'Y' vi-yank-eol
+  bindkey -M vicmd 'H' vi-first-non-blank
+  bindkey -M vicmd 'L' vi-end-of-line
 }
 
 if command -v sheldon &> /dev/null; then
