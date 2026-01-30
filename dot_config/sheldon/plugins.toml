@@ -10,3 +10,6 @@ github = "zsh-users/zsh-autosuggestions"
 
 [plugins.zsh-syntax-highlighting]
 github = 'zsh-users/zsh-syntax-highlighting'
+
+[plugins.zsh-vi-mode]
+github = 'jeffreytse/zsh-vi-mode'
