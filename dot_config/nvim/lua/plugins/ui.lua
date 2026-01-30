@@ -1,13 +1,54 @@
 return {
+  -- カラーテーマ集
   {
     "cpea2506/one_monokai.nvim",
+    lazy = true,
+    priority = 1000,
+    opts = { transparent = true },
+  },
+  {
+    "catppuccin/nvim",
+    name = "catppuccin",
+    lazy = true,
+    priority = 1000,
+    opts = { transparent_background = true },
+  },
+  {
+    "folke/tokyonight.nvim",
+    lazy = true,
+    priority = 1000,
+    opts = { transparent = true },
+  },
+  {
+    "rebelot/kanagawa.nvim",
+    lazy = true,
+    priority = 1000,
+    opts = { transparent = true },
+  },
+  {
+    "rose-pine/neovim",
+    name = "rose-pine",
+    lazy = true,
+    priority = 1000,
+    opts = { styles = { transparency = true } },
+  },
+  {
+    "sainnhe/gruvbox-material",
+    lazy = true,
     priority = 1000,
     config = function()
-      require("one_monokai").setup({
-        transparent = true,
-      })
+      vim.g.gruvbox_material_transparent_background = 2
+    end,
+  },
+  -- デフォルトテーマ設定
+  {
+    "cpea2506/one_monokai.nvim",
+    lazy = false,
+    priority = 1000,
+    config = function()
+      require("one_monokai").setup({ transparent = true })
       vim.cmd([[colorscheme one_monokai]])
-    end
+    end,
   },
   {
     "nvim-tree/nvim-tree.lua",
