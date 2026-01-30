@@ -1,0 +1,36 @@
+#!/bin/bash
+# IDE layout for wezterm
+# Layout:
+# +------------------+--------+
+# |                  |   AI   |
+# |      Main        |  Chat  |
+# |                  |        |
+# +--------+---------+--------+
+# | Term 1 | Term 2  |
+# +--------+---------+
+
+# Get current pane ID (this will be the main pane)
+MAIN_PANE=$(wezterm cli list --format json | jq -r '.[] | select(.is_active == true) | .pane_id')
+
+if [ -z "$MAIN_PANE" ]; then
+    echo "Error: Could not determine current pane"
+    exit 1
+fi
+
+# Split bottom for Terminal area (20%)
+TERM1_PANE=$(wezterm cli split-pane --pane-id "$MAIN_PANE" --bottom --percent 20)
+
+# Split right of main pane for AI Chat (25%)
+AI_PANE=$(wezterm cli split-pane --pane-id "$MAIN_PANE" --right --percent 25)
+
+# Split term1 pane right for Term 2 (50%)
+TERM2_PANE=$(wezterm cli split-pane --pane-id "$TERM1_PANE" --right --percent 50)
+
+# Activate main pane
+wezterm cli activate-pane --pane-id "$MAIN_PANE"
+
+echo "IDE layout created"
+echo "  Main pane: $MAIN_PANE"
+echo "  AI pane: $AI_PANE"
+echo "  Term1 pane: $TERM1_PANE"
+echo "  Term2 pane: $TERM2_PANE"
