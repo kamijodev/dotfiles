@@ -1,52 +1,17 @@
 return {
   -- カラーテーマ集
-  {
-    "cpea2506/one_monokai.nvim",
-    lazy = true,
-    priority = 1000,
-    opts = { transparent = true },
-  },
-  {
-    "catppuccin/nvim",
-    name = "catppuccin",
-    lazy = true,
-    priority = 1000,
-    opts = { transparent_background = true },
-  },
-  {
-    "folke/tokyonight.nvim",
-    lazy = true,
-    priority = 1000,
-    opts = { transparent = true },
-  },
-  {
-    "rebelot/kanagawa.nvim",
-    lazy = true,
-    priority = 1000,
-    opts = { transparent = true },
-  },
-  {
-    "rose-pine/neovim",
-    name = "rose-pine",
-    lazy = true,
-    priority = 1000,
-    opts = { styles = { transparency = true } },
-  },
-  {
-    "sainnhe/gruvbox-material",
-    lazy = true,
-    priority = 1000,
-    config = function()
-      vim.g.gruvbox_material_transparent_background = 2
-    end,
-  },
+  { "cpea2506/one_monokai.nvim", lazy = true, priority = 1000 },
+  { "catppuccin/nvim", name = "catppuccin", lazy = true, priority = 1000 },
+  { "folke/tokyonight.nvim", lazy = true, priority = 1000 },
+  { "rebelot/kanagawa.nvim", lazy = true, priority = 1000 },
+  { "rose-pine/neovim", name = "rose-pine", lazy = true, priority = 1000 },
+  { "sainnhe/gruvbox-material", lazy = true, priority = 1000 },
   -- デフォルトテーマ設定
   {
     "cpea2506/one_monokai.nvim",
     lazy = false,
     priority = 1000,
     config = function()
-      require("one_monokai").setup({ transparent = true })
       vim.cmd([[colorscheme one_monokai]])
     end,
   },
