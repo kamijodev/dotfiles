@@ -92,14 +92,6 @@ return {
     end,
   },
   {
-    "folke/which-key.nvim",
-    event = "VeryLazy",
-    -- keys = {
-    --   { "<leader>f", "<cmd>" }
-    -- },
-    opts = {},
-  },
-  {
     "machakann/vim-highlightedyank"
   },
   {
