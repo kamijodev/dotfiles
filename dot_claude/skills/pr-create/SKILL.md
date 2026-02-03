@@ -1,20 +1,80 @@
 ---
 name: pr-create
-description: Pull Requestを作成する。ブランチの差分とコミット履歴を分析し、適切なタイトルと説明文を自動生成する。「PR作って」「PRを作成して」「プルリクエスト作成」等の指示があった場合に使用。
+description: Pull Requestを作成する。ブランチの差分とコミット履歴を分析し、適切なタイトルと説明文を自動生成する。「PR作って」「PRを作成して」「プルリクエスト作成」「このブランチPR出して」等の指示があった場合に使用。
 ---
 
 # PR Create
 
-ブランチの変更内容を分析し、DraftでPull Requestを作成する。
+ブランチの変更内容を分析し、レビュー後にPull Requestを作成する。
 
 ## ワークフロー
 
+### Phase 1: 事前確認
+
 1. `git status` で未コミットの変更を確認
 2. リモートブランチの状態を確認（push済みか）
-3. `git log main..HEAD` でコミット履歴を取得
-4. `git diff main...HEAD` で差分を確認
-5. PRタイトルと説明文を生成
-6. `gh pr create` でPRを作成
+3. `git log main..HEAD --no-merges --first-parent` でこのブランチ固有のコミット履歴を取得
+4. ブランチ固有のコミットで変更されたファイルの差分を確認
+
+### Phase 2: セルフレビュー（必須）
+
+**PR作成前に必ず `pr-review` スキルの観点でレビューを実施する。**
+
+レビュー観点（pr-reviewスキル参照）:
+- バグ: ロジックエラー、境界条件
+- セキュリティ: インジェクション、認証・認可、機密情報の露出
+- パフォーマンス: N+1クエリ、不要なループ
+- フロントエンド: FSD準拠、Container/Presentational Pattern
+- バックエンド: 不要なpublicメソッド
+
+レビュー結果を以下の形式で報告:
+```markdown
+## セルフレビュー結果
+
+### 問題点
+- [ ] **[重要度]** ファイル名:行番号 - 問題の説明
+
+### 改善提案
+- ファイル名:行番号 - 提案内容
+
+### 良い点
+- 良かった点
+```
+
+### Phase 3: ユーザー確認（必須）
+
+レビュー結果を報告した後、**必ず** AskUserQuestion でユーザーに確認する:
+
+- 問題点がある場合: 「以下の問題が見つかりました。このままPRを作成しますか？修正しますか？」
+- 問題点がない場合: 「レビューで問題は見つかりませんでした。PRを作成してよろしいですか？」
+
+**ユーザーの承認を得るまでPR作成に進まないこと。**
+
+### Phase 4: PR作成
+
+ユーザーの承認後:
+1. PRタイトルと説明文を生成
+2. `gh pr create` でPRを作成
+
+### 重要: マージコミットの除外
+
+mainブランチをマージした場合、マージで混入した他PRの変更がdiffに含まれてしまう。
+PRの説明にはこのブランチ固有の変更のみを記載すること。
+
+**ブランチ固有の変更を取得する方法:**
+```bash
+# このブランチで直接行われたコミットのみ取得（マージコミット除外）
+git log main..HEAD --no-merges --first-parent --oneline
+
+# ブランチ固有のコミットで変更されたファイル一覧
+git log main..HEAD --no-merges --first-parent --name-only --pretty=format: | sort -u | grep -v '^$'
+
+# 特定ファイルの差分を確認（上記で取得したファイルに対して）
+git diff main...HEAD -- <file_path>
+```
+
+**注意:** `git diff main...HEAD` だけではマージで混入した変更も含まれるため、
+必ずブランチ固有のコミットで変更されたファイルを特定してから差分を確認する。
 
 ## 事前チェック
 
@@ -33,8 +93,11 @@ git status
 # リモートとの同期状態確認
 git log origin/<branch>..HEAD
 
-# ベースブランチとの差分確認
-git log main..HEAD --oneline
+# ブランチ固有のコミット確認（マージコミット除外）
+git log main..HEAD --no-merges --first-parent --oneline
+
+# ブランチ固有の変更ファイル一覧
+git log main..HEAD --no-merges --first-parent --name-only --pretty=format: | sort -u | grep -v '^$'
 ```
 
 ## PRタイトル生成ルール
