@@ -128,14 +128,15 @@ return {
     },
     config = function(_, opts)
       local hooks = require("ibl.hooks")
+      -- one_monokaiテーマに合わせた背景色
       hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-        vim.api.nvim_set_hl(0, "RainbowRed", { bg = "#2d1f1f" })
-        vim.api.nvim_set_hl(0, "RainbowYellow", { bg = "#2d2a1f" })
-        vim.api.nvim_set_hl(0, "RainbowBlue", { bg = "#1f2535" })
-        vim.api.nvim_set_hl(0, "RainbowOrange", { bg = "#2d251f" })
-        vim.api.nvim_set_hl(0, "RainbowGreen", { bg = "#1f2d1f" })
-        vim.api.nvim_set_hl(0, "RainbowViolet", { bg = "#291f2d" })
-        vim.api.nvim_set_hl(0, "RainbowCyan", { bg = "#1f2a2d" })
+        vim.api.nvim_set_hl(0, "RainbowRed", { bg = "#3d2028" })    -- ピンク系 (#F92672)
+        vim.api.nvim_set_hl(0, "RainbowYellow", { bg = "#3d3520" }) -- 黄色系 (#E6DB74)
+        vim.api.nvim_set_hl(0, "RainbowBlue", { bg = "#203540" })   -- シアン系 (#66D9EF)
+        vim.api.nvim_set_hl(0, "RainbowOrange", { bg = "#3d2d18" }) -- オレンジ系 (#FD971F)
+        vim.api.nvim_set_hl(0, "RainbowGreen", { bg = "#283d20" })  -- 緑系 (#A6E22E)
+        vim.api.nvim_set_hl(0, "RainbowViolet", { bg = "#302540" }) -- 紫系 (#AE81FF)
+        vim.api.nvim_set_hl(0, "RainbowCyan", { bg = "#203538" })   -- シアン薄め
       end)
       require("ibl").setup(opts)
     end,
