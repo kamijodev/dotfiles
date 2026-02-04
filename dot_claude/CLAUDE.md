@@ -1,5 +1,17 @@
 # Claude Code Instructions
 
+## Git操作
+
+`git push` は引数なしだと権限エラーになるため、必ずリモートとブランチを明示する：
+
+```bash
+# NG
+git push
+
+# OK
+git push origin <branch>
+```
+
 ## Dotfiles管理
 
 `chezmoi managed` で管理対象ファイルを確認できる。
