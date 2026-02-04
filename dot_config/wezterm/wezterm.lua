@@ -2,11 +2,16 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 config.automatically_reload_config = true
+config.enable_wayland = true
 config.font_size = 12.0
 config.font = wezterm.font('Hack Nerd Font')
 config.use_ime = true
-config.window_background_opacity = 0.85
+config.window_background_opacity = 0.95
 config.macos_window_background_blur = 20
+config.color_scheme = 'Gruvbox Material (Gogh)'
+config.pane_focus_follows_mouse = false
+config.inactive_pane_hsb = { brightness = 1.0 }  -- 非アクティブペインも同じ明るさ
+config.window_padding = { left = 8, right = 8, top = 8, bottom = 8 }
 
 ----------------------------------------------------
 -- Tab
@@ -28,7 +33,7 @@ config.window_frame = {
 
 -- タブバーを背景色に合わせる
 config.window_background_gradient = {
-  colors = { "#0a0a12" },
+  colors = { "#151515" },
 }
 
 -- タブの追加ボタンを非表示
@@ -42,6 +47,8 @@ config.colors = {
   tab_bar = {
     inactive_tab_edge = "none",
   },
+  -- ペイン間のボーダーを透明に（背景が見える）
+  split = "rgba(0, 0, 0, 0)",
 }
 
 -- タブの形をカスタマイズ

@@ -49,3 +49,6 @@ for _, g in ipairs(groups) do
     vim.keymap.set(mode, map.key, map.action, vim.tbl_extend("force", default_opts, map.opts or {}))
   end
 end
+
+-- Inspect: カーソル位置のハイライト情報表示
+vim.keymap.set("n", "<leader>i", "<cmd>Inspect<cr>", { desc = "シンボル情報表示" })

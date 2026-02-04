@@ -33,21 +33,51 @@ return {
     opts = { styles = { transparency = true } },
   },
   {
-    "sainnhe/gruvbox-material",
-    lazy = true,
+    "scottmckendry/cyberdream.nvim",
+    lazy = false,
     priority = 1000,
-    config = function()
-      vim.g.gruvbox_material_transparent_background = 2
-    end,
+    opts = { transparent = true },
   },
-  -- デフォルトテーマ設定
   {
-    "cpea2506/one_monokai.nvim",
+    "sainnhe/gruvbox-material",
     lazy = false,
     priority = 1000,
     config = function()
-      require("one_monokai").setup({ transparent = true })
-      vim.cmd([[colorscheme one_monokai]])
+      vim.g.gruvbox_material_transparent_background = 2
+      -- ピンクをもう少し紫っぽく
+      vim.g.gruvbox_material_colors_override = {
+        purple = { '#b48ead', '139' },
+      }
+      vim.cmd([[colorscheme gruvbox-material]])
+      -- ホバーウィンドウの背景を暗く
+      vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#141414" })
+      vim.api.nvim_set_hl(0, "FloatBorder", { bg = "#141414", fg = "#7daea3" })
+    end,
+  },
+  -- one_monokai（テーマ選択用に残す）
+  {
+    "cpea2506/one_monokai.nvim",
+    lazy = true,
+    priority = 1000,
+    opts = { transparent = true },
+  },
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    },
+    ft = { "markdown" },
+    opts = {},
+  },
+  {
+    "rachartier/tiny-devicons-auto-colors.nvim",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
+    event = "VeryLazy",
+    config = function()
+      require("tiny-devicons-auto-colors").setup()
     end,
   },
   {
@@ -128,15 +158,15 @@ return {
     },
     config = function(_, opts)
       local hooks = require("ibl.hooks")
-      -- one_monokaiテーマに合わせた背景色
+      -- gruvbox-materialに合わせた背景色
       hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-        vim.api.nvim_set_hl(0, "RainbowRed", { bg = "#3d2028" })    -- ピンク系 (#F92672)
-        vim.api.nvim_set_hl(0, "RainbowYellow", { bg = "#3d3520" }) -- 黄色系 (#E6DB74)
-        vim.api.nvim_set_hl(0, "RainbowBlue", { bg = "#203540" })   -- シアン系 (#66D9EF)
-        vim.api.nvim_set_hl(0, "RainbowOrange", { bg = "#3d2d18" }) -- オレンジ系 (#FD971F)
-        vim.api.nvim_set_hl(0, "RainbowGreen", { bg = "#283d20" })  -- 緑系 (#A6E22E)
-        vim.api.nvim_set_hl(0, "RainbowViolet", { bg = "#302540" }) -- 紫系 (#AE81FF)
-        vim.api.nvim_set_hl(0, "RainbowCyan", { bg = "#203538" })   -- シアン薄め
+        vim.api.nvim_set_hl(0, "RainbowRed", { bg = "#3c2020" })    -- 赤系 (#ea6962)
+        vim.api.nvim_set_hl(0, "RainbowYellow", { bg = "#3c3020" }) -- 黄系 (#d8a657)
+        vim.api.nvim_set_hl(0, "RainbowBlue", { bg = "#203038" })   -- 青系 (#7daea3)
+        vim.api.nvim_set_hl(0, "RainbowOrange", { bg = "#3c2818" }) -- オレンジ系 (#e78a4e)
+        vim.api.nvim_set_hl(0, "RainbowGreen", { bg = "#283020" })  -- 緑系 (#a9b665)
+        vim.api.nvim_set_hl(0, "RainbowViolet", { bg = "#302830" }) -- 紫系 (#b48ead)
+        vim.api.nvim_set_hl(0, "RainbowCyan", { bg = "#203030" })   -- アクア系 (#89b482)
       end)
       require("ibl").setup(opts)
     end,

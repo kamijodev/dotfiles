@@ -1,4 +1,34 @@
 return {
+  -- Treesitter: シンタックスハイライト強化
+  {
+    "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
+    lazy = false,
+    config = function()
+      local ts = require("nvim-treesitter")
+      ts.setup()
+
+      -- よく使う言語のパーサーをインストール
+      local langs = {
+        "typescript", "tsx", "javascript",
+        "lua", "vue", "html", "css",
+        "json", "yaml", "markdown",
+        "graphql", "prisma", "bash",
+      }
+      ts.install(langs)
+
+      -- ハイライトとインデントを有効化
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "*",
+        callback = function()
+          pcall(vim.treesitter.start)
+          pcall(function()
+            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          end)
+        end,
+      })
+    end,
+  },
   {
     "coder/claudecode.nvim",
     dependencies = { "folke/snacks.nvim" },
