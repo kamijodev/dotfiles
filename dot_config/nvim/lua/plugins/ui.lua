@@ -155,6 +155,22 @@ return {
       current_line_blame_formatter = "<author>, <author_time:%Y-%m-%d> - <summary>",
     },
   },
+  -- ミニマップ
+  {
+    "wfxr/minimap.vim",
+    cmd = { "Minimap", "MinimapClose", "MinimapToggle" },
+    keys = {
+      { "<leader>mm", "<cmd>MinimapToggle<cr>", desc = "ミニマップ切り替え" },
+    },
+    init = function()
+      vim.g.minimap_width = 10
+      vim.g.minimap_auto_start = 0
+      vim.g.minimap_auto_start_win_enter = 0
+      vim.g.minimap_highlight_range = 1
+      vim.g.minimap_highlight_search = 1
+      vim.g.minimap_git_colors = 1
+    end,
+  },
   {
     "svermeulen/vim-subversive",
     keys = {
