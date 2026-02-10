@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=URL Dispatcher
+Comment=Dispatch URLs to appropriate applications
+Exec=/home/emacs/.local/bin/url-dispatcher %U
+Type=Application
+NoDisplay=true
+MimeType=x-scheme-handler/unknown;x-scheme-handler/about;text/html;x-scheme-handler/https;x-scheme-handler/http;

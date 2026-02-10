@@ -1,0 +1,57 @@
+#!/bin/bash
+# URL Dispatcher - URLのドメインに応じて適切なアプリで開く
+
+URL="$1"
+LOTION_DEBUG_PORT=19222
+
+open_in_lotion() {
+  local url="$1"
+
+  # Lotionが既にリモートデバッグ付きで起動中か確認
+  if curl -s --max-time 1 "http://127.0.0.1:$LOTION_DEBUG_PORT/json/version" > /dev/null 2>&1; then
+    # notion.soのタブを見つけてWebSocket URLを取得
+    local ws_url
+    ws_url=$(curl -s --max-time 2 "http://127.0.0.1:$LOTION_DEBUG_PORT/json/list" | python3 -c "
+import sys, json
+tabs = json.load(sys.stdin)
+for t in tabs:
+    u = t.get('url', '')
+    if 'notion.so' in u and 'worker' not in u and '_assets' not in u:
+        print(t['webSocketDebuggerUrl'])
+        break
+" 2>/dev/null)
+
+    if [ -n "$ws_url" ]; then
+      # websocat経由でCDPナビゲーション
+      echo "{\"id\":1,\"method\":\"Page.navigate\",\"params\":{\"url\":\"$url\"}}" \
+        | websocat -t --no-close -1 "$ws_url" 2>/dev/null
+
+      # niriでLotionウィンドウにフォーカス
+      local win_id
+      win_id=$(niri msg --json windows 2>/dev/null | python3 -c "
+import sys, json
+windows = json.load(sys.stdin)
+lotion = [w for w in windows if w.get('app_id') == 'Lotion']
+if lotion:
+    print(lotion[0]['id'])
+" 2>/dev/null)
+
+      if [ -n "$win_id" ]; then
+        niri msg action focus-window --id "$win_id" 2>/dev/null
+      fi
+      return 0
+    fi
+  fi
+
+  # Lotionが起動していない or CDP接続失敗 → 新規起動
+  exec /usr/bin/lotion --remote-debugging-port=$LOTION_DEBUG_PORT "$url"
+}
+
+case "$URL" in
+  https://www.notion.so/* | https://notion.so/*)
+    open_in_lotion "$URL"
+    ;;
+  *)
+    exec /usr/bin/google-chrome-canary "$URL"
+    ;;
+esac
