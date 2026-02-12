@@ -3,50 +3,15 @@ autoload -Uz compinit && compinit
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 
-typeset -A MISSING_TOOLS
-MISSING_TOOLS=()
-
 if command -v starship &> /dev/null; then
   eval "$(starship init zsh)"
-else
-  MISSING_TOOLS[starship]="https://starship.rs"
 fi
 
 if command -v sheldon &> /dev/null; then
   eval "$(sheldon source)"
-else
-  MISSING_TOOLS[sheldon]="https://sheldon.cli.rs"
 fi
 
-command -v claude &> /dev/null || MISSING_TOOLS[claude]="https://docs.anthropic.com/en/docs/claude-code"
-
-# pacman
-command -v nvim &> /dev/null || MISSING_TOOLS[neovim]="pacman -S neovim"
-command -v jq &> /dev/null || MISSING_TOOLS[jq]="pacman -S jq"
-command -v notify-send &> /dev/null || MISSING_TOOLS[libnotify]="pacman -S libnotify"
-command -v alacritty &> /dev/null || MISSING_TOOLS[alacritty]="pacman -S alacritty"
-command -v wezterm &> /dev/null || MISSING_TOOLS[wezterm]="pacman -S wezterm"
-command -v nautilus &> /dev/null || MISSING_TOOLS[nautilus]="pacman -S nautilus"
-command -v grim &> /dev/null || MISSING_TOOLS[grim]="pacman -S grim"
-command -v slurp &> /dev/null || MISSING_TOOLS[slurp]="pacman -S slurp"
-command -v satty &> /dev/null || MISSING_TOOLS[satty]="pacman -S satty"
-command -v wl-copy &> /dev/null || MISSING_TOOLS[wl-clipboard]="pacman -S wl-clipboard"
-command -v websocat &> /dev/null || MISSING_TOOLS[websocat]="pacman -S websocat"
-
-# AUR
-command -v google-chrome-canary &> /dev/null || MISSING_TOOLS[google-chrome-canary]="paru -S google-chrome-canary"
-command -v wl-screenrec &> /dev/null || MISSING_TOOLS[wl-screenrec]="paru -S wl-screenrec"
-command -v lotion &> /dev/null || MISSING_TOOLS[lotion]="paru -S lotion-bin"
-
-# pip (asdf python)
-command -v gcalcli &> /dev/null || MISSING_TOOLS[gcalcli]="pip install gcalcli"
-
-if (( ${#MISSING_TOOLS[@]} > 0 )); then
-  echo "Missing tools:"
-  for tool url in ${(kv)MISSING_TOOLS}; do
-    echo "  $tool: $url"
-  done
-fi
+source ~/.config/zsh/check-tools.zsh
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
