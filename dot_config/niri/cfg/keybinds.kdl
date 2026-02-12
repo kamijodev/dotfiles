@@ -128,6 +128,9 @@ binds {
     // ─── Screen Recording ───
     Mod+M                               hotkey-overlay-title="Screen Recording: Toggle" { spawn-sh "pid=/tmp/wl-screenrec.pid; if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Saved' ~/Videos/Recordings/; else f=~/Videos/Recordings/$(date +%Y-%m-%d_%H:%M:%S).mp4 && wl-screenrec -g \"$(slurp)\" -f \"$f\" & echo $! > $pid && notify-send 'Recording Started' && (sleep 1200 && if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Auto-Stopped' '20min limit'; fi) & fi"; }
 
+    // ─── Clipboard History ───
+    Mod+Shift+V                         hotkey-overlay-title="Clipboard History" { spawn-sh "qs -c noctalia-shell ipc call launcher clipboard"; }
+
     // ─── Emergency Escape Key ───
     // Use this when a fullscreen app blocks your keybinds.
     // It disables any active keyboard shortcut inhibitor, restoring control.
