@@ -1,0 +1,10 @@
+#!/bin/sh
+win_width=$(niri msg -j focused-window | jq '.layout.tile_size[0]')
+out_width=$(niri msg -j focused-output | jq '.logical.width')
+ratio=$(python3 -c "print(${win_width} / ${out_width})")
+
+if python3 -c "exit(0 if ${ratio} > 0.9 else 1)"; then
+  niri msg action set-column-width "48%"
+else
+  niri msg action set-column-width "100%"
+fi

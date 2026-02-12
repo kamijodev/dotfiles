@@ -120,7 +120,7 @@ binds {
 
     // ─── Modes ───
     Mod+F                               { toggle-window-floating; }
-    Mod+R                               { fullscreen-window; }
+    Mod+R                               { spawn-sh "~/.local/bin/niri-toggle-maximize"; }
 
     // ─── Screenshots ───
     Mod+N                               hotkey-overlay-title="Screenshot: Region → Satty" { spawn-sh "f=~/Pictures/Screenshots/$(date +%Y-%m-%d_%H:%M:%S).png && grim -g \"$(slurp)\" \"$f\" && satty -f \"$f\""; }
