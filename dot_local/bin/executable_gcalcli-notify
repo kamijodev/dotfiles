@@ -30,4 +30,4 @@ else
 fi
 
 notify-send -u critical -a 'Google Calendar' -i appointment-soon "$title ${label}"
-pw-play --volume=0.4 ~/.local/share/sounds/custom/calendar-notify.mp3 &
+setsid pw-play --volume=0.15 ~/.local/share/sounds/custom/calendar-notify.mp3 &

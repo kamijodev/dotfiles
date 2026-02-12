@@ -3,5 +3,6 @@ Description=Google Calendar Reminder
 
 [Service]
 Type=oneshot
+KillMode=process
 Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus
 ExecStart=/home/emacs/.asdf/installs/python/3.14.3t/bin/gcalcli --calendar "(上條) HapInS" --calendar "f.kamijodev@gmail.com" remind 5 "/home/emacs/.local/bin/gcalcli-notify '%%s'"
