@@ -26,6 +26,13 @@ chezmoi cd                   # ソースディレクトリに移動
 - `private_` → パーミッション 0600
 - `executable_` → 実行権限付き
 
+## Package Restore
+
+```bash
+sudo pacman -S --needed - < pkglist-pacman.txt
+paru -S --needed - < pkglist-aur.txt
+```
+
 ## Docs
 
 詳細なドキュメントは [`~/docs/`](docs/) を参照。

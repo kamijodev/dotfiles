@@ -1,0 +1,7 @@
+asdf-vm
+google-chrome-canary
+lotion
+niri-git
+slack-desktop
+wezterm-git
+wl-screenrec
