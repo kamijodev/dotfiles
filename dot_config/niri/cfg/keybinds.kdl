@@ -10,9 +10,10 @@ binds {
 
     // ─── Applications ───
     Mod+Return                          hotkey-overlay-title="Open Terminal: Alacritty" { spawn "alacritty"; }
+    Mod+T                               hotkey-overlay-title="Open Terminal: WezTerm" { spawn "wezterm"; }
     Mod+CTRL+Return                     hotkey-overlay-title="Open App Launcher: noctalia launcher" { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
     Mod+Space                           hotkey-overlay-title="Open App Launcher" { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
-    Mod+B                               hotkey-overlay-title="Open Browser: firefox" { spawn "firefox"; }
+    Mod+B                               hotkey-overlay-title="Open Browser: Chrome Canary" { spawn "google-chrome-canary"; }
     Mod+ALT+L                           hotkey-overlay-title="Lock Screen: noctalia lock" { spawn-sh "qs -c noctalia-shell ipc call lockScreen lock"; }
     Mod+Shift+Q                        hotkey-overlay-title="Session Menu: noctalia sessionMenu" { spawn-sh "qs -c noctalia-shell ipc call sessionMenu toggle"; }
 
@@ -36,13 +37,13 @@ binds {
     // ─── Window Movement and Focus ───
     Mod+Q                               { close-window; }
 
-    // フォーカス移動
-    Mod+A                               { focus-column-left; }
-    Mod+D                               { focus-column-right; }
+    // フォーカス移動（端まで行ったら隣のモニターに移動）
+    Mod+A                               { focus-column-or-monitor-left; }
+    Mod+D                               { focus-column-or-monitor-right; }
     Mod+W                               { focus-workspace-up; }
     Mod+S                               { focus-workspace-down; }
-    Mod+Left                            { focus-column-left; }
-    Mod+Right                           { focus-column-right; }
+    Mod+Left                            { focus-column-or-monitor-left; }
+    Mod+Right                           { focus-column-or-monitor-right; }
     Mod+Up                              { focus-workspace-up; }
     Mod+Down                            { focus-workspace-down; }
 
@@ -118,13 +119,14 @@ binds {
     Mod+Shift+Equal                     { set-window-height "+10%"; }
 
     // ─── Modes ───
-    Mod+T                               { toggle-window-floating; }
-    Mod+F                               { fullscreen-window; }
+    Mod+F                               { toggle-window-floating; }
+    Mod+R                               { fullscreen-window; }
 
     // ─── Screenshots ───
-    CTRL+Shift+1                        { screenshot; }
-    CTRL+Shift+2                        { screenshot-screen; }
-    CTRL+Shift+3                        { screenshot-window; }
+    Mod+N                               hotkey-overlay-title="Screenshot: Region → Satty" { spawn-sh "f=~/Pictures/Screenshots/$(date +%Y-%m-%d_%H:%M:%S).png && grim -g \"$(slurp)\" \"$f\" && satty -f \"$f\""; }
+
+    // ─── Screen Recording ───
+    Mod+M                               hotkey-overlay-title="Screen Recording: Toggle" { spawn-sh "pid=/tmp/wl-screenrec.pid; if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Saved' ~/Videos/Recordings/; else f=~/Videos/Recordings/$(date +%Y-%m-%d_%H:%M:%S).mp4 && wl-screenrec -g \"$(slurp)\" -f \"$f\" & echo $! > $pid && notify-send 'Recording Started' && (sleep 1200 && if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Auto-Stopped' '20min limit'; fi) & fi"; }
 
     // ─── Emergency Escape Key ───
     // Use this when a fullscreen app blocks your keybinds.

@@ -1,0 +1,6 @@
+[Unit]
+Description=Google Calendar Reminder
+
+[Service]
+Type=oneshot
+ExecStart=/home/emacs/.asdf/installs/python/3.14.3t/bin/gcalcli --calendar "(上條) HapInS" --calendar "f.kamijodev@gmail.com" remind 5

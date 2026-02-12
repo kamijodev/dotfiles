@@ -1,0 +1,5 @@
+[general]
+output-filename = "~/Pictures/Screenshots/satty-%Y-%m-%d_%H:%M:%S.png"
+copy-command = "wl-copy"
+save-after-copy = true
+early-exit = true
