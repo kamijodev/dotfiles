@@ -1,0 +1,3 @@
+#!/bin/sh
+notify-send -u critical -a 'Google Calendar' -i appointment-soon "$1"
+pw-play ~/.local/share/sounds/custom/calendar-notify.mp3 &
