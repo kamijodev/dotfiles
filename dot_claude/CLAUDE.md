@@ -30,5 +30,18 @@ git push origin <branch>
 
 ```bash
 chezmoi add <変更したファイル>
-cd ~/.local/share/chezmoi && git add -A && git commit -m "<適切なメッセージ>" && git push
+cd ~/.local/share/chezmoi && git add -A && git commit -m "<適切なメッセージ>" && git push origin main
 ```
+
+### 環境変更時のドキュメント
+
+環境に変更を加えた場合（ツール導入、設定追加、ワークフロー構築など）、以下を必ず行う：
+
+1. **dotfiles**: 設定ファイルは `chezmoi add` で管理に追加
+2. **docs**: dotfilesだけでは再現できない手順（パッケージインストール、API設定、外部サービス連携など）を `~/.local/share/chezmoi/docs/` にMarkdownで残す
+3. **check-tools.zsh**: 新しいツールを追加した場合は `~/.config/zsh/check-tools.zsh` にチェックを追加
+4. **パッケージリスト**: pacman/AURでインストールした場合は以下で更新
+   ```bash
+   pacman -Qqen > ~/.local/share/chezmoi/pkglist-pacman.txt
+   pacman -Qqem > ~/.local/share/chezmoi/pkglist-aur.txt
+   ```
