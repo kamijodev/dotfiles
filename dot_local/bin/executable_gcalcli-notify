@@ -1,3 +1,33 @@
 #!/bin/sh
-notify-send -u critical -a 'Google Calendar' -i appointment-soon "$1"
-pw-play ~/.local/share/sounds/custom/calendar-notify.mp3 &
+# $1 = "3:34午後  test" のような形式
+time_part=$(echo "$1" | sed 's/^\s*//' | cut -d' ' -f1)
+title=$(echo "$1" | sed 's/^[^ ]*\s*//')
+
+# 12h → 24h 変換して残り分数を計算
+minutes_left=$(python3 -c "
+import re, sys
+from datetime import datetime
+s = '$time_part'
+m = re.match(r'(\d+):(\d+)(午前|午後)', s)
+if m:
+    h, mi, ap = int(m[1]), int(m[2]), m[3]
+    if ap == '午後' and h != 12: h += 12
+    if ap == '午前' and h == 12: h = 0
+    event = datetime.now().replace(hour=h, minute=mi, second=0, microsecond=0)
+    diff = int((event - datetime.now()).total_seconds() // 60)
+    if diff < 0: diff = 0
+    print(diff)
+else:
+    print(-1)
+")
+
+if [ "$minutes_left" = "0" ]; then
+    label="now"
+elif [ "$minutes_left" -gt 0 ] 2>/dev/null; then
+    label="@${minutes_left}m"
+else
+    label=""
+fi
+
+notify-send -u critical -a 'Google Calendar' -i appointment-soon "$title ${label}"
+pw-play --volume=0.4 ~/.local/share/sounds/custom/calendar-notify.mp3 &
