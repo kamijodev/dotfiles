@@ -1,16 +1,18 @@
 ---
-name: pr-review
-description: PRの差分をレビューし、問題点や改善点を指摘する。「PRレビューして」「このPRを確認して」等の指示があった場合に使用。
+name: review
+description: コードをレビューし、問題点や改善点を指摘する。「レビューして」「コードレビュー」「PRレビュー」「このコード確認して」等の指示があった場合に使用。
 ---
 
-# PR Review
+# Code Review
 
-Pull Requestの変更内容をレビューし、コードの問題点や改善点を指摘する。
+コードの問題点や改善点を指摘する。PRレビュー・コードレビューの両方に対応。
 
 ## ワークフロー
 
-1. 対象のPR/ブランチを確認
-2. `git diff` または `gh pr diff` で差分を取得
+1. レビュー対象を特定（指定ファイル、差分、PR等）
+2. 対象コードを取得
+   - PRの場合: `git diff` または `gh pr diff` で差分を取得
+   - ファイル指定の場合: 対象ファイルを読み込む
 3. 変更内容をレビュー
 4. 問題点・改善点をまとめて報告
 
@@ -66,10 +68,9 @@ Pull Requestの変更内容をレビューし、コードの問題点や改善�
 ## 使用例
 
 ```bash
-# 現在のブランチとmainの差分をレビュー
-gh pr diff | ...
-
-# 特定のPRをレビュー
-gh pr view <number> --json files,additions,deletions
+# PRをレビュー
 gh pr diff <number>
+
+# 現在のブランチの差分をレビュー
+git diff main...HEAD
 ```
