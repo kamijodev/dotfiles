@@ -195,10 +195,10 @@ return {
     },
     opts = {
       highlights = {
-        line_insert = "#1a2e1a",
-        line_delete = "#2e1a1a",
-        char_insert = "#2a4a2a",
-        char_delete = "#4a2a2a",
+        line_insert = "#0d1a0d",
+        line_delete = "#1a0d0d",
+        char_insert = "#1a2e1a",
+        char_delete = "#2e1a1a",
       },
     },
     config = function(_, opts)
