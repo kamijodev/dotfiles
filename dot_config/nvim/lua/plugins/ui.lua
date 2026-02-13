@@ -213,32 +213,6 @@ return {
           end
         end,
       })
-      -- カーソル移動でファイルのdiffを自動プレビュー
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = "codediff-explorer",
-        callback = function(ev)
-          local last_line = -1
-          local explorer_win = vim.fn.bufwinid(ev.buf)
-          vim.api.nvim_create_autocmd("CursorMoved", {
-            buffer = ev.buf,
-            callback = function()
-              local line = vim.api.nvim_win_get_cursor(0)[1]
-              if line == last_line then return end
-              last_line = line
-              local text = vim.api.nvim_buf_get_lines(ev.buf, line - 1, line, false)[1] or ""
-              if text:match("^  ") then
-                local cr = vim.api.nvim_replace_termcodes("<CR>", true, true, true)
-                vim.api.nvim_feedkeys(cr, "m", false)
-                vim.defer_fn(function()
-                  if vim.api.nvim_win_is_valid(explorer_win) then
-                    vim.api.nvim_set_current_win(explorer_win)
-                  end
-                end, 200)
-              end
-            end,
-          })
-        end,
-      })
       -- タブクローズ時に残留バッファを掃除
       vim.api.nvim_create_autocmd("TabClosed", {
         callback = function()
