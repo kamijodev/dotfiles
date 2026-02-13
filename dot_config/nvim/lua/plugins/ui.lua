@@ -193,7 +193,9 @@ return {
     keys = {
       { "<leader>g", "<cmd>CodeDiff<cr>", desc = "Git diff" },
     },
-    opts = {},
+    opts = {
+      explorer = { view_mode = "tree" },
+    },
     config = function(_, opts)
       require("codediff").setup(opts)
       -- diffハイライトを薄い色で上書き
