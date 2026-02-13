@@ -196,6 +196,7 @@ return {
     opts = {},
     config = function(_, opts)
       require("codediff").setup(opts)
+      -- カーソル移動でファイルのdiffを自動プレビュー
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "codediff-explorer",
         callback = function(ev)
@@ -213,6 +214,27 @@ return {
               end
             end,
           })
+        end,
+      })
+      -- タブクローズ時に残留バッファを掃除
+      vim.api.nvim_create_autocmd("TabClosed", {
+        callback = function()
+          vim.schedule(function()
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+              if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted then
+                local name = vim.api.nvim_buf_get_name(buf)
+                local ft = vim.bo[buf].filetype
+                if ft == "codediff-explorer" or name:match("^codediff://") then
+                  vim.api.nvim_buf_delete(buf, { force = true })
+                elseif name == "" and not vim.bo[buf].modified and vim.api.nvim_buf_line_count(buf) <= 1 then
+                  local lines = vim.api.nvim_buf_get_lines(buf, 0, 1, false)
+                  if #lines == 0 or lines[1] == "" then
+                    vim.api.nvim_buf_delete(buf, { force = true })
+                  end
+                end
+              end
+            end
+          end)
         end,
       })
     end,
@@ -253,7 +275,9 @@ return {
       tabpages = true,
       sidebar_filetypes = {
         NvimTree = true,
-      }
+      },
+      exclude_ft = { "codediff-explorer" },
+      exclude_name = { "codediff://*" },
     },
     lazy = false,
     keys = {
