@@ -191,9 +191,7 @@ return {
     dependencies = { "MunifTanjim/nui.nvim" },
     cmd = "CodeDiff",
     keys = {
-      { "<leader>gd", "<cmd>CodeDiff<cr>", desc = "Git diff (explorer)" },
-      { "<leader>gf", "<cmd>CodeDiff file HEAD<cr>", desc = "Git diff (current file vs HEAD)" },
-      { "<leader>gh", "<cmd>CodeDiff history<cr>", desc = "Git commit history" },
+      { "<leader>g", "<cmd>CodeDiff<cr>", desc = "Git diff" },
     },
     opts = {},
   },
