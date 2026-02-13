@@ -194,6 +194,28 @@ return {
       { "<leader>g", "<cmd>CodeDiff<cr>", desc = "Git diff" },
     },
     opts = {},
+    config = function(_, opts)
+      require("codediff").setup(opts)
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "codediff-explorer",
+        callback = function(ev)
+          local last_line = -1
+          vim.api.nvim_create_autocmd("CursorMoved", {
+            buffer = ev.buf,
+            callback = function()
+              local line = vim.api.nvim_win_get_cursor(0)[1]
+              if line == last_line then return end
+              last_line = line
+              local text = vim.api.nvim_buf_get_lines(ev.buf, line - 1, line, false)[1] or ""
+              if text:match("^  ") then
+                local cr = vim.api.nvim_replace_termcodes("<CR>", true, true, true)
+                vim.api.nvim_feedkeys(cr, "m", false)
+              end
+            end,
+          })
+        end,
+      })
+    end,
   },
   -- ミニマップ
   {
