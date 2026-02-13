@@ -193,7 +193,14 @@ return {
     keys = {
       { "<leader>g", "<cmd>CodeDiff<cr>", desc = "Git diff" },
     },
-    opts = {},
+    opts = {
+      highlights = {
+        line_insert = "#1a2e1a",
+        line_delete = "#2e1a1a",
+        char_insert = "#2a4a2a",
+        char_delete = "#4a2a2a",
+      },
+    },
     config = function(_, opts)
       require("codediff").setup(opts)
       -- カーソル移動でファイルのdiffを自動プレビュー
