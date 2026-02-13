@@ -215,6 +215,25 @@ return {
           end
         end,
       })
+      -- エクスプローラから直接ファイルを開いてcodediffを閉じる
+      vim.api.nvim_create_autocmd("FileType", {
+        pattern = "codediff-explorer",
+        callback = function(ev)
+          vim.keymap.set("n", "o", function()
+            local lifecycle = require("codediff.ui.lifecycle")
+            local tabpage = vim.api.nvim_get_current_tabpage()
+            local explorer = lifecycle.get_explorer(tabpage)
+            if not explorer or not explorer.tree then return end
+            local node = explorer.tree:get_node()
+            if not node or not node.data or not node.data.path then return end
+            local abs_path = explorer.git_root .. "/" .. node.data.path
+            vim.cmd("tabclose")
+            vim.schedule(function()
+              vim.cmd("edit " .. vim.fn.fnameescape(abs_path))
+            end)
+          end, { buffer = ev.buf, noremap = true, silent = true, desc = "ファイルを開いてcodediffを閉じる" })
+        end,
+      })
       -- タブクローズ時に残留バッファを掃除
       vim.api.nvim_create_autocmd("TabClosed", {
         callback = function()
