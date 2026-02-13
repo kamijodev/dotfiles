@@ -201,6 +201,7 @@ return {
         pattern = "codediff-explorer",
         callback = function(ev)
           local last_line = -1
+          local explorer_win = vim.fn.bufwinid(ev.buf)
           vim.api.nvim_create_autocmd("CursorMoved", {
             buffer = ev.buf,
             callback = function()
@@ -211,6 +212,11 @@ return {
               if text:match("^  ") then
                 local cr = vim.api.nvim_replace_termcodes("<CR>", true, true, true)
                 vim.api.nvim_feedkeys(cr, "m", false)
+                vim.defer_fn(function()
+                  if vim.api.nvim_win_is_valid(explorer_win) then
+                    vim.api.nvim_set_current_win(explorer_win)
+                  end
+                end, 200)
               end
             end,
           })
