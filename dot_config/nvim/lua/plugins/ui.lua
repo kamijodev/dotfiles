@@ -193,16 +193,26 @@ return {
     keys = {
       { "<leader>g", "<cmd>CodeDiff<cr>", desc = "Git diff" },
     },
-    opts = {
-      highlights = {
-        line_insert = "#0d1a0d",
-        line_delete = "#1a0d0d",
-        char_insert = "#1a2e1a",
-        char_delete = "#2e1a1a",
-      },
-    },
+    opts = {},
     config = function(_, opts)
       require("codediff").setup(opts)
+      -- diffハイライトを薄い色で上書き
+      local diff_hl = {
+        CodeDiffLineInsert = { bg = "#0d1a0d" },
+        CodeDiffLineDelete = { bg = "#1a0d0d" },
+        CodeDiffCharInsert = { bg = "#1a2e1a" },
+        CodeDiffCharDelete = { bg = "#2e1a1a" },
+      }
+      for name, val in pairs(diff_hl) do
+        vim.api.nvim_set_hl(0, name, val)
+      end
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        callback = function()
+          for name, val in pairs(diff_hl) do
+            vim.api.nvim_set_hl(0, name, val)
+          end
+        end,
+      })
       -- カーソル移動でファイルのdiffを自動プレビュー
       vim.api.nvim_create_autocmd("FileType", {
         pattern = "codediff-explorer",
