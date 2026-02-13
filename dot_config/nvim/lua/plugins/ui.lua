@@ -198,10 +198,10 @@ return {
       require("codediff").setup(opts)
       -- diffハイライトを薄い色で上書き
       local diff_hl = {
-        CodeDiffLineInsert = { bg = "#0d1a0d" },
-        CodeDiffLineDelete = { bg = "#1a0d0d" },
-        CodeDiffCharInsert = { bg = "#1a2e1a" },
-        CodeDiffCharDelete = { bg = "#2e1a1a" },
+        CodeDiffLineInsert = { bg = "#1a1d1a" },
+        CodeDiffLineDelete = { bg = "#1d1a1a" },
+        CodeDiffCharInsert = { bg = "#1e251e" },
+        CodeDiffCharDelete = { bg = "#251e1e" },
       }
       for name, val in pairs(diff_hl) do
         vim.api.nvim_set_hl(0, name, val)
