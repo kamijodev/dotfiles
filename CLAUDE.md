@@ -1,0 +1,36 @@
+# デスクトップ環境
+
+- **OS**: CachyOS (Arch系) / Kernel: linux-cachyos
+- **WM**: niri (Wayland スクロール型タイリング)
+- **Shell UI**: Noctalia Shell (バー・ランチャー・通知・クリップボード・ロック画面・壁紙を統合)
+- **Terminal**: WezTerm (メイン) / Alacritty (サブ)
+- **Shell**: zsh + starship + sheldon
+- **Editor**: Neovim (LazyVim)
+- **Browser**: Google Chrome Canary
+- **IME**: fcitx5 + Mozc (テーマ: Ori dark)
+- **Audio**: PipeWire + WirePlumber
+- **Font**: Hack Nerd Font / **Theme**: Gruvbox Material
+- **Dotfiles**: chezmoi管理
+- **ランタイム管理**: asdf
+- **パッケージ**: pacman + paru (AUR)
+
+## 主要キーバインド (Mod = Super)
+
+| キー | 動作 |
+|------|------|
+| Mod+Return | Alacritty |
+| Mod+T | WezTerm |
+| Mod+Space | アプリランチャー |
+| Mod+B | Chrome Canary |
+| Mod+E | Nautilus (フローティング) |
+| Mod+Q | ウィンドウを閉じる |
+| Mod+A/D | フォーカス左/右 |
+| Mod+W/S | ワークスペース上/下 |
+| Mod+H/L | ウィンドウ移動 左/右 |
+| Mod+K/J | ウィンドウ移動 上/下 |
+| Mod+F | フローティング切替 |
+| Mod+R | 最大化トグル |
+| Mod+N | スクリーンショット (grim+slurp+satty) |
+| Mod+M | 画面録画トグル (wl-screenrec) |
+| Mod+Shift+V | クリップボード履歴 |
+| Mod+O | オーバービュー |
