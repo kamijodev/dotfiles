@@ -50,6 +50,7 @@ dnsmasq
 docker
 docker-compose
 dosfstools
+downgrade
 duf
 e2fsprogs
 efibootmgr
@@ -148,6 +149,7 @@ pv
 python
 python-defusedxml
 python-packaging
+quickshell
 rebuild-detector
 reflector
 ripgrep
@@ -176,6 +178,7 @@ unzip
 upower
 usb_modeswitch
 usbutils
+vesktop
 vim
 vlc-plugins-all
 vulkan-radeon
