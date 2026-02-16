@@ -1,43 +1,59 @@
 #!/bin/sh
 # niriではwtypeが動作しないため、ydotoolで代替する
 # noctalia-shellのClipboardService.qmlから呼ばれる形式を変換:
-#   wtype -M ctrl -k v        → ydotool key ctrl+v
-#   wtype -M ctrl -M shift v  → ydotool key ctrl+shift+v
+#   wtype -M ctrl -k v        → Ctrl+V (キーコード: 29=ctrl, 47=v)
+#   wtype -M ctrl -M shift v  → Ctrl+Shift+V (キーコード: 29=ctrl, 42=shift, 47=v)
 
 sleep 0.15
 
-keys=""
+modifiers=""
+key=""
+
 while [ $# -gt 0 ]; do
     case "$1" in
         -M)
             shift
-            if [ -n "$keys" ]; then
-                keys="${keys}+${1}"
-            else
-                keys="$1"
-            fi
+            case "$1" in
+                ctrl)  modifiers="$modifiers 29" ;;
+                shift) modifiers="$modifiers 42" ;;
+                alt)   modifiers="$modifiers 56" ;;
+                super) modifiers="$modifiers 125" ;;
+            esac
             ;;
         -k)
             shift
-            if [ -n "$keys" ]; then
-                keys="${keys}+${1}"
-            else
-                keys="$1"
-            fi
+            key="$1"
             ;;
         -*)
-            ;; # 未対応オプションは無視
+            ;;
         *)
-            if [ -n "$keys" ]; then
-                keys="${keys}+${1}"
-            else
-                keys="$1"
-            fi
+            key="$1"
             ;;
     esac
     shift
 done
 
-if [ -n "$keys" ]; then
-    exec ydotool key "$keys"
+# キー名→キーコード変換
+keycode=""
+case "$key" in
+    v) keycode=47 ;;
+    c) keycode=46 ;;
+    x) keycode=45 ;;
+    a) keycode=30 ;;
+esac
+
+if [ -z "$keycode" ]; then
+    exit 1
 fi
+
+# press modifiers → press key → release key → release modifiers
+seq=""
+for m in $modifiers; do
+    seq="$seq ${m}:1"
+done
+seq="$seq ${keycode}:1 ${keycode}:0"
+for m in $(echo $modifiers | tr ' ' '\n' | tac); do
+    seq="$seq ${m}:0"
+done
+
+exec ydotool key $seq
