@@ -8,10 +8,10 @@ Managed by [chezmoi](https://www.chezmoi.io/).
 |---|---|
 | OS | [CachyOS](https://cachyos.org/) (Arch Linux ベース) |
 | Window Manager | [niri](https://github.com/YaLTeR/niri) (Wayland スクロール型タイリング WM) |
-| Shell | [Noctalia Shell](https://github.com/nicefacer/noctalia) (Quickshell ベースのデスクトップシェル) |
+| Desktop Shell | [Noctalia Shell](https://github.com/nicefacer/noctalia) (Quickshell ベースのデスクトップシェル) |
 | Input Method | fcitx5 (Mozc) |
 | Terminal | WezTerm |
-| Shell | Zsh |
+| Login Shell | Zsh |
 
 ## Setup
 
