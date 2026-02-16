@@ -38,6 +38,7 @@ cachyos-zsh-config
 cantarell-fonts
 chezmoi
 chwd
+cliphist
 cpupower
 cryptsetup
 device-mapper
@@ -180,8 +181,10 @@ which
 wireless-regdb
 wireplumber
 wpa_supplicant
+wtype
 xdg-user-dirs
 xf86-video-amdgpu
 xfsprogs
 xl2tpd
 yazi
+ydotool
