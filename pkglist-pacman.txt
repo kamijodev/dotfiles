@@ -6,6 +6,7 @@ alsa-plugins
 alsa-utils
 amd-ucode
 awesome-terminal-fonts
+aws-cli-v2
 base
 base-devel
 bash-completion
@@ -85,6 +86,7 @@ inetutils
 iptables-nft
 iwd
 jfsutils
+lazydocker
 less
 lib32-mesa
 lib32-opencl-mesa
@@ -118,6 +120,7 @@ nano-syntax-highlighting
 neovim
 netctl
 networkmanager
+networkmanager-l2tp
 networkmanager-openvpn
 nfs-utils
 nilfs-utils
@@ -157,6 +160,7 @@ slurp
 smartmontools
 snapper
 sof-firmware
+strongswan
 sudo
 sysfsutils
 texinfo

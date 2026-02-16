@@ -13,6 +13,7 @@ command -v slurp &> /dev/null || MISSING_TOOLS[slurp]="pacman -S slurp"
 command -v satty &> /dev/null || MISSING_TOOLS[satty]="pacman -S satty"
 command -v wl-copy &> /dev/null || MISSING_TOOLS[wl-clipboard]="pacman -S wl-clipboard"
 command -v websocat &> /dev/null || MISSING_TOOLS[websocat]="pacman -S websocat"
+command -v aws &> /dev/null || MISSING_TOOLS[aws-cli-v2]="pacman -S aws-cli-v2"
 
 # AUR
 command -v google-chrome-canary &> /dev/null || MISSING_TOOLS[google-chrome-canary]="paru -S google-chrome-canary"

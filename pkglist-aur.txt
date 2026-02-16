@@ -1,3 +1,4 @@
+1password
 asdf-vm
 fcitx5-skin-ori-git
 google-chrome-canary
