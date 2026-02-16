@@ -1,4 +1,5 @@
 asdf-vm
+fcitx5-skin-ori-git
 google-chrome-canary
 lotion
 niri-git
