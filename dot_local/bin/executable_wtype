@@ -1,0 +1,43 @@
+#!/bin/sh
+# niriではwtypeが動作しないため、ydotoolで代替する
+# noctalia-shellのClipboardService.qmlから呼ばれる形式を変換:
+#   wtype -M ctrl -k v        → ydotool key ctrl+v
+#   wtype -M ctrl -M shift v  → ydotool key ctrl+shift+v
+
+sleep 0.15
+
+keys=""
+while [ $# -gt 0 ]; do
+    case "$1" in
+        -M)
+            shift
+            if [ -n "$keys" ]; then
+                keys="${keys}+${1}"
+            else
+                keys="$1"
+            fi
+            ;;
+        -k)
+            shift
+            if [ -n "$keys" ]; then
+                keys="${keys}+${1}"
+            else
+                keys="$1"
+            fi
+            ;;
+        -*)
+            ;; # 未対応オプションは無視
+        *)
+            if [ -n "$keys" ]; then
+                keys="${keys}+${1}"
+            else
+                keys="$1"
+            fi
+            ;;
+    esac
+    shift
+done
+
+if [ -n "$keys" ]; then
+    exec ydotool key "$keys"
+fi

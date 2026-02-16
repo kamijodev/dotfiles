@@ -35,6 +35,8 @@ gcalcli --client-id=<クライアントID>.apps.googleusercontent.com --client-s
 |---------|------|
 | `~/.config/systemd/user/gcalcli-remind.service` | 通知実行サービス |
 | `~/.config/systemd/user/gcalcli-remind.timer` | 1分ごとの定期実行タイマー |
+| `~/.local/bin/gcalcli-remind` | agenda --nodeclined で辞退済みイベントを除外するリマインドスクリプト |
+| `~/.local/bin/gcalcli-notify` | デスクトップ通知＋サウンド再生スクリプト |
 
 ## 新規環境でのセットアップ
 
