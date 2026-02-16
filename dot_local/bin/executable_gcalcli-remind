@@ -1,0 +1,27 @@
+#!/bin/sh
+# gcalcli agenda --nodeclined で辞退済みイベントを除外してリマインド
+GCALCLI=/home/emacs/.asdf/installs/python/3.14.3t/bin/gcalcli
+NOTIFY=/home/emacs/.local/bin/gcalcli-notify
+MINUTES=5
+
+now=$(date '+%Y-%m-%dT%H:%M')
+end=$(date -d "+${MINUTES} minutes" '+%Y-%m-%dT%H:%M')
+
+$GCALCLI \
+  --calendar "(上條) HapInS" \
+  --calendar "f.kamijodev@gmail.com" \
+  agenda --tsv --nodeclined --nostarted "$now" "$end" 2>/dev/null |
+  tail -n +2 |
+  while IFS=$'\t' read -r _date start_time _edate _etime title; do
+    [ -z "$title" ] && continue
+    # gcalcli-notify が期待する "HH:MM午前/午後 title" 形式に変換
+    formatted=$(python3 -c "
+from datetime import datetime
+t = datetime.strptime('$start_time', '%H:%M')
+h = t.hour % 12
+if h == 0: h = 12
+ap = '午前' if t.hour < 12 else '午後'
+print(f'{h}:{t.minute:02d}{ap}')
+")
+    "$NOTIFY" "$formatted  $title"
+  done
