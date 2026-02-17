@@ -36,6 +36,10 @@
 | Mod+Shift+R | Noctalia Shell 再起動 |
 | Mod+O | オーバービュー |
 
+## Noctalia Shell プラグイン開発
+
+プラグインの作成・修正時は `~/.local/share/chezmoi/docs/noctalia-plugin-dev.md` を参照すること。
+
 ## カスタムサービス
 
 - **Google Calendar 通知**: gcalcli + systemd timer (1分毎) → `gcalcli-notify` で `notify-send -a 'Google Calendar'` + サウンド再生
