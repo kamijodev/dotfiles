@@ -1,17 +1,6 @@
 local wezterm = require("wezterm")
 local act = wezterm.action
 
-local paste_from_wayland = wezterm.action_callback(function(_, pane)
-  local handle = io.popen("wl-paste --no-newline 2>/dev/null")
-  if handle then
-    local text = handle:read("*a")
-    handle:close()
-    if text and #text > 0 then
-      pane:paste(text)
-    end
-  end
-end)
-
 -- Show which key table is active in the status area
 wezterm.on("update-right-status", function(window, pane)
   local name = window:active_key_table()
@@ -89,7 +78,7 @@ return {
     -- コピー
     { key = "c", mods = "SUPER", action = act.CopyTo("Clipboard") },
     -- 貼り付け（wl-paste で確実にクリップボードを取得）
-    { key = "v", mods = "SUPER", action = paste_from_wayland },
+    { key = "v", mods = "SUPER", action = act.PasteFrom("Clipboard") },
 
     -- Pane作成 leader + r or d
     { key = "d", mods = "LEADER|CTRL", action = act.SplitVertical({ domain = "CurrentPaneDomain" }) },
@@ -112,8 +101,8 @@ return {
     -- フォントサイズのリセット
     { key = "0", mods = "CTRL", action = act.ResetFontSize },
     -- クリップボード貼り付け（wl-paste で確実にクリップボードを取得）
-    { key = "v", mods = "CTRL", action = paste_from_wayland },
-    { key = "v", mods = "CTRL|SHIFT", action = paste_from_wayland },
+    { key = "v", mods = "CTRL", action = act.PasteFrom("Clipboard") },
+    { key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
 
     -- ついでに Ctrl+C でコピーも（任意）
     -- { key = "c", mods = "CTRL", action = act.CopyTo("Clipboard") },
