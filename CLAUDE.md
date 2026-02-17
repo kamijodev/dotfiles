@@ -33,4 +33,10 @@
 | Mod+N | スクリーンショット (grim+slurp+satty) |
 | Mod+M | 画面録画トグル (wl-screenrec) |
 | Mod+Shift+V | クリップボード履歴 |
+| Mod+Shift+R | Noctalia Shell 再起動 |
 | Mod+O | オーバービュー |
+
+## カスタムサービス
+
+- **Google Calendar 通知**: gcalcli + systemd timer (1分毎) → `gcalcli-notify` で `notify-send -a 'Google Calendar'` + サウンド再生
+- **gcal-reminder プラグイン**: Noctalia Shell プラグイン。Google Calendar 通知をキャプチャし手動で閉じるまで保持。@3m以内でフルスクリーンアラート表示（バーウィジェット + パネル）

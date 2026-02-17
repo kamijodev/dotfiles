@@ -4,6 +4,7 @@ Description=Google Calendar Reminder Timer
 [Timer]
 OnBootSec=1min
 OnUnitActiveSec=1min
+AccuracySec=1s
 
 [Install]
 WantedBy=timers.target

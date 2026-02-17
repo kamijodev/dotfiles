@@ -1,11 +1,11 @@
 {
-  "id": "sticky-notifications",
-  "name": "Sticky Notifications",
+  "id": "gcal-reminder",
+  "name": "Google Calendar Reminder",
   "version": "1.0.0",
   "minNoctaliaVersion": "4.0.0",
   "author": "emacs",
   "license": "MIT",
-  "description": "Notifications that persist until manually dismissed",
+  "description": "Google Calendar reminder with fullscreen alerts",
   "entryPoints": {
     "main": "Main.qml",
     "barWidget": "BarWidget.qml",
@@ -19,8 +19,8 @@
     "defaultSettings": {
       "notifications": [],
       "count": 0,
-      "filterMode": "all",
-      "filteredApps": ["Google Chrome Canary", "Google Chrome", "Chromium"],
+      "filterMode": "filter",
+      "filteredApps": ["Google Calendar"],
       "maxNotifications": 200
     }
   }

@@ -159,8 +159,8 @@ Item {
                         anchors.centerIn: parent
                         icon: "plus"
                         color: Color.mPrimary
-                        width: Style.fontSizeIconS
-                        height: Style.fontSizeIconS
+                        width: Style.fontSizeS
+                        height: Style.fontSizeS
                     }
 
                     MouseArea {
@@ -208,8 +208,8 @@ Item {
                             }
 
                             Rectangle {
-                                width: Style.fontSizeIconS + Style.marginS
-                                height: Style.fontSizeIconS + Style.marginS
+                                width: Style.fontSizeS + Style.marginS
+                                height: Style.fontSizeS + Style.marginS
                                 radius: Style.radiusS
                                 color: removeArea.containsMouse
                                     ? Qt.rgba(Color.mError.r, Color.mError.g, Color.mError.b, 0.2)
@@ -219,8 +219,8 @@ Item {
                                     anchors.centerIn: parent
                                     icon: "close"
                                     color: Color.mError
-                                    width: Style.fontSizeIconXS
-                                    height: Style.fontSizeIconXS
+                                    width: Style.fontSizeXS
+                                    height: Style.fontSizeXS
                                 }
 
                                 MouseArea {

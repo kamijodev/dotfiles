@@ -70,14 +70,14 @@ Item {
             spacing: Style.marginS
 
             NIcon {
-                icon: "bell"
+                icon: "calendar"
                 color: Color.mPrimary
                 Layout.preferredWidth: Style.fontSizeL
                 Layout.preferredHeight: Style.fontSizeL
             }
 
             NText {
-                text: "固定通知"
+                text: "予定"
                 color: Color.mOnSurface
                 pointSize: Style.fontSizeM
                 font.bold: true
@@ -153,7 +153,7 @@ Item {
                         spacing: Style.marginM
 
                         NIcon {
-                            icon: "bell"
+                            icon: "calendar"
                             color: Color.mOnSurfaceVariant
                             Layout.preferredWidth: Style.fontSizeXXL
                             Layout.preferredHeight: Style.fontSizeXXL
@@ -162,7 +162,7 @@ Item {
                         }
 
                         NText {
-                            text: "通知はありません"
+                            text: "予定はありません"
                             color: Color.mOnSurfaceVariant
                             pointSize: Style.fontSizeS
                             Layout.alignment: Qt.AlignHCenter

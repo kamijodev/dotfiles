@@ -39,7 +39,7 @@ Item {
             spacing: Style.marginS
 
             NIcon {
-                icon: "bell"
+                icon: "calendar"
                 color: root.notifCount > 0 ? Color.mPrimary : Color.mOnSurfaceVariant
                 Layout.preferredWidth: Style.fontSizeM
                 Layout.preferredHeight: Style.fontSizeM
