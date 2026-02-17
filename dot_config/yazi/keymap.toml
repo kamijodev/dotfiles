@@ -1,0 +1,19 @@
+[[mgr.prepend_keymap]]
+on   = "q"
+run  = "quit"
+desc = "Quit and cd to current directory"
+
+[[mgr.prepend_keymap]]
+on   = "Q"
+run  = "quit --no-cwd"
+desc = "Quit without cd"
+
+[[mgr.prepend_keymap]]
+on   = "n"
+run  = "create"
+desc = "Create a file"
+
+[[mgr.prepend_keymap]]
+on   = "N"
+run  = "create --dir"
+desc = "Create a directory"
