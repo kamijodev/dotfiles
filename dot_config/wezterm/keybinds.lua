@@ -102,6 +102,7 @@ return {
     { key = "0", mods = "CTRL", action = act.ResetFontSize },
     -- クリップボード貼り付け
     { key = "v", mods = "CTRL", action = act.PasteFrom("Clipboard") },
+    { key = "v", mods = "CTRL|SHIFT", action = act.PasteFrom("Clipboard") },
 
     -- ついでに Ctrl+C でコピーも（任意）
     -- { key = "c", mods = "CTRL", action = act.CopyTo("Clipboard") },
