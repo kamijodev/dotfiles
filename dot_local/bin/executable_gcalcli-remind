@@ -1,5 +1,6 @@
 #!/bin/sh
 # gcalcli agenda --nodeclined で辞退済みイベントを除外してリマインド
+/home/emacs/.local/bin/gcalcli-today &
 GCALCLI=/home/emacs/.asdf/installs/python/3.14.3t/bin/gcalcli
 NOTIFY=/home/emacs/.local/bin/gcalcli-notify
 MINUTES=5

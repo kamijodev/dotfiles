@@ -12,23 +12,15 @@ Item {
     property ShellScreen screen
 
     readonly property var geometryPlaceholder: panelContainer
-    property real contentPreferredWidth: 500 * Style.uiScaleRatio
+    property real contentPreferredWidth: 400 * Style.uiScaleRatio
     property real contentPreferredHeight: 600 * Style.uiScaleRatio
     readonly property bool allowAttach: true
 
     readonly property var mainInstance: pluginApi?.mainInstance
 
-    property var notifications: []
+    property var todayEvents: pluginApi?.pluginSettings?.todayEvents ?? []
 
     property int refreshTick: 0
-
-    Binding {
-        target: panelContainer
-        property: "notifications"
-        value: pluginApi?.pluginSettings?.notifications ?? []
-        when: pluginApi?.pluginSettings?.notifications !== undefined
-        restoreMode: Binding.RestoreNone
-    }
 
     Timer {
         running: true
@@ -37,27 +29,24 @@ Item {
         onTriggered: panelContainer.refreshTick++
     }
 
-    function timeAgo(timestamp) {
+    function isInProgress(ev) {
         void panelContainer.refreshTick;
-        var now = Date.now();
-        var diff = now - timestamp;
-        var seconds = Math.floor(diff / 1000);
-        var minutes = Math.floor(seconds / 60);
-        var hours = Math.floor(minutes / 60);
-        var days = Math.floor(hours / 24);
-
-        if (days > 0) return days + "日前";
-        if (hours > 0) return hours + "時間前";
-        if (minutes > 0) return minutes + "分前";
-        return "たった今";
+        var now = new Date();
+        var nowMin = now.getHours() * 60 + now.getMinutes();
+        var sp = ev.start.split(":");
+        var startMin = parseInt(sp[0]) * 60 + parseInt(sp[1]);
+        var ep = ev.end.split(":");
+        var endMin = ep.length === 2 ? parseInt(ep[0]) * 60 + parseInt(ep[1]) : startMin + 60;
+        return nowMin >= startMin && nowMin < endMin;
     }
 
-    function urgencyColor(urgency) {
-        switch (urgency) {
-            case 2: return Color.mError;
-            case 1: return Color.mPrimary;
-            default: return Color.mOnSurfaceVariant;
-        }
+    function isPast(ev) {
+        void panelContainer.refreshTick;
+        var now = new Date();
+        var nowMin = now.getHours() * 60 + now.getMinutes();
+        var ep = ev.end.split(":");
+        var endMin = ep.length === 2 ? parseInt(ep[0]) * 60 + parseInt(ep[1]) : 0;
+        return endMin > 0 && nowMin >= endMin;
     }
 
     ColumnLayout {
@@ -77,50 +66,17 @@ Item {
             }
 
             NText {
-                text: "予定"
+                text: "今日の予定"
                 color: Color.mOnSurface
                 pointSize: Style.fontSizeM
                 font.bold: true
                 Layout.fillWidth: true
             }
 
-            Rectangle {
-                visible: panelContainer.notifications.length > 0
-                width: clearRow.implicitWidth + Style.marginM * 2
-                height: clearRow.implicitHeight + Style.marginS * 2
-                radius: Style.iRadiusS
-                color: mouseAreaClear.containsMouse
-                    ? Qt.rgba(Color.mError.r, Color.mError.g, Color.mError.b, 0.2)
-                    : "transparent"
-
-                RowLayout {
-                    id: clearRow
-                    anchors.centerIn: parent
-                    spacing: Style.marginXS
-
-                    NIcon {
-                        icon: "delete"
-                        color: Color.mError
-                        Layout.preferredWidth: Style.fontSizeS
-                        Layout.preferredHeight: Style.fontSizeS
-                    }
-
-                    NText {
-                        text: "すべてクリア"
-                        color: Color.mError
-                        pointSize: Style.fontSizeXS
-                    }
-                }
-
-                MouseArea {
-                    id: mouseAreaClear
-                    anchors.fill: parent
-                    hoverEnabled: true
-                    cursorShape: Qt.PointingHandCursor
-                    onClicked: {
-                        if (mainInstance) mainInstance.dismissAll();
-                    }
-                }
+            NText {
+                text: panelContainer.todayEvents.length + "件"
+                color: Color.mOnSurfaceVariant
+                pointSize: Style.fontSizeXS
             }
         }
 
@@ -134,17 +90,17 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
             contentWidth: width
-            contentHeight: notifColumn.implicitHeight
+            contentHeight: eventColumn.implicitHeight
             clip: true
             boundsBehavior: Flickable.StopAtBounds
 
             Column {
-                id: notifColumn
+                id: eventColumn
                 width: parent.width
-                spacing: Style.marginS
+                spacing: Style.marginXS
 
                 Item {
-                    visible: panelContainer.notifications.length === 0
+                    visible: panelContainer.todayEvents.length === 0
                     width: parent.width
                     height: 200
 
@@ -171,100 +127,72 @@ Item {
                 }
 
                 Repeater {
-                    model: panelContainer.notifications
+                    model: panelContainer.todayEvents
 
                     Rectangle {
                         id: card
-                        width: notifColumn.width
-                        height: cardLayout.implicitHeight + Style.marginM * 2
-                        radius: Style.radiusM
-                        color: Style.capsuleColor
+                        width: eventColumn.width
+                        height: cardLayout.implicitHeight + Style.marginS * 2
+                        radius: Style.radiusS
+                        color: panelContainer.isInProgress(card.modelData)
+                            ? Qt.rgba(Color.mPrimary.r, Color.mPrimary.g, Color.mPrimary.b, 0.12)
+                            : "transparent"
+                        opacity: panelContainer.isPast(card.modelData) ? 0.45 : 1.0
 
                         required property var modelData
                         required property int index
 
-                        ColumnLayout {
+                        RowLayout {
                             id: cardLayout
                             anchors {
                                 left: parent.left
                                 right: parent.right
                                 verticalCenter: parent.verticalCenter
-                                margins: Style.marginM
+                                leftMargin: Style.marginS
+                                rightMargin: Style.marginS
                             }
-                            spacing: Style.marginXS
+                            spacing: Style.marginM
 
-                            RowLayout {
-                                Layout.fillWidth: true
-                                spacing: Style.marginS
+                            // Time column
+                            ColumnLayout {
+                                Layout.preferredWidth: 50
+                                spacing: 0
 
-                                Rectangle {
-                                    width: 8
-                                    height: 8
-                                    radius: 4
-                                    color: panelContainer.urgencyColor(card.modelData.urgency)
+                                NText {
+                                    text: card.modelData.start
+                                    pointSize: Style.fontSizeS
+                                    font.bold: panelContainer.isInProgress(card.modelData)
+                                    color: panelContainer.isInProgress(card.modelData)
+                                        ? Color.mPrimary : Color.mOnSurface
                                 }
 
                                 NText {
-                                    text: card.modelData.appName
+                                    text: card.modelData.end
                                     pointSize: Style.fontSizeXS
                                     color: Color.mOnSurfaceVariant
-                                }
-
-                                Item { Layout.fillWidth: true }
-
-                                NText {
-                                    text: panelContainer.timeAgo(card.modelData.timestamp)
-                                    pointSize: Style.fontSizeXS
-                                    color: Color.mOnSurfaceVariant
-                                }
-
-                                Rectangle {
-                                    width: Style.fontSizeM + Style.marginS
-                                    height: Style.fontSizeM + Style.marginS
-                                    radius: Style.iRadiusXS
-                                    color: dismissArea.containsMouse
-                                        ? Qt.rgba(Color.mOnSurface.r, Color.mOnSurface.g, Color.mOnSurface.b, 0.1)
-                                        : "transparent"
-
-                                    NIcon {
-                                        anchors.centerIn: parent
-                                        icon: "close"
-                                        color: Color.mOnSurfaceVariant
-                                        width: Style.fontSizeXS
-                                        height: Style.fontSizeXS
-                                    }
-
-                                    MouseArea {
-                                        id: dismissArea
-                                        anchors.fill: parent
-                                        hoverEnabled: true
-                                        cursorShape: Qt.PointingHandCursor
-                                        onClicked: {
-                                            if (mainInstance) mainInstance.dismissNotification(card.modelData.id);
-                                        }
-                                    }
                                 }
                             }
 
+                            // Divider
+                            Rectangle {
+                                Layout.preferredWidth: 3
+                                Layout.fillHeight: true
+                                Layout.topMargin: Style.marginXS
+                                Layout.bottomMargin: Style.marginXS
+                                radius: 1.5
+                                color: panelContainer.isInProgress(card.modelData)
+                                    ? Color.mPrimary : Color.mOutlineVariant
+                            }
+
+                            // Title
                             NText {
-                                visible: card.modelData.summary !== ""
-                                text: card.modelData.summary
+                                Layout.fillWidth: true
+                                text: card.modelData.title
                                 pointSize: Style.fontSizeS
-                                color: Color.mOnSurface
-                                font.bold: true
+                                font.bold: panelContainer.isInProgress(card.modelData)
+                                color: panelContainer.isInProgress(card.modelData)
+                                    ? Color.mPrimary : Color.mOnSurface
                                 wrapMode: Text.WordWrap
-                                Layout.fillWidth: true
-                            }
-
-                            NText {
-                                visible: card.modelData.body !== ""
-                                text: card.modelData.body
-                                pointSize: Style.fontSizeXS
-                                color: Color.mOnSurfaceVariant
-                                wrapMode: Text.WordWrap
-                                Layout.fillWidth: true
-                                maximumLineCount: 4
-                                elide: Text.ElideRight
                             }
                         }
                     }

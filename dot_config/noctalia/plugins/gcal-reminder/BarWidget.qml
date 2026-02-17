@@ -13,16 +13,62 @@ Item {
     property string widgetId: ""
     property string section: ""
 
-    readonly property int notifCount: {
-        var val = pluginApi?.pluginSettings?.count;
-        return (val !== undefined && val !== null) ? Number(val) : 0;
+    property int refreshTick: 0
+
+    Timer {
+        running: true
+        repeat: true
+        interval: 60000
+        onTriggered: root.refreshTick++
     }
 
-    readonly property string latestSummary: {
-        var notifs = pluginApi?.pluginSettings?.notifications;
-        if (!notifs || notifs.length === 0) return "";
-        var n = notifs[0];
-        return n.summary || n.body || "";
+    readonly property var todayEvents: pluginApi?.pluginSettings?.todayEvents ?? []
+
+    readonly property var displayEvent: {
+        void root.refreshTick;
+        var now = new Date();
+        var nowMin = now.getHours() * 60 + now.getMinutes();
+        var currentEvent = null;
+        var nextEvent = null;
+        var nextDiff = Infinity;
+
+        for (var i = 0; i < todayEvents.length; i++) {
+            var ev = todayEvents[i];
+            if (ev.title === "稼働") continue;
+            var sp = ev.start.split(":");
+            var startMin = parseInt(sp[0]) * 60 + parseInt(sp[1]);
+            var ep = ev.end.split(":");
+            var endMin = ep.length === 2 ? parseInt(ep[0]) * 60 + parseInt(ep[1]) : startMin + 60;
+
+            if (nowMin >= startMin && nowMin < endMin) {
+                currentEvent = ev;
+            }
+            if (startMin > nowMin && startMin - nowMin < nextDiff) {
+                nextDiff = startMin - nowMin;
+                nextEvent = ev;
+            }
+        }
+        return currentEvent || nextEvent;
+    }
+
+    readonly property bool isCurrentlyInProgress: {
+        void root.refreshTick;
+        if (!displayEvent) return false;
+        var now = new Date();
+        var nowMin = now.getHours() * 60 + now.getMinutes();
+        var sp = displayEvent.start.split(":");
+        var startMin = parseInt(sp[0]) * 60 + parseInt(sp[1]);
+        var ep = displayEvent.end.split(":");
+        var endMin = ep.length === 2 ? parseInt(ep[0]) * 60 + parseInt(ep[1]) : startMin + 60;
+        return nowMin >= startMin && nowMin < endMin;
+    }
+
+    readonly property string displayText: {
+        if (!displayEvent) return "";
+        if (isCurrentlyInProgress) {
+            return displayEvent.title + " (〜" + displayEvent.end + ")";
+        }
+        return displayEvent.start + " " + displayEvent.title;
     }
 
     implicitWidth: row.implicitWidth + Style.marginM * 2
@@ -40,25 +86,18 @@ Item {
 
             NIcon {
                 icon: "calendar"
-                color: root.notifCount > 0 ? Color.mPrimary : Color.mOnSurfaceVariant
+                color: root.displayEvent ? Color.mPrimary : Color.mOnSurfaceVariant
                 Layout.preferredWidth: Style.fontSizeM
                 Layout.preferredHeight: Style.fontSizeM
             }
 
             NText {
-                visible: root.notifCount > 0
-                text: root.notifCount.toString()
-                color: Color.mPrimary
-                pointSize: Style.fontSizeS
-            }
-
-            NText {
-                visible: root.latestSummary !== ""
-                text: root.latestSummary
-                color: Color.mOnSurfaceVariant
+                visible: root.displayText !== ""
+                text: root.displayText
+                color: root.isCurrentlyInProgress ? Color.mPrimary : Color.mOnSurfaceVariant
                 pointSize: Style.fontSizeXS
                 elide: Text.ElideRight
-                Layout.maximumWidth: 200 * Style.uiScaleRatio
+                Layout.maximumWidth: 250 * Style.uiScaleRatio
             }
         }
     }

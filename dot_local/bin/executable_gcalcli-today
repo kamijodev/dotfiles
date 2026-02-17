@@ -1,0 +1,26 @@
+#!/bin/bash
+OUTPUT="/tmp/gcal-today-events.json"
+GCALCLI=/home/emacs/.asdf/installs/python/3.14.3t/bin/gcalcli
+PYTHON=/home/emacs/.asdf/installs/python/3.14.3t/bin/python3
+
+$GCALCLI \
+  --calendar "(上條) HapInS" \
+  --calendar "f.kamijodev@gmail.com" \
+  agenda "today" "tomorrow" --nodeclined --military --tsv 2>/dev/null | \
+$PYTHON -c "
+import sys, json
+
+seen = set()
+events = []
+for i, line in enumerate(sys.stdin):
+    if i == 0: continue
+    parts = line.rstrip().split('\t')
+    if len(parts) < 5: continue
+    sd, st, ed, et, title = parts[:5]
+    if not st or title in ('Busy',): continue
+    key = (st, et, title)
+    if key in seen: continue
+    seen.add(key)
+    events.append({'title': title, 'start': st, 'end': et})
+print(json.dumps(events))
+" > "$OUTPUT"

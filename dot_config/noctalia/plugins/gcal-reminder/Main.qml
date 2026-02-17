@@ -22,6 +22,9 @@ Item {
     // Suppressed event titles (no more fullscreen alerts for these)
     property var suppressedEvents: []
 
+    // Today's calendar events
+    property var todayEvents: []
+
     readonly property int count: rawNotifications.length
 
     Timer {
@@ -37,6 +40,26 @@ Item {
         Qt.callLater(function() {
             lastHistoryCount = NotificationService.historyList.count;
         });
+        Qt.callLater(loadTodayEvents);
+    }
+
+    function loadTodayEvents() {
+        var content = todayFile.text();
+        if (content) {
+            try {
+                root.todayEvents = JSON.parse(content);
+                pluginApi.pluginSettings.todayEvents = root.todayEvents;
+                pluginApi.saveSettings();
+            } catch (e) {}
+        }
+    }
+
+    FileView {
+        id: todayFile
+        path: "/tmp/gcal-today-events.json"
+        watchChanges: true
+        preload: true
+        onFileChanged: root.loadTodayEvents()
     }
 
     function initSettings() {
