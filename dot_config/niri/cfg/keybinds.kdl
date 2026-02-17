@@ -19,7 +19,7 @@ binds {
 
     // Please choose your own file manager.
     Mod+E                               hotkey-overlay-title="File Manager: Nautilus" { spawn "nautilus"; }
-    Mod+M                               hotkey-overlay-title="Daily Memo" { spawn "wezterm" "start" "--" "memo"; }
+    Mod+M                               hotkey-overlay-title="Daily Memo" { spawn "wezterm" "start" "--" "/home/emacs/.local/bin/memo"; }
 
     // ─── Media Controls ───
     XF86AudioRaiseVolume                allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call volume increase"; }
