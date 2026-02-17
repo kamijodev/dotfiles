@@ -100,7 +100,8 @@ return {
     { key = "-", mods = "CTRL", action = act.DecreaseFontSize },
     -- フォントサイズのリセット
     { key = "0", mods = "CTRL", action = act.ResetFontSize },
-    -- クリップボード貼り付けは Super+V を使用（Ctrl+V はターミナルアプリに渡す）
+    -- クリップボード貼り付け
+    { key = "v", mods = "CTRL", action = act.PasteFrom("Clipboard") },
 
     -- ついでに Ctrl+C でコピーも（任意）
     -- { key = "c", mods = "CTRL", action = act.CopyTo("Clipboard") },
