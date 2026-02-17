@@ -54,6 +54,14 @@ return {
     },
   },
   {
+    "kamijodev/daily-memo.nvim",
+    cmd = "DailyMemo",
+    keys = {
+      { "<leader>m", "<cmd>DailyMemo<cr>", desc = "Daily Memo" },
+    },
+    opts = {},
+  },
+  {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "InsertEnter",
