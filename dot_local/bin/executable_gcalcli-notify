@@ -3,9 +3,9 @@
 time_part=$(echo "$1" | sed 's/^\s*//' | cut -d' ' -f1)
 title=$(echo "$1" | sed 's/^[^ ]*\s*//')
 
-# 12h → 24h 変換して残り分数を計算
-minutes_left=$(python3 -c "
-import re, sys
+# 12h → 24h 変換して残り分数と開始時刻(HH:MM)を計算
+eval "$(python3 -c "
+import re
 from datetime import datetime
 s = '$time_part'
 m = re.match(r'(\d+):(\d+)(午前|午後)', s)
@@ -16,18 +16,23 @@ if m:
     event = datetime.now().replace(hour=h, minute=mi, second=0, microsecond=0)
     diff = int((event - datetime.now()).total_seconds() // 60)
     if diff < 0: diff = 0
-    print(diff)
+    print(f'minutes_left={diff}')
+    print(f'start_time={h}:{mi:02d}')
 else:
-    print(-1)
-")
+    print('minutes_left=-1')
+    print('start_time=')
+")"
 
 if [ "$minutes_left" = "0" ]; then
     label="now"
 elif [ "$minutes_left" -gt 0 ] 2>/dev/null; then
-    label="@${minutes_left}m"
+    case "$minutes_left" in
+        15|10|5|3|1) label="@${minutes_left}m" ;;
+        *) exit 0 ;;
+    esac
 else
     label=""
 fi
 
-notify-send -u critical -a 'Google Calendar' -i appointment-soon "$title ${label}"
+notify-send -u critical -a 'Google Calendar' -i appointment-soon "$title ${label} ~${start_time}"
 setsid pw-play --volume=0.15 ~/.local/share/sounds/custom/calendar-notify.mp3 &

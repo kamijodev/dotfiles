@@ -98,10 +98,9 @@ Item {
     function isUrgent(summary) {
         var text = summary.toLowerCase();
         if (text.indexOf("now") !== -1) return true;
-        if (text.indexOf("@0m") !== -1) return true;
         if (text.indexOf("@1m") !== -1) return true;
-        if (text.indexOf("@2m") !== -1) return true;
         if (text.indexOf("@3m") !== -1) return true;
+        if (text.indexOf("@5m") !== -1) return true;
         return false;
     }
 
@@ -222,22 +221,15 @@ Item {
     }
 
     function getStartTime(summary) {
-        var match = summary.match(/@(\d+)m/i);
-        var start;
+        var match = summary.match(/~(\d+:\d{2})/);
         if (match) {
-            start = new Date(Date.now() + parseInt(match[1]) * 60000);
-        } else if (summary.toLowerCase().indexOf("now") !== -1) {
-            start = new Date();
-        } else {
-            return "";
+            return match[1] + " 開始";
         }
-        var h = start.getHours();
-        var m = start.getMinutes();
-        return h + ":" + (m < 10 ? "0" + m : m) + " 開始";
+        return "";
     }
 
     function extractTitle(summary) {
-        return summary.replace(/\s*@\d+m\s*|\s*now\s*/gi, "").trim();
+        return summary.replace(/\s*@\d+m\s*|\s*now\s*|\s*~\d+:\d{2}\s*/gi, "").trim();
     }
 
     // Fullscreen urgent alert
