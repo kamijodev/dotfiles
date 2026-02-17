@@ -54,7 +54,7 @@ return {
     },
   },
   {
-    "kamijodev/daily-memo.nvim",
+    url = "git@github.com:kamijodev/daily-memo.nvim.git",
     cmd = "DailyMemo",
     keys = {
       { "<leader>m", "<cmd>DailyMemo<cr>", desc = "Daily Memo" },
