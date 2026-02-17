@@ -19,7 +19,7 @@ binds {
 
     // Please choose your own file manager.
     Mod+E                               hotkey-overlay-title="File Manager: Nautilus" { spawn "nautilus"; }
-    Mod+Shift+N                         hotkey-overlay-title="Daily Memo" { spawn "alacritty" "-e" "memo"; }
+    Mod+M                               hotkey-overlay-title="Daily Memo" { spawn "wezterm" "start" "--" "memo"; }
 
     // ─── Media Controls ───
     XF86AudioRaiseVolume                allow-when-locked=true { spawn-sh "qs -c noctalia-shell ipc call volume increase"; }
@@ -127,7 +127,7 @@ binds {
     Mod+N                               hotkey-overlay-title="Screenshot: Region → Satty" { spawn-sh "f=~/Pictures/Screenshots/$(date +%Y-%m-%d_%H:%M:%S).png && grim -g \"$(slurp)\" \"$f\" && satty -f \"$f\""; }
 
     // ─── Screen Recording ───
-    Mod+M                               hotkey-overlay-title="Screen Recording: Toggle" { spawn-sh "pid=/tmp/wl-screenrec.pid; if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Saved' ~/Videos/Recordings/; else f=~/Videos/Recordings/$(date +%Y-%m-%d_%H:%M:%S).mp4; wl-screenrec -g \"$(slurp)\" -f \"$f\" & echo $! > $pid; notify-send 'Recording Started'; (sleep 1200 && if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Auto-Stopped' '20min limit'; fi) & fi"; }
+    Mod+Shift+N                         hotkey-overlay-title="Screen Recording: Toggle" { spawn-sh "pid=/tmp/wl-screenrec.pid; if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Saved' ~/Videos/Recordings/; else f=~/Videos/Recordings/$(date +%Y-%m-%d_%H:%M:%S).mp4; wl-screenrec -g \"$(slurp)\" -f \"$f\" & echo $! > $pid; notify-send 'Recording Started'; (sleep 1200 && if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Auto-Stopped' '20min limit'; fi) & fi"; }
 
     // ─── Clipboard History ───
     Mod+Shift+V                         hotkey-overlay-title="Clipboard History" { spawn-sh "qs -c noctalia-shell ipc call launcher clipboard"; }
