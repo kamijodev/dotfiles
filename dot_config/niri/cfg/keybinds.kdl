@@ -48,8 +48,8 @@ binds {
     Mod+Down                            { focus-workspace-down; }
 
     // ウィンドウ移動 (HJKL)
-    Mod+H                               { move-column-left; }
-    Mod+L                               { move-column-right; }
+    Mod+H                               { move-column-left-or-to-monitor-left; }
+    Mod+L                               { move-column-right-or-to-monitor-right; }
     Mod+K                               { move-column-to-workspace-up; }
     Mod+J                               { move-column-to-workspace-down; }
     Mod+CTRL+Left                       { move-column-left; }
@@ -126,10 +126,13 @@ binds {
     Mod+N                               hotkey-overlay-title="Screenshot: Region → Satty" { spawn-sh "f=~/Pictures/Screenshots/$(date +%Y-%m-%d_%H:%M:%S).png && grim -g \"$(slurp)\" \"$f\" && satty -f \"$f\""; }
 
     // ─── Screen Recording ───
-    Mod+M                               hotkey-overlay-title="Screen Recording: Toggle" { spawn-sh "pid=/tmp/wl-screenrec.pid; if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Saved' ~/Videos/Recordings/; else f=~/Videos/Recordings/$(date +%Y-%m-%d_%H:%M:%S).mp4 && wl-screenrec -g \"$(slurp)\" -f \"$f\" & echo $! > $pid && notify-send 'Recording Started' && (sleep 1200 && if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Auto-Stopped' '20min limit'; fi) & fi"; }
+    Mod+M                               hotkey-overlay-title="Screen Recording: Toggle" { spawn-sh "pid=/tmp/wl-screenrec.pid; if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Saved' ~/Videos/Recordings/; else f=~/Videos/Recordings/$(date +%Y-%m-%d_%H:%M:%S).mp4; wl-screenrec -g \"$(slurp)\" -f \"$f\" & echo $! > $pid; notify-send 'Recording Started'; (sleep 1200 && if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Auto-Stopped' '20min limit'; fi) & fi"; }
 
     // ─── Clipboard History ───
     Mod+Shift+V                         hotkey-overlay-title="Clipboard History" { spawn-sh "qs -c noctalia-shell ipc call launcher clipboard"; }
+
+    // ─── Noctalia Shell ───
+    Mod+Shift+R                         hotkey-overlay-title="Restart Noctalia Shell" { spawn-sh "pkill -x qs; sleep 1; exec qs -c noctalia-shell"; }
 
     // ─── Emergency Escape Key ───
     // Use this when a fullscreen app blocks your keybinds.

@@ -44,6 +44,7 @@ cpupower
 cryptsetup
 device-mapper
 diffutils
+discord
 dmidecode
 dmraid
 dnsmasq
