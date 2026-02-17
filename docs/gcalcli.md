@@ -34,9 +34,10 @@ gcalcli --client-id=<クライアントID>.apps.googleusercontent.com --client-s
 | ファイル | 役割 |
 |---------|------|
 | `~/.config/systemd/user/gcalcli-remind.service` | 通知実行サービス |
-| `~/.config/systemd/user/gcalcli-remind.timer` | 1分ごとの定期実行タイマー |
-| `~/.local/bin/gcalcli-remind` | agenda --nodeclined で辞退済みイベントを除外するリマインドスクリプト |
+| `~/.config/systemd/user/gcalcli-remind.timer` | 1分ごとの定期実行タイマー（AccuracySec=1s） |
+| `~/.local/bin/gcalcli-remind` | リマインド通知 + gcalcli-today を毎分呼び出し |
 | `~/.local/bin/gcalcli-notify` | デスクトップ通知＋サウンド再生スクリプト |
+| `~/.local/bin/gcalcli-today` | 今日の予定をJSON出力 → `/tmp/gcal-today-events.json` |
 
 ## 新規環境でのセットアップ
 
@@ -53,8 +54,21 @@ systemctl --user enable --now gcalcli-remind.timer
 
 ## 通知対象カレンダー
 
-`gcalcli-remind.service` の `ExecStart` で `--calendar` オプションにより指定。
-変更する場合は `gcalcli list` で一覧を確認し、サービスファイルを編集する。
+`gcalcli-remind` と `gcalcli-today` で `--calendar` オプションにより指定。
+現在の対象: `(上條) HapInS`, `f.kamijodev@gmail.com`
+変更する場合は `gcalcli list` で一覧を確認し、両スクリプトを編集する。
+
+## データフロー
+
+```
+gcalcli-remind.timer (1分毎)
+  └→ gcalcli-remind
+       ├→ gcalcli-notify (5分以内の予定を通知)
+       └→ gcalcli-today (今日の全予定を /tmp/gcal-today-events.json に出力)
+            └→ Noctalia FileView が検知 → バー/パネル更新
+```
+
+除外対象: `Busy`（データから除外）、`稼働`（バー表示のみ除外、パネルには表示）
 
 ## gcal-reminder プラグイン（Noctalia Shell）
 
@@ -62,10 +76,12 @@ Google Calendar 通知を Noctalia Shell 上で永続表示するカスタムプ
 
 ### 機能
 
-- `appName: "Google Calendar"` の通知のみキャプチャし、手動で閉じるまで保持
-- バーウィジェット: カレンダーアイコン + 通知数 + 最新の通知概要を表示
-- パネル: 通知一覧の閲覧・個別/一括削除
-- フルスクリーンアラート: 開始3分前（@3m〜@0m, now）に全画面でイベント名と開始時刻を表示
+- **バーウィジェット**: 進行中または次の予定を表示（`稼働`は除外）
+  - 進行中: `タイトル (〜HH:MM)`
+  - 次の予定: `HH:MM タイトル`
+- **パネル**: 今日の全予定を時系列表示（進行中ハイライト、終了済み半透明）
+- **通知キャプチャ**: `appName: "Google Calendar"` の通知のみキャプチャし手動で閉じるまで保持
+- **フルスクリーンアラート**: 開始3分前（@3m〜@0m, now）に全画面でイベント名と開始時刻を表示
   - 「閉じる」: アラートを閉じるが、次の通知（@2m→@1m→now）で再表示
   - 「以降非表示」: 同イベントのアラートをすべて抑制し通知も削除
 
@@ -74,9 +90,9 @@ Google Calendar 通知を Noctalia Shell 上で永続表示するカスタムプ
 | ファイル | 役割 |
 |---------|------|
 | `~/.config/noctalia/plugins/gcal-reminder/manifest.json` | プラグイン定義 |
-| `~/.config/noctalia/plugins/gcal-reminder/Main.qml` | 通知キャプチャ + フルスクリーンアラート |
-| `~/.config/noctalia/plugins/gcal-reminder/BarWidget.qml` | バーウィジェット |
-| `~/.config/noctalia/plugins/gcal-reminder/Panel.qml` | 通知一覧パネル |
+| `~/.config/noctalia/plugins/gcal-reminder/Main.qml` | 通知キャプチャ + FileView監視 + フルスクリーンアラート |
+| `~/.config/noctalia/plugins/gcal-reminder/BarWidget.qml` | 進行中/次の予定を表示 |
+| `~/.config/noctalia/plugins/gcal-reminder/Panel.qml` | 今日の予定一覧 |
 | `~/.config/noctalia/plugins/gcal-reminder/Settings.qml` | フィルター設定UI |
 | `~/.config/noctalia/plugins.json` | プラグイン有効/無効管理 |
 
