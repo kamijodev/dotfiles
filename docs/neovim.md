@@ -12,7 +12,7 @@ codediff.nvim の詳細は [neovim-codediff.md](neovim-codediff.md) を参照。
 | `~/.config/nvim/lua/config/options.lua` | エディタオプション |
 | `~/.config/nvim/lua/config/keymaps.lua` | カスタムキーマップ |
 | `~/.config/nvim/lua/config/lazy.lua` | Lazy.nvim ブートストラップ |
-| `~/.config/nvim/lua/plugins/editor.lua` | Treesitter, Claude Code, Copilot |
+| `~/.config/nvim/lua/plugins/editor.lua` | Treesitter, Claude Code, Daily Memo, Copilot |
 | `~/.config/nvim/lua/plugins/lsp.lua` | LSP 設定 |
 | `~/.config/nvim/lua/plugins/search.lua` | Telescope, grug-far |
 | `~/.config/nvim/lua/plugins/ui.lua` | UI・ビジュアル系プラグイン |
@@ -61,6 +61,11 @@ codediff.nvim の詳細は [neovim-codediff.md](neovim-codediff.md) を参照。
 | Leader+ab | バッファを追加 |
 | Leader+as | 選択テキスト送信 / ファイルツリーから追加 |
 | Leader+aa / ad | 差分を承認 / 拒否 |
+
+**daily-memo.nvim** — 日別メモ (`kamijodev/daily-memo.nvim`)
+- `Leader+m` で今日のメモ (`~/.local/share/daily-memo/YYYY/MM/DD.md`) を開く
+- シェルからは `memo` コマンドでも起動可
+- Git 同期はプラグイン内蔵機能を無効化し、systemd timer (`daily-memo-sync.timer`) で5分間隔のバックグラウンド同期に移行
 
 **Copilot** — AI コード補完
 - オートトリガー有効、Tab で Accept、Ctrl+] で Dismiss
