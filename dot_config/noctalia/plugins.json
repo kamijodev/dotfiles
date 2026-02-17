@@ -8,8 +8,7 @@
     ],
     "states": {
         "gcal-reminder": {
-            "enabled": true,
-            "sourceUrl": "https://github.com/noctalia-dev/noctalia-plugins"
+            "enabled": true
         },
         "todo": {
             "enabled": true,

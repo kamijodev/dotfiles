@@ -4,7 +4,7 @@ import QtQuick.Controls
 import qs.Commons
 import qs.Widgets
 
-Item {
+ColumnLayout {
     id: root
 
     property var pluginApi: null
@@ -22,10 +22,7 @@ Item {
         pluginApi.saveSettings();
     }
 
-    ColumnLayout {
-        anchors.fill: parent
-        anchors.margins: Style.marginM
-        spacing: Style.marginL
+    spacing: Style.marginL
 
         // Filter mode
         ColumnLayout {
