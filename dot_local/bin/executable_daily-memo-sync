@@ -1,0 +1,14 @@
+#!/bin/bash
+MEMO_DIR="$HOME/.local/share/daily-memo"
+
+cd "$MEMO_DIR" || exit 0
+
+# gitリポジトリでなければ終了
+[ -d .git ] || exit 0
+
+# 差分がなければ終了
+git diff --quiet && git diff --cached --quiet && [ -z "$(git ls-files --others --exclude-standard)" ] && exit 0
+
+git add -A
+git commit -m "$(date +%Y-%m-%d)"
+git push origin main

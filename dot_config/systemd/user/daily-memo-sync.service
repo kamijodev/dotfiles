@@ -1,0 +1,6 @@
+[Unit]
+Description=Daily Memo Git Sync
+
+[Service]
+Type=oneshot
+ExecStart=/home/emacs/.local/bin/daily-memo-sync

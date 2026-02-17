@@ -59,7 +59,7 @@ return {
     keys = {
       { "<leader>m", "<cmd>DailyMemo<cr>", desc = "Daily Memo" },
     },
-    opts = {},
+    opts = { git = { enabled = false } },
   },
   {
     "zbirenbaum/copilot.lua",
