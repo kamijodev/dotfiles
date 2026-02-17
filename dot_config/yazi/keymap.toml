@@ -9,6 +9,11 @@ run  = "quit --no-cwd"
 desc = "Quit without cd"
 
 [[mgr.prepend_keymap]]
+on   = "<Enter>"
+run  = ["enter", "quit"]
+desc = "Enter directory and cd quit"
+
+[[mgr.prepend_keymap]]
 on   = "m"
 run  = "plugin bookmarks save"
 desc = "Save bookmark"
