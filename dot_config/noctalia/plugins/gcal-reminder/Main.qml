@@ -31,7 +31,10 @@ Item {
         running: true
         repeat: true
         interval: 60000
-        onTriggered: root.refreshTick++
+        onTriggered: {
+            root.refreshTick++;
+            todayFile.reload();
+        }
     }
 
     Component.onCompleted: {
@@ -40,7 +43,6 @@ Item {
         Qt.callLater(function() {
             lastHistoryCount = NotificationService.historyList.count;
         });
-        Qt.callLater(loadTodayEvents);
     }
 
     function loadTodayEvents() {
@@ -59,7 +61,8 @@ Item {
         path: "/tmp/gcal-today-events.json"
         watchChanges: true
         preload: true
-        onFileChanged: root.loadTodayEvents()
+        onFileChanged: todayFile.reload()
+        onLoaded: root.loadTodayEvents()
     }
 
     function initSettings() {

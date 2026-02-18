@@ -40,7 +40,7 @@ cd ~/.local/share/chezmoi && git add -A && git commit -m "<適切なメッセー
 1. **dotfiles**: 設定ファイルは `chezmoi add` で管理に追加
 2. **docs**: 変更内容を `~/.local/share/chezmoi/docs/` にMarkdownで残す。dotfilesだけで再現できるものでも、何をなぜやったか・構成の全体像・変更方法がわかるように書く
 3. **check-tools.zsh**: 新しいツールを追加した場合は `~/.config/zsh/check-tools.zsh` にチェックを追加
-4. **パッケージリスト**: pacman/AURでインストールした場合は以下で更新
+4. **パッケージリスト**: dotfilesリポジトリに `git push` する際は、必ず事前にパッケージリストを更新してコミットに含める
    ```bash
    pacman -Qqen > ~/.local/share/chezmoi/pkglist-pacman.txt
    pacman -Qqem > ~/.local/share/chezmoi/pkglist-aur.txt

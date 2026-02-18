@@ -121,6 +121,7 @@ nano
 nano-syntax-highlighting
 neovim
 netctl
+network-manager-applet
 networkmanager
 networkmanager-l2tp
 networkmanager-openvpn

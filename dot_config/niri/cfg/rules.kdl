@@ -6,6 +6,7 @@
     window-rule {
         match app-id="org.gnome.Nautilus"
         open-floating true
+        opacity 0.7
     }
 
     window-rule {

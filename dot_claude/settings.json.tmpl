@@ -1,5 +1,9 @@
 {
-  "permissions":{
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
+  "permissions": {
     "allow": [
       "Bash",
       "ExitPlanMode",
@@ -20,24 +24,27 @@
       "tone": "professional"
     }
   },
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  },
   "hooks": {
     "Stop": [
       {
         "hooks": [
-          { "type": "command", "command": "~/.claude/hooks/notify-stop.sh" }
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify-stop.sh"
+          }
         ]
       }
     ],
     "PermissionRequest": [
       {
         "hooks": [
-          { "type": "command", "command": "~/.claude/hooks/notify.sh 'Claude Code' '許可が必要です'" }
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/notify.sh 'Claude Code' '許可が必要です'"
+          }
         ]
       }
     ]
-  }
+  },
+  "language": "Japanese"
 }
