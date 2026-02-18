@@ -68,7 +68,19 @@ return {
       "nvim-tree/nvim-web-devicons",
     },
     ft = { "markdown" },
-    opts = {},
+    config = function()
+      require("render-markdown").setup({})
+      local function set_heading_bgs()
+        vim.api.nvim_set_hl(0, "RenderMarkdownH1Bg", { bg = "#3c2020" }) -- 赤系
+        vim.api.nvim_set_hl(0, "RenderMarkdownH2Bg", { bg = "#3c2818" }) -- オレンジ系
+        vim.api.nvim_set_hl(0, "RenderMarkdownH3Bg", { bg = "#3c3020" }) -- 黄系
+        vim.api.nvim_set_hl(0, "RenderMarkdownH4Bg", { bg = "#283020" }) -- 緑系
+        vim.api.nvim_set_hl(0, "RenderMarkdownH5Bg", { bg = "#203030" }) -- アクア系
+        vim.api.nvim_set_hl(0, "RenderMarkdownH6Bg", { bg = "#302830" }) -- 紫系
+      end
+      set_heading_bgs()
+      vim.api.nvim_create_autocmd("ColorScheme", { callback = set_heading_bgs })
+    end,
   },
   {
     "rachartier/tiny-devicons-auto-colors.nvim",
