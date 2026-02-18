@@ -12,6 +12,10 @@ git push
 git push origin <branch>
 ```
 
+## Pull Request
+
+PRの作成時は必ず `pr-create` スキルを使用する。
+
 ## コードコメント
 
 コメントにはコードの「目的」や「理由」のみを書く。以下のようなPR説明・変更履歴に該当する情報はコメントに含めない：
