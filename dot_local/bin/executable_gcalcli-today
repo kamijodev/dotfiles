@@ -3,10 +3,20 @@ OUTPUT="/tmp/gcal-today-events.json"
 GCALCLI=/home/emacs/.asdf/installs/python/3.14.3t/bin/gcalcli
 PYTHON=/home/emacs/.asdf/installs/python/3.14.3t/bin/python3
 
+TMPFILE=$(mktemp)
+ERRFILE=$(mktemp)
+trap 'rm -f "$TMPFILE" "$ERRFILE"' EXIT
+
 $GCALCLI \
   --calendar "(上條) HapInS" \
   --calendar "f.kamijodev@gmail.com" \
-  agenda "today" "tomorrow" --nodeclined --military --tsv 2>/dev/null | \
+  agenda "today" "tomorrow" --nodeclined --military --tsv >"$TMPFILE" 2>"$ERRFILE"
+
+if grep -q "invalid_grant\|Token has been expired\|RefreshError" "$ERRFILE"; then
+    echo '{"error":"auth_expired"}' > "$OUTPUT"
+    exit 1
+fi
+
 $PYTHON -c "
 import sys, json
 
@@ -23,4 +33,4 @@ for i, line in enumerate(sys.stdin):
     seen.add(key)
     events.append({'title': title, 'start': st, 'end': et})
 print(json.dumps(events))
-" > "$OUTPUT"
+" < "$TMPFILE" > "$OUTPUT"

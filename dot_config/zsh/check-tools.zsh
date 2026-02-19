@@ -19,6 +19,7 @@ command -v aws &> /dev/null || MISSING_TOOLS[aws-cli-v2]="pacman -S aws-cli-v2"
 command -v google-chrome-canary &> /dev/null || MISSING_TOOLS[google-chrome-canary]="paru -S google-chrome-canary"
 command -v wl-screenrec &> /dev/null || MISSING_TOOLS[wl-screenrec]="paru -S wl-screenrec"
 command -v lotion &> /dev/null || MISSING_TOOLS[lotion]="paru -S lotion-bin"
+command -v nordvpn &> /dev/null || MISSING_TOOLS[nordvpn]="paru -S nordvpn-gui-bin"
 
 # pip (asdf python)
 command -v gcalcli &> /dev/null || MISSING_TOOLS[gcalcli]="pip install gcalcli"

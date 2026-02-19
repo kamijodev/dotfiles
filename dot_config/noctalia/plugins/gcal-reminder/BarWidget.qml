@@ -23,6 +23,7 @@ Item {
     }
 
     readonly property var todayEvents: pluginApi?.pluginSettings?.todayEvents ?? []
+    readonly property bool authError: pluginApi?.pluginSettings?.authError ?? false
 
     readonly property var displayEvent: {
         void root.refreshTick;
@@ -85,16 +86,16 @@ Item {
             spacing: Style.marginS
 
             NIcon {
-                icon: "calendar"
-                color: root.displayEvent ? Color.mPrimary : Color.mOnSurfaceVariant
+                icon: root.authError ? "alert-circle" : "calendar"
+                color: root.authError ? Color.mError : (root.displayEvent ? Color.mPrimary : Color.mOnSurfaceVariant)
                 Layout.preferredWidth: Style.fontSizeM
                 Layout.preferredHeight: Style.fontSizeM
             }
 
             NText {
-                visible: root.displayText !== ""
-                text: root.displayText
-                color: root.isCurrentlyInProgress ? Color.mPrimary : Color.mOnSurfaceVariant
+                visible: root.authError || root.displayText !== ""
+                text: root.authError ? "認証切れ" : root.displayText
+                color: root.authError ? Color.mError : (root.isCurrentlyInProgress ? Color.mPrimary : Color.mOnSurfaceVariant)
                 pointSize: Style.fontSizeXS
                 elide: Text.ElideRight
                 Layout.maximumWidth: 250 * Style.uiScaleRatio

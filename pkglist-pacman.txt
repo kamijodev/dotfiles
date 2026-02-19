@@ -197,3 +197,4 @@ xfsprogs
 xl2tpd
 yazi
 ydotool
+zip

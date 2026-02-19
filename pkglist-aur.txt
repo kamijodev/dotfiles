@@ -4,6 +4,7 @@ fcitx5-skin-ori-git
 google-chrome-canary
 lotion
 niri-git
+nordvpn-gui-bin
 slack-desktop
 wezterm-git
 wl-screenrec

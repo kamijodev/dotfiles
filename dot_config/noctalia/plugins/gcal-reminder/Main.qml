@@ -24,6 +24,7 @@ Item {
 
     // Today's calendar events
     property var todayEvents: []
+    property bool authError: false
 
     readonly property int count: rawNotifications.length
 
@@ -49,8 +50,16 @@ Item {
         var content = todayFile.text();
         if (content) {
             try {
-                root.todayEvents = JSON.parse(content);
+                var data = JSON.parse(content);
+                if (Array.isArray(data)) {
+                    root.todayEvents = data;
+                    root.authError = false;
+                } else if (data.error === "auth_expired") {
+                    root.todayEvents = [];
+                    root.authError = true;
+                }
                 pluginApi.pluginSettings.todayEvents = root.todayEvents;
+                pluginApi.pluginSettings.authError = root.authError;
                 pluginApi.saveSettings();
             } catch (e) {}
         }

@@ -1,0 +1,16 @@
+{
+    "id": "top-clock",
+    "name": "Top Clock",
+    "version": "1.0.0",
+    "minNoctaliaVersion": "4.0.0",
+    "author": "emacs",
+    "license": "MIT",
+    "description": "画面上部のパディング領域に現在時刻を表示",
+    "entryPoints": {
+        "main": "Main.qml"
+    },
+    "dependencies": { "plugins": [] },
+    "metadata": {
+        "defaultSettings": {}
+    }
+}
