@@ -36,6 +36,12 @@
 | Mod+Shift+R | Noctalia Shell 再起動 |
 | Mod+O | オーバービュー |
 
+## スクリーンショット
+
+- **保存先**: `~/Pictures/Screenshots/`
+- **ファイル名**: `YYYY-MM-DD_HH:MM:SS.png` (satty編集後は `satty-` プレフィックス付き)
+- **ツール**: grim (撮影) + slurp (範囲選択) + satty (編集)
+
 ## Noctalia Shell プラグイン開発
 
 プラグインの作成・修正時は `~/.local/share/chezmoi/docs/noctalia-plugin-dev.md` を参照すること。

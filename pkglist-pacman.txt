@@ -151,7 +151,6 @@ pv
 python
 python-defusedxml
 python-packaging
-quickshell
 rebuild-detector
 reflector
 ripgrep

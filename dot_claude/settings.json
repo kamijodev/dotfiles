@@ -14,7 +14,10 @@
       "Write",
       "Update",
       "Edit",
-      "Plugin:*"
+      "Plugin:*",
+      "Read",
+      "Glob",
+      "Grep"
     ],
     "deny": [],
     "defaults": {
@@ -46,5 +49,8 @@
       }
     ]
   },
-  "language": "Japanese"
+  "language": "Japanese",
+  "enabledPlugins": {
+    "rust-analyzer-lsp@claude-plugins-official": true
+  }
 }

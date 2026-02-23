@@ -3,6 +3,7 @@ asdf-vm
 fcitx5-skin-ori-git
 google-chrome-canary
 lotion
+maplemono-nf
 niri-git
 nordvpn-gui-bin
 slack-desktop
