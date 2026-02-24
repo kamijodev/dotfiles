@@ -36,7 +36,30 @@ function ws() {
   done
 }
 
-alias sysmy='sysz -u'
+function sysmy() {
+  local units=()
+  for f in ~/.config/systemd/user/*.{service,timer}(N); do
+    units+=(${f:t:r})
+  done
+  local query=$(printf '%s\n' "${(u)units[@]}" | paste -sd'|')
+  systemctl --user list-units --all --no-legend --no-pager \
+    | awk '{print $1}' \
+    | grep -E "^(${query})\." \
+    | fzf --multi --ansi --prompt="My Units: " \
+        --preview="SYSTEMD_COLORS=1 systemctl --user status --no-pager {}" \
+        --preview-window=70% \
+    | while read -r unit; do
+        local cmd
+        cmd=$(printf '%s\n' status restart start stop enable disable journal cat edit \
+          | fzf --no-multi --prompt="Command: " \
+              --preview="SYSTEMD_COLORS=1 systemctl --user status --no-pager $unit" \
+              --preview-window=70%) || return
+        case $cmd in
+          journal) journalctl --user -xeu "$unit" ;;
+          *) systemctl --user "$cmd" "$unit" ;;
+        esac
+      done
+}
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
