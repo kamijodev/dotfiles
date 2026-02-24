@@ -22,6 +22,22 @@ function y() {
   rm -f -- "$tmp"
 }
 
+function ws() {
+  local ws_root="$HOME/Workspace"
+  local org repo
+
+  local fzf_opts=(--height=~50% --reverse --no-info --disabled --bind='j:down,k:up,l:accept,h:abort')
+
+  while true; do
+    org=$(ls "$ws_root" | fzf "${fzf_opts[@]}" --prompt="Workspace > ") || return
+    repo=$(ls "$ws_root/$org" | fzf "${fzf_opts[@]}" --prompt="$org > ") || continue
+    builtin cd "$ws_root/$org/$repo"
+    return
+  done
+}
+
+alias sysmy='sysz daily-memo gcalcli mochimochi'
+
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
