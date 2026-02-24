@@ -1,0 +1,10 @@
+[Unit]
+Description=もちもちAIトピックス publish
+After=docker.service
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/Workspace/kamijodev/ai-voice-generator
+ExecStartPre=/usr/bin/docker compose up -d
+ExecStart=%h/Workspace/kamijodev/ai-voice-generator/scripts/publish.sh
+TimeoutStartSec=900
