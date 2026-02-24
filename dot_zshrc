@@ -36,7 +36,7 @@ function ws() {
   done
 }
 
-alias sysmy='sysz daily-memo gcalcli mochimochi'
+alias sysmy='sysz -u'
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
