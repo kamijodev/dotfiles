@@ -42,8 +42,9 @@ function sysmy() {
     units+=(${f:t:r})
   done
   local query=$(printf '%s\n' "${(u)units[@]}" | paste -sd'|')
-  systemctl --user list-units --all --no-legend --no-pager \
-    | awk '{print $1}' \
+  { systemctl --user list-units --all --no-legend --no-pager | awk '{print $1}'; \
+    systemctl --user list-unit-files --no-legend --no-pager | awk '{print $1}' } \
+    | sort -u \
     | grep -E "^(${query})\." \
     | fzf --multi --ansi --prompt="My Units: " \
         --preview="SYSTEMD_COLORS=1 systemctl --user status --no-pager {}" \
