@@ -47,9 +47,62 @@ if lotion:
   exec /usr/bin/lotion --remote-debugging-port=$LOTION_DEBUG_PORT "$url"
 }
 
+open_in_slack() {
+  local url="$1"
+  local SLACK_CONFIG="$HOME/.config/Slack/storage/root-state.json"
+
+  # ドメインからチームIDを解決
+  resolve_team_id() {
+    local domain="$1"
+    python3 -c "
+import json, sys
+with open('$SLACK_CONFIG') as f:
+    data = json.load(f)
+for tid, ws in data.get('workspaces', {}).items():
+    if ws.get('domain') == sys.argv[1]:
+        print(tid)
+        break
+" "$domain" 2>/dev/null
+  }
+
+  local deep_link
+
+  # https://WORKSPACE.slack.com/archives/CHANNEL/pTIMESTAMP
+  if [[ "$url" =~ ^https://([^.]+)\.slack\.com/archives/([^/]+)(/p([0-9]+))? ]]; then
+    local domain="${BASH_REMATCH[1]}"
+    local channel="${BASH_REMATCH[2]}"
+    local ts_raw="${BASH_REMATCH[4]}"
+    local team_id
+    team_id=$(resolve_team_id "$domain")
+
+    if [ -n "$team_id" ]; then
+      deep_link="slack://channel?team=${team_id}&id=${channel}"
+      if [ -n "$ts_raw" ]; then
+        # p1771472545064259 → 1771472545.064259
+        local ts="${ts_raw:0:10}.${ts_raw:10}"
+        deep_link="${deep_link}&message=${ts}"
+      fi
+    fi
+
+  # https://app.slack.com/client/TEAM/CHANNEL
+  elif [[ "$url" =~ ^https://(app\.)?slack\.com/(client|huddle)/([^/]+)/([^/?]+) ]]; then
+    deep_link="slack://channel?team=${BASH_REMATCH[3]}&id=${BASH_REMATCH[4]}"
+  fi
+
+  # フォールバック
+  if [ -z "$deep_link" ]; then
+    deep_link="slack://open"
+  fi
+
+  exec /usr/bin/slack -- "$deep_link"
+}
+
 case "$URL" in
   https://www.notion.so/* | https://notion.so/*)
     open_in_lotion "$URL"
+    ;;
+  https://app.slack.com/* | https://*.slack.com/*)
+    open_in_slack "$URL"
     ;;
   *)
     exec /usr/bin/google-chrome-canary "$URL"

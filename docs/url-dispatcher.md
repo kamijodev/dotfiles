@@ -27,7 +27,12 @@ sudo pacman -S websocat   # WebSocket CLIクライアント（CDP通信に使用
 2. `notion.so` のURL → Lotionへ振り分け
    - Lotion起動中: CDP (port 19222) 経由で既存タブにナビゲーション + niriでウィンドウフォーカス
    - Lotion未起動: `--remote-debugging-port=19222` 付きで新規起動
-3. それ以外のURL → Google Chrome Canary で開く
+3. `*.slack.com` のURL → Slackデスクトップアプリへ振り分け
+   - `WORKSPACE.slack.com/archives/CHANNEL/pTIMESTAMP` → `slack://channel?team=TEAM&id=CHANNEL&message=TS` に変換
+   - `app.slack.com/client/TEAM/CHANNEL` → `slack://channel?team=TEAM&id=CHANNEL` に変換
+   - ドメイン→チームIDの解決は `~/.config/Slack/storage/root-state.json` を参照
+   - その他のSlack URL → `slack://open` でアプリを前面に
+4. それ以外のURL → Google Chrome Canary で開く
 
 ## 新規環境でのセットアップ
 
@@ -48,10 +53,9 @@ case "$URL" in
   https://www.notion.so/* | https://notion.so/*)
     open_in_lotion "$URL"
     ;;
-  # 例: Slack のリンクを Slack アプリで開く
-  # https://app.slack.com/*)
-  #   open_in_slack "$URL"
-  #   ;;
+  https://app.slack.com/* | https://*.slack.com/*)
+    open_in_slack "$URL"
+    ;;
   *)
     exec /usr/bin/google-chrome-canary "$URL"
     ;;
