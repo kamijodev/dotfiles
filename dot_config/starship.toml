@@ -4,6 +4,7 @@ $memory_usage\
 $python
 $directory\
 $git_branch\
+${custom.git_worktree}\
 $git_status\
 """
 
@@ -27,3 +28,9 @@ threshold = 0
 
 [python]
 format = "[$virtualenv](fg:#d8a657)"
+
+[custom.git_worktree]
+command = "basename $(git rev-parse --show-toplevel)"
+when = """t=$(git rev-parse --show-toplevel 2>/dev/null) && c=$(cd "$t" && realpath "$(git rev-parse --git-common-dir)") && [ "$t" != "${c%/.git}" ]"""
+format = "[@$output](fg:#d3869b) "
+shell = ["bash", "--nologin"]

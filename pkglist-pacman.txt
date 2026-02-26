@@ -81,6 +81,7 @@ gst-plugin-pipewire
 gst-plugin-va
 gst-plugins-bad
 gst-plugins-ugly
+haruna
 hdparm
 hwdetect
 hwinfo
