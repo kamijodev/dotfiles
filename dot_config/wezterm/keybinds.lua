@@ -85,11 +85,15 @@ return {
     { key = "v", mods = "LEADER|CTRL", action = act.SplitHorizontal({ domain = "CurrentPaneDomain" }) },
     -- Paneを閉じる leader + x
     { key = "/", mods = "LEADER|CTRL", action = act({ CloseCurrentPane = { confirm = true } }) },
-    -- Pane移動 leader + hlkj
+    -- Pane移動 leader + hlkj / Super+Shift+hjkl
     { key = "h", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Left") },
     { key = "l", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Right") },
     { key = "k", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Up") },
     { key = "j", mods = "LEADER|CTRL", action = act.ActivatePaneDirection("Down") },
+    { key = "h", mods = "SUPER|SHIFT", action = act.ActivatePaneDirection("Left") },
+    { key = "l", mods = "SUPER|SHIFT", action = act.ActivatePaneDirection("Right") },
+    { key = "k", mods = "SUPER|SHIFT", action = act.ActivatePaneDirection("Up") },
+    { key = "j", mods = "SUPER|SHIFT", action = act.ActivatePaneDirection("Down") },
     -- Pane選択
     { key = "[", mods = "CTRL|SHIFT", action = act.PaneSelect },
     -- 選択中のPaneのみ表示
@@ -107,9 +111,15 @@ return {
     -- ついでに Ctrl+C でコピーも（任意）
     -- { key = "c", mods = "CTRL", action = act.CopyTo("Clipboard") },
 
+    -- Paneサイズ調整 (Ctrl+矢印)
+    { key = "LeftArrow", mods = "CTRL", action = act.AdjustPaneSize({ "Left", 5 }) },
+    { key = "RightArrow", mods = "CTRL", action = act.AdjustPaneSize({ "Right", 5 }) },
+    { key = "UpArrow", mods = "CTRL", action = act.AdjustPaneSize({ "Up", 5 }) },
+    { key = "DownArrow", mods = "CTRL", action = act.AdjustPaneSize({ "Down", 5 }) },
+
     -- スクロール
-    { key = "j", mods = "ALT", action = act.ScrollByLine(2) },
-    { key = "k", mods = "ALT", action = act.ScrollByLine(-2) },
+    { key = "j", mods = "CTRL", action = act.ScrollByLine(2) },
+    { key = "k", mods = "CTRL", action = act.ScrollByLine(-2) },
 
     -- コマンドパレット
     { key = "p", mods = "SHIFT|CTRL", action = act.ActivateCommandPalette },
