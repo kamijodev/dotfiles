@@ -29,6 +29,8 @@ local groups = {
       { key = "<C-w><C-/>", action = "<C-w>q" },
       { key = ">", action = ">>" },
       { key = "<", action = "<<" },
+      { key = "X", action = "\"_D" },
+      { key = "gc", action = "gcc", opts = { remap = true } },
     }
   },
   {
