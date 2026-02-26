@@ -10,6 +10,8 @@ Item {
     property string currentTime: ""
     property bool vpnConnected: false
     property bool cameraEnabled: false
+    property bool recording: false
+    property int recordingSeconds: 0
 
     Timer {
         running: true
@@ -71,6 +73,48 @@ Item {
             ? ["sudo", "modprobe", "-r", "uvcvideo"]
             : ["sudo", "modprobe", "uvcvideo"]
         onExited: cameraCheck.running = true
+    }
+
+    property bool _recordingFound: false
+
+    Process {
+        id: recordingCheck
+        command: ["sh", "-c", "[ -f /tmp/wl-screenrec.pid ] && kill -0 $(cat /tmp/wl-screenrec.pid) 2>/dev/null && echo recording"]
+        stdout: SplitParser {
+            onRead: data => {
+                if (data === "recording") {
+                    root._recordingFound = true;
+                }
+            }
+        }
+        onRunningChanged: {
+            if (running) {
+                root._recordingFound = false;
+            } else {
+                root.recording = root._recordingFound;
+            }
+        }
+    }
+
+    Timer {
+        running: root.recording
+        repeat: true
+        interval: 1000
+        onTriggered: root.recordingSeconds += 1
+    }
+
+    Timer {
+        running: true
+        repeat: true
+        interval: 2000
+        onTriggered: recordingCheck.running = true
+        Component.onCompleted: recordingCheck.running = true
+    }
+
+    onRecordingChanged: {
+        if (!recording) {
+            recordingSeconds = 0;
+        }
     }
 
     Component.onCompleted: {
@@ -210,6 +254,40 @@ Item {
                         font.weight: Font.DemiBold
                         color: Color.mPrimary
                         anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Row {
+                        visible: root.recording
+                        spacing: Style.marginXS
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        Rectangle {
+                            width: 8
+                            height: 8
+                            radius: 4
+                            color: Color.mError
+                            anchors.verticalCenter: parent.verticalCenter
+
+                            SequentialAnimation on opacity {
+                                running: root.recording
+                                loops: Animation.Infinite
+                                NumberAnimation { to: 0.3; duration: 800; easing.type: Easing.InOutQuad }
+                                NumberAnimation { to: 1.0; duration: 800; easing.type: Easing.InOutQuad }
+                            }
+                        }
+
+                        Text {
+                            text: {
+                                var m = Math.floor(root.recordingSeconds / 60);
+                                var s = root.recordingSeconds % 60;
+                                return "REC " + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
+                            }
+                            font.family: "Maple Mono NF"
+                            font.pixelSize: Style.fontSizeS
+                            font.weight: Font.DemiBold
+                            color: Color.mError
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
                     }
                 }
             }

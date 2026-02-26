@@ -9,7 +9,7 @@ binds {
     Mod+Shift+ESCAPE                     { show-hotkey-overlay; }
 
     // ─── Applications ───
-    Mod+Return                          hotkey-overlay-title="Open Terminal: Alacritty" { spawn "alacritty"; }
+    // Mod+Return                          hotkey-overlay-title="Open Terminal: Alacritty" { spawn "alacritty"; }
     Mod+T                               hotkey-overlay-title="Open Terminal: WezTerm" { spawn "wezterm"; }
     Mod+CTRL+Return                     hotkey-overlay-title="Open App Launcher: noctalia launcher" { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
     Mod+Space                           hotkey-overlay-title="Open App Launcher" { spawn-sh "qs -c noctalia-shell ipc call launcher toggle"; }
@@ -43,8 +43,8 @@ binds {
     Mod+D                               { focus-column-or-monitor-right; }
     Mod+W                               { focus-workspace-up; }
     Mod+S                               { focus-workspace-down; }
-    Mod+Left                            { focus-column-or-monitor-left; }
-    Mod+Right                           { focus-column-or-monitor-right; }
+    Mod+Left                            { set-column-width "-10%"; }
+    Mod+Right                           { set-column-width "+10%"; }
     Mod+Up                              { focus-workspace-up; }
     Mod+Down                            { focus-workspace-down; }
 
@@ -127,7 +127,7 @@ binds {
     Mod+N                               hotkey-overlay-title="Screenshot: Region → Satty" { spawn-sh "f=~/Pictures/Screenshots/$(date +%Y-%m-%d_%H:%M:%S).png && grim -g \"$(slurp)\" \"$f\" && satty -f \"$f\""; }
 
     // ─── Screen Recording ───
-    Mod+Shift+N                         hotkey-overlay-title="Screen Recording: Toggle" { spawn-sh "pid=/tmp/wl-screenrec.pid; if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Saved' ~/Videos/Recordings/; else f=~/Videos/Recordings/$(date +%Y-%m-%d_%H:%M:%S).mp4; wl-screenrec -g \"$(slurp)\" -f \"$f\" & echo $! > $pid; notify-send 'Recording Started'; (sleep 1200 && if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Auto-Stopped' '20min limit'; fi) & fi"; }
+    Mod+Shift+N                         hotkey-overlay-title="Screen Recording: Toggle" { spawn-sh "pid=/tmp/wl-screenrec.pid; if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Saved' ~/Videos/Recordings/; else geo=$(slurp) || exit 0; f=~/Videos/Recordings/$(date +%Y-%m-%d_%H:%M:%S).mp4; wl-screenrec -g \"$geo\" -f \"$f\" & echo $! > $pid; notify-send 'Recording Started'; (sleep 1200 && if [ -f $pid ] && kill -0 $(cat $pid) 2>/dev/null; then kill -INT $(cat $pid) && rm $pid && notify-send 'Recording Auto-Stopped' '20min limit'; fi) & fi"; }
 
     // ─── Clipboard History ───
     Mod+Shift+V                         hotkey-overlay-title="Clipboard History" { spawn-sh "qs -c noctalia-shell ipc call launcher clipboard"; }
