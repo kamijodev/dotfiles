@@ -151,6 +151,7 @@ pv
 python
 python-defusedxml
 python-packaging
+qt5-wayland
 rebuild-detector
 reflector
 ripgrep
@@ -163,6 +164,7 @@ slurp
 smartmontools
 snapper
 sof-firmware
+sqlitebrowser
 strongswan
 sudo
 sysfsutils
