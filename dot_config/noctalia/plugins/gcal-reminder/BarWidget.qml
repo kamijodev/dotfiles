@@ -103,6 +103,10 @@ Item {
         }
     }
 
+    HoverHandler {
+        cursorShape: Qt.PointingHandCursor
+    }
+
     TapHandler {
         acceptedButtons: Qt.LeftButton
         onTapped: pluginApi.openPanel(root.screen)

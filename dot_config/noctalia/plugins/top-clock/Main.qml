@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell
+import Quickshell.Io
 import Quickshell.Wayland
 import qs.Commons
 
@@ -7,13 +8,8 @@ Item {
     id: root
     property var pluginApi: null
     property string currentTime: ""
-
-    readonly property color nixieAmber: "#FF8C00"
-    readonly property color nixieGlow: Qt.rgba(1.0, 0.55, 0.0, 0.3)
-    readonly property color nixieDim: Qt.rgba(1.0, 0.55, 0.0, 0.08)
-    readonly property color tubeColor: "#080808"
-    readonly property color frameColor: "#151515"
-    readonly property color frameBorder: "#2a2a2a"
+    property bool vpnConnected: false
+    property bool cameraEnabled: false
 
     Timer {
         running: true
@@ -24,8 +20,63 @@ Item {
         }
     }
 
+    Timer {
+        running: true
+        repeat: true
+        interval: 5000
+        onTriggered: vpnCheck.running = true
+    }
+
+    property bool _vpnFound: false
+
+    Process {
+        id: vpnCheck
+        command: ["nmcli", "-t", "-f", "TYPE,STATE", "connection", "show", "--active"]
+        stdout: SplitParser {
+            onRead: data => {
+                if (data.indexOf("vpn:activated") !== -1) {
+                    root._vpnFound = true;
+                }
+            }
+        }
+        onRunningChanged: {
+            if (running) {
+                root._vpnFound = false;
+            } else {
+                root.vpnConnected = root._vpnFound;
+            }
+        }
+    }
+
+    Process {
+        id: cameraCheck
+        command: ["lsmod"]
+        stdout: SplitParser {
+            onRead: data => {
+                if (data.startsWith("uvcvideo")) {
+                    root.cameraEnabled = true;
+                }
+            }
+        }
+        onRunningChanged: {
+            if (running) {
+                root.cameraEnabled = false;
+            }
+        }
+    }
+
+    Process {
+        id: cameraToggle
+        command: root.cameraEnabled
+            ? ["sudo", "modprobe", "-r", "uvcvideo"]
+            : ["sudo", "modprobe", "uvcvideo"]
+        onExited: cameraCheck.running = true
+    }
+
     Component.onCompleted: {
         currentTime = Qt.formatTime(new Date(), "HH:mm:ss");
+        vpnCheck.running = true;
+        cameraCheck.running = true;
     }
 
     Variants {
@@ -34,6 +85,8 @@ Item {
         PanelWindow {
             required property ShellScreen modelData
             screen: modelData
+
+            focusable: true
 
             WlrLayershell.namespace: "top-clock"
             WlrLayershell.layer: WlrLayer.Top
@@ -49,89 +102,114 @@ Item {
 
             color: "transparent"
 
-            width: frame.width
-            height: frame.height
+            width: frame.width + 2
+            height: frame.height + 2
 
             Rectangle {
                 id: frame
-                width: meterRow.width + 14
-                height: meterRow.height + 10
+                width: meterRow.width + Style.marginL * 2
+                height: meterRow.height + Style.marginM * 2
                 anchors.centerIn: parent
-                radius: 5
-                color: root.frameColor
-                border.color: root.frameBorder
-                border.width: 1
+                radius: Style.radiusXS
+                color: Color.mSurfaceVariant
+                border.color: Color.mOutline
+                border.width: Style.borderS
 
                 Row {
                     id: meterRow
                     anchors.centerIn: parent
-                    spacing: 2
+                    spacing: Style.marginM
 
-                    Repeater {
-                        model: 8
+                    Text {
+                        text: root.cameraEnabled ? "\u{F0100}" : "\u{F0101}"
+                        font.family: "Maple Mono NF"
+                        font.pixelSize: Style.fontSizeXL
+                        color: root.cameraEnabled ? Color.mPrimary : Color.mOnSurfaceVariant
+                        anchors.verticalCenter: parent.verticalCenter
 
-                        delegate: Item {
-                            required property int index
-                            readonly property string ch: root.currentTime.charAt(index)
-                            readonly property bool isColon: index === 2 || index === 5
+                        HoverHandler {
+                            cursorShape: Qt.PointingHandCursor
+                        }
 
-                            width: isColon ? 10 : 24
-                            height: 28
+                        TapHandler {
+                            onTapped: cameraToggle.running = true
+                        }
+                    }
 
-                            // Nixie tube
-                            Rectangle {
-                                anchors.fill: parent
-                                visible: !parent.isColon
-                                radius: 3
-                                color: root.tubeColor
-                                border.color: "#1a1a1a"
-                                border.width: 1
+                    Row {
+                        spacing: 2
 
-                                // Glass reflection
+                        Repeater {
+                            model: 8
+
+                            delegate: Item {
+                                required property int index
+                                readonly property string ch: root.currentTime.charAt(index)
+                                readonly property bool isColon: index === 2 || index === 5
+
+                                width: isColon ? 10 : 24
+                                height: 28
+
                                 Rectangle {
                                     anchors.fill: parent
-                                    anchors.margins: 1
-                                    radius: 2
-                                    gradient: Gradient {
-                                        GradientStop { position: 0.0; color: Qt.rgba(1, 1, 1, 0.05) }
-                                        GradientStop { position: 0.35; color: "transparent" }
-                                        GradientStop { position: 1.0; color: "transparent" }
+                                    visible: !parent.isColon
+                                    radius: Style.radiusXXXS
+                                    color: Color.mSurface
+                                    border.color: Color.mOutline
+                                    border.width: Style.borderS
+
+                                    Rectangle {
+                                        anchors.fill: parent
+                                        anchors.margins: 1
+                                        radius: Style.radiusXXXS
+                                        gradient: Gradient {
+                                            GradientStop { position: 0.0; color: Qt.rgba(1, 1, 1, 0.03) }
+                                            GradientStop { position: 0.35; color: "transparent" }
+                                            GradientStop { position: 1.0; color: "transparent" }
+                                        }
+                                    }
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: "8"
+                                        font.family: "Maple Mono NF"
+                                        font.pixelSize: 18
+                                        font.weight: Font.Bold
+                                        color: Qt.alpha(Color.mPrimary, 0.08)
                                     }
                                 }
 
-                                // Unlit filament hint
                                 Text {
                                     anchors.centerIn: parent
-                                    text: "8"
-                                    font.family: "Hack Nerd Font Mono"
-                                    font.pixelSize: 18
+                                    text: parent.ch
+                                    font.family: "Maple Mono NF"
+                                    font.pixelSize: parent.isColon ? 16 : 20
                                     font.weight: Font.Bold
-                                    color: root.nixieDim
+                                    color: Qt.alpha(Color.mPrimary, 0.3)
+                                    style: Text.Outline
+                                    styleColor: Qt.alpha(Color.mPrimary, 0.1)
+                                }
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: parent.ch
+                                    font.family: "Maple Mono NF"
+                                    font.pixelSize: parent.isColon ? 16 : 18
+                                    font.weight: Font.Bold
+                                    color: Color.mPrimary
                                 }
                             }
-
-                            // Glow layer
-                            Text {
-                                anchors.centerIn: parent
-                                text: parent.ch
-                                font.family: "Hack Nerd Font Mono"
-                                font.pixelSize: parent.isColon ? 16 : 20
-                                font.weight: Font.Bold
-                                color: root.nixieGlow
-                                style: Text.Outline
-                                styleColor: Qt.rgba(1.0, 0.4, 0.0, 0.15)
-                            }
-
-                            // Digit
-                            Text {
-                                anchors.centerIn: parent
-                                text: parent.ch
-                                font.family: "Hack Nerd Font Mono"
-                                font.pixelSize: parent.isColon ? 16 : 18
-                                font.weight: Font.Bold
-                                color: root.nixieAmber
-                            }
                         }
+                    }
+
+                    Text {
+                        visible: root.vpnConnected
+                        text: "VPN Connected"
+                        font.family: "Maple Mono NF"
+                        font.pixelSize: Style.fontSizeS
+                        font.weight: Font.DemiBold
+                        color: Color.mPrimary
+                        anchors.verticalCenter: parent.verticalCenter
                     }
                 }
             }
