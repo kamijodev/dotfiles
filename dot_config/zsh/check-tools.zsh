@@ -16,6 +16,7 @@ command -v websocat &> /dev/null || MISSING_TOOLS[websocat]="pacman -S websocat"
 command -v aws &> /dev/null || MISSING_TOOLS[aws-cli-v2]="pacman -S aws-cli-v2"
 
 # AUR
+command -v kanata &> /dev/null || MISSING_TOOLS[kanata]="paru -S kanata-bin"
 command -v google-chrome-canary &> /dev/null || MISSING_TOOLS[google-chrome-canary]="paru -S google-chrome-canary"
 command -v wl-screenrec &> /dev/null || MISSING_TOOLS[wl-screenrec]="paru -S wl-screenrec"
 command -v lotion &> /dev/null || MISSING_TOOLS[lotion]="paru -S lotion-bin"

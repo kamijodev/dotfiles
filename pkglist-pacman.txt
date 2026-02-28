@@ -32,6 +32,7 @@ cachyos-packageinstaller
 cachyos-plymouth-bootanimation
 cachyos-rate-mirrors
 cachyos-settings
+cachyos-snapper-support
 cachyos-v3-mirrorlist
 cachyos-v4-mirrorlist
 cachyos-wallpapers
@@ -57,6 +58,7 @@ e2fsprogs
 efibootmgr
 efitools
 ethtool
+evtest
 exfatprogs
 f2fs-tools
 fastfetch
@@ -86,6 +88,8 @@ hdparm
 hwdetect
 hwinfo
 inetutils
+intel-media-driver
+intel-ucode
 iptables-nft
 iwd
 jfsutils
@@ -93,12 +97,16 @@ lazydocker
 less
 lib32-mesa
 lib32-opencl-mesa
+lib32-vulkan-intel
 lib32-vulkan-radeon
 libdvdcss
 libgsf
 libopenraw
 libreoffice-fresh
 libreoffice-fresh-ja
+limine
+limine-mkinitcpio-hook
+limine-snapper-sync
 linux-cachyos
 linux-cachyos-headers
 linux-cachyos-lts
@@ -161,11 +169,13 @@ s-nail
 satty
 sddm
 sg3_utils
+sheldon
 slurp
 smartmontools
 snapper
 sof-firmware
 sqlitebrowser
+starship
 strongswan
 sudo
 sysfsutils
@@ -185,8 +195,11 @@ usbutils
 vesktop
 vim
 vlc-plugins-all
+vpl-gpu-rt
+vulkan-intel
 vulkan-radeon
 websocat
+wezterm
 wget
 which
 wireless-regdb

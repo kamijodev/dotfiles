@@ -8,8 +8,8 @@ Item {
     id: root
     property var pluginApi: null
     property string currentTime: ""
+    property string currentDate: ""
     property bool vpnConnected: false
-    property bool cameraEnabled: false
     property bool recording: false
     property int recordingSeconds: 0
 
@@ -18,7 +18,9 @@ Item {
         repeat: true
         interval: 1000
         onTriggered: {
-            root.currentTime = Qt.formatTime(new Date(), "HH:mm:ss");
+            var now = new Date();
+            root.currentTime = Qt.formatTime(now, "HH:mm:ss");
+            root.currentDate = Qt.formatDate(now, "MM/dd (ddd)");
         }
     }
 
@@ -48,31 +50,6 @@ Item {
                 root.vpnConnected = root._vpnFound;
             }
         }
-    }
-
-    Process {
-        id: cameraCheck
-        command: ["lsmod"]
-        stdout: SplitParser {
-            onRead: data => {
-                if (data.startsWith("uvcvideo")) {
-                    root.cameraEnabled = true;
-                }
-            }
-        }
-        onRunningChanged: {
-            if (running) {
-                root.cameraEnabled = false;
-            }
-        }
-    }
-
-    Process {
-        id: cameraToggle
-        command: root.cameraEnabled
-            ? ["sudo", "modprobe", "-r", "uvcvideo"]
-            : ["sudo", "modprobe", "uvcvideo"]
-        onExited: cameraCheck.running = true
     }
 
     property bool _recordingFound: false
@@ -118,9 +95,10 @@ Item {
     }
 
     Component.onCompleted: {
-        currentTime = Qt.formatTime(new Date(), "HH:mm:ss");
+        var now = new Date();
+        currentTime = Qt.formatTime(now, "HH:mm:ss");
+        currentDate = Qt.formatDate(now, "MM/dd (ddd)");
         vpnCheck.running = true;
-        cameraCheck.running = true;
     }
 
     Variants {
@@ -165,19 +143,12 @@ Item {
                     spacing: Style.marginM
 
                     Text {
-                        text: root.cameraEnabled ? "\u{F0100}" : "\u{F0101}"
+                        text: root.currentDate
                         font.family: "Maple Mono NF"
-                        font.pixelSize: Style.fontSizeXL
-                        color: root.cameraEnabled ? Color.mPrimary : Color.mOnSurfaceVariant
+                        font.pixelSize: Style.fontSizeM
+                        font.weight: Font.DemiBold
+                        color: Color.mPrimary
                         anchors.verticalCenter: parent.verticalCenter
-
-                        HoverHandler {
-                            cursorShape: Qt.PointingHandCursor
-                        }
-
-                        TapHandler {
-                            onTapped: cameraToggle.running = true
-                        }
                     }
 
                     Row {
