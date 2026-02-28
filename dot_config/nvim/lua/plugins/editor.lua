@@ -14,6 +14,7 @@ return {
         "lua", "vue", "html", "css",
         "json", "yaml", "markdown",
         "graphql", "prisma", "bash",
+        "rust", "toml",
       }
       ts.install(langs)
 

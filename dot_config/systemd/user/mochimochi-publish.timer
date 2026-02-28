@@ -1,10 +1,8 @@
 [Unit]
-Description=もちもちAIトピックス daily publish
+Description=もちもちAIトピックス publish
 
 [Timer]
-OnCalendar=*-*-* 07:00:00
-OnCalendar=*-*-* 12:00:00
-OnCalendar=*-*-* 18:00:00
+OnCalendar=Mon *-*-* 07:00:00
 Persistent=true
 
 [Install]

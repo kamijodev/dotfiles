@@ -44,6 +44,7 @@ return {
         "tailwindcss",     -- TailwindCSS
         "biome",           -- Biome (リンター/フォーマッター)
         "vue_ls",          -- Vue
+        "rust_analyzer",   -- Rust
       },
       automatic_enable = true,
     },

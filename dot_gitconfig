@@ -13,6 +13,7 @@
   l1 = log --oneline
   back = reset --hard HEAD^
   cp = cherry-pick
+  wt = worktree
 [core]
   editor = nvim
 [init]

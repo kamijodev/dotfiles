@@ -61,6 +61,7 @@ return {
     priority = 1000,
     opts = { transparent = true },
   },
+  -- Markdownをリッチ表示（見出しに色付き背景）
   {
     "MeanderingProgrammer/render-markdown.nvim",
     dependencies = {
@@ -82,6 +83,7 @@ return {
       vim.api.nvim_create_autocmd("ColorScheme", { callback = set_heading_bgs })
     end,
   },
+  -- deviconsの色をカラーテーマに合わせて自動調整
   {
     "rachartier/tiny-devicons-auto-colors.nvim",
     dependencies = {
@@ -92,6 +94,7 @@ return {
       require("tiny-devicons-auto-colors").setup()
     end,
   },
+  -- ファイルツリー（Ctrl+nで切り替え）
   {
     "nvim-tree/nvim-tree.lua",
     dependencies = {
@@ -126,6 +129,7 @@ return {
       require("nvim-tree").setup(opts)
     end
   },
+  -- ステータスライン
   {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" }, -- アイコン欲しい人向け
@@ -133,55 +137,28 @@ return {
       require("lualine").setup()
     end,
   },
+  -- ヤンク範囲をハイライト表示
   {
     "machakann/vim-highlightedyank"
   },
-  -- インデントレインボー（スペース背景色）
+  -- チャンクハイライト（ブロックの開始〜終了をL字線で接続）
   {
-    "lukas-reineke/indent-blankline.nvim",
-    main = "ibl",
+    "shellRaining/hlchunk.nvim",
     event = { "BufReadPost", "BufNewFile" },
     opts = {
+      chunk = {
+        enable = true,
+        style = { { fg = "#7daea3" } },
+        delay = 50,
+      },
       indent = {
-        char = " ",
-        highlight = {
-          "RainbowRed",
-          "RainbowYellow",
-          "RainbowBlue",
-          "RainbowOrange",
-          "RainbowGreen",
-          "RainbowViolet",
-          "RainbowCyan",
-        },
+        enable = true,
+        chars = { "│" },
+        style = { { fg = "#3a3a3a" } },
       },
-      whitespace = {
-        highlight = {
-          "RainbowRed",
-          "RainbowYellow",
-          "RainbowBlue",
-          "RainbowOrange",
-          "RainbowGreen",
-          "RainbowViolet",
-          "RainbowCyan",
-        },
-        remove_blankline_trail = false,
-      },
-      scope = { enabled = false },
+      line_num = { enable = false },
+      blank = { enable = false },
     },
-    config = function(_, opts)
-      local hooks = require("ibl.hooks")
-      -- gruvbox-materialに合わせた背景色
-      hooks.register(hooks.type.HIGHLIGHT_SETUP, function()
-        vim.api.nvim_set_hl(0, "RainbowRed", { bg = "#3c2020" })    -- 赤系 (#ea6962)
-        vim.api.nvim_set_hl(0, "RainbowYellow", { bg = "#3c3020" }) -- 黄系 (#d8a657)
-        vim.api.nvim_set_hl(0, "RainbowBlue", { bg = "#203038" })   -- 青系 (#7daea3)
-        vim.api.nvim_set_hl(0, "RainbowOrange", { bg = "#3c2818" }) -- オレンジ系 (#e78a4e)
-        vim.api.nvim_set_hl(0, "RainbowGreen", { bg = "#283020" })  -- 緑系 (#a9b665)
-        vim.api.nvim_set_hl(0, "RainbowViolet", { bg = "#302830" }) -- 紫系 (#b48ead)
-        vim.api.nvim_set_hl(0, "RainbowCyan", { bg = "#203030" })   -- アクア系 (#89b482)
-      end)
-      require("ibl").setup(opts)
-    end,
   },
   -- Git signs + 現在行のblame表示
   {
@@ -285,6 +262,7 @@ return {
       vim.g.minimap_git_colors = 1
     end,
   },
+  -- モーションで置換（<leader>r でヤンク内容に置き換え）
   {
     "svermeulen/vim-subversive",
     keys = {
@@ -293,6 +271,7 @@ return {
       { "<leader>rr", "<plug>(SubversiveSubstituteToEndOfLine)" },
     }
   },
+  -- タブライン（セパレータなし、アクティブ=背景同化、非アクティブ=グレー背景+薄文字）
   {
     "romgrk/barbar.nvim",
     dependencies = {
@@ -308,6 +287,12 @@ return {
       },
       exclude_ft = { "codediff-explorer" },
       exclude_name = { "codediff://*" },
+      highlight_inactive_file_icons = true,
+      icons = {
+        separator = { left = "", right = "" },
+        inactive = { separator = { left = "", right = "" } },
+        separator_at_end = false,
+      },
     },
     lazy = false,
     keys = {
@@ -316,22 +301,87 @@ return {
       { "<C-/>", "<Cmd>BufferClose<CR>", desc = "バッファを閉じる" },
     },
     config = function(_, opts)
-      local function brighten_barbar_current_text()
+      require("barbar").setup(opts)
+
+      local function set_barbar_highlights()
         local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
-        vim.api.nvim_set_hl(0, "BufferCurrent",    { fg = normal.fg, bold = true })
-        vim.api.nvim_set_hl(0, "BufferCurrentMod", { fg = normal.fg, bold = true })
-        -- 非アクティブを暗く（TabLineに寄せる）
-        vim.api.nvim_set_hl(0, "BufferInactive",    { fg = "#5a5b5e" })
-        vim.api.nvim_set_hl(0, "BufferInactiveMod", { fg = "#5a5b5e" })
+        local fg = normal.fg and string.format("#%06x", normal.fg) or "#d4be98"
+        local dim = "#5a5b5e"
+
+        -- 組み込みTabLine系も透明に
+        vim.cmd("hi! TabLine guibg=NONE ctermbg=NONE")
+        vim.cmd("hi! TabLineFill guibg=NONE ctermbg=NONE")
+        vim.cmd("hi! TabLineSel guibg=NONE ctermbg=NONE")
+
+        local inactive_bg = "#282828"
+        local suffixes = { "", "Mod", "Sign", "Index", "SignRight", "Number", "Btn", "ADDED", "CHANGED", "DELETED", "ERROR", "HINT", "INFO", "WARN", "Pin", "PinBtn" }
+
+        -- アクティブタブ: 背景透明（エディタと同化）
+        for _, suffix in ipairs(suffixes) do
+          local bold = (suffix == "" or suffix == "Mod") and " gui=bold" or ""
+          vim.cmd("hi! BufferCurrent" .. suffix .. " guifg=" .. fg .. " guibg=NONE ctermbg=NONE" .. bold)
+        end
+        -- アイコンは背景だけ設定し、fg は devicons の色を維持
+        vim.cmd("hi! BufferCurrentIcon guibg=NONE ctermbg=NONE")
+        vim.cmd("hi! BufferCurrentTarget guifg=#ea6962 guibg=NONE ctermbg=NONE gui=bold")
+
+        -- 非アクティブタブ: 薄いグレー背景
+        for _, prefix in ipairs({ "BufferInactive", "BufferVisible", "BufferAlternate" }) do
+          for _, suffix in ipairs(suffixes) do
+            vim.cmd("hi! " .. prefix .. suffix .. " guifg=" .. dim .. " guibg=" .. inactive_bg .. " ctermbg=NONE")
+          end
+          -- アイコンは背景だけ設定し、fg は devicons の色を維持
+          vim.cmd("hi! " .. prefix .. "Icon guibg=" .. inactive_bg .. " ctermbg=NONE")
+          vim.cmd("hi! " .. prefix .. "Target guifg=#ea6962 guibg=" .. inactive_bg .. " ctermbg=NONE gui=bold")
+        end
+
+        vim.cmd("hi! BufferTabpageFill guibg=NONE ctermbg=NONE")
+        vim.cmd("hi! BufferTabpages guifg=" .. fg .. " guibg=NONE ctermbg=NONE")
+        vim.cmd("hi! BufferOffset guibg=NONE ctermbg=NONE")
       end
 
-      brighten_barbar_current_text()
+      vim.defer_fn(set_barbar_highlights, 50)
 
-      vim.api.nvim_create_autocmd("ColorScheme", {
-        callback = brighten_barbar_current_text,
+      vim.api.nvim_create_autocmd({ "ColorScheme", "BufEnter", "BufAdd" }, {
+        callback = function()
+          vim.schedule(set_barbar_highlights)
+        end,
       })
-
-      require("barbar").setup(opts)
     end
-  }
+  },
+  -- パンくずリスト（winbar: パス + LSP/treesitterでコード構造を表示、グレー文字）
+  {
+    "Bekaboo/dropbar.nvim",
+    event = { "BufReadPost", "BufNewFile" },
+    opts = {
+      bar = {
+        sources = function(buf, _)
+          local sources = require("dropbar.sources")
+          local utils = require("dropbar.utils")
+          if vim.bo[buf].ft == "markdown" then
+            return { sources.path, sources.markdown }
+          end
+          if vim.bo[buf].buftype == "terminal" then
+            return { sources.terminal }
+          end
+          return { sources.path, utils.source.fallback({ sources.lsp, sources.treesitter }) }
+        end,
+      },
+    },
+    config = function(_, opts)
+      require("dropbar").setup(opts)
+      local dim = "#6e6e6e"
+      local function set_dropbar_hl()
+        vim.cmd("hi! WinBar guifg=" .. dim .. " guibg=NONE")
+        vim.cmd("hi! WinBarNC guifg=" .. dim .. " guibg=NONE")
+        vim.cmd("hi! DropBarIconKindFile guifg=" .. dim)
+        vim.cmd("hi! DropBarIconKindFolder guifg=" .. dim)
+        vim.cmd("hi! DropBarKindFile guifg=" .. dim)
+        vim.cmd("hi! DropBarKindFolder guifg=" .. dim)
+        vim.cmd("hi! DropBarIconUISeparator guifg=#505050")
+      end
+      set_dropbar_hl()
+      vim.api.nvim_create_autocmd("ColorScheme", { callback = set_dropbar_hl })
+    end,
+  },
 }
