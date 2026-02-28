@@ -25,6 +25,13 @@ command -v nordvpn &> /dev/null || MISSING_TOOLS[nordvpn]="paru -S nordvpn-gui-b
 # pip (asdf python)
 command -v gcalcli &> /dev/null || MISSING_TOOLS[gcalcli]="pip install gcalcli"
 
+# asdf plugins
+if command -v asdf &> /dev/null; then
+  while IFS=' ' read -r plugin version _; do
+    asdf where "$plugin" "$version" &> /dev/null || MISSING_TOOLS["asdf:${plugin}@${version}"]="asdf install ${plugin} ${version}"
+  done < ~/.tool-versions
+fi
+
 # CLI tools
 command -v claude &> /dev/null || MISSING_TOOLS[claude]="https://docs.anthropic.com/en/docs/claude-code"
 
