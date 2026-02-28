@@ -2,7 +2,7 @@ local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
 config.automatically_reload_config = true
-config.enable_wayland = true
+config.enable_wayland = false
 config.font_size = 12.0
 config.font = wezterm.font('Maple Mono NF')
 config.use_ime = true
@@ -77,6 +77,31 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
     { Foreground = { Color = edge_foreground } },
     { Text = SOLID_RIGHT_ARROW },
   }
+end)
+
+----------------------------------------------------
+-- CWD export for Noctalia Shell plugin
+----------------------------------------------------
+wezterm.on("update-status", function(window, pane)
+  local cwd_uri = pane:get_current_working_dir()
+  if cwd_uri then
+    local cwd = cwd_uri.file_path or tostring(cwd_uri):gsub("^file://[^/]*", "")
+    local f = io.open("/tmp/wezterm-cwd.txt", "w")
+    if f then
+      f:write(cwd)
+      f:close()
+    end
+  end
+end)
+
+wezterm.on("window-focus-changed", function(window, pane)
+  if not window:is_focused() then
+    local f = io.open("/tmp/wezterm-cwd.txt", "w")
+    if f then
+      f:write("")
+      f:close()
+    end
+  end
 end)
 
 ----------------------------------------------------

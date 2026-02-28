@@ -23,7 +23,7 @@
         struts {
             left 16
             right 16
-            top 32
+            top 48
             bottom 0
         }
     }
