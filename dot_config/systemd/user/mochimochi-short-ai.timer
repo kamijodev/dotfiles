@@ -1,0 +1,10 @@
+[Unit]
+Description=もちもちAIトピックス ショート publish
+
+[Timer]
+OnCalendar=*-*-* 10:00:00
+OnCalendar=*-*-* 17:00:00
+Persistent=true
+
+[Install]
+WantedBy=timers.target

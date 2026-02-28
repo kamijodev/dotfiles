@@ -1,0 +1,8 @@
+[Unit]
+Description=もちもちAIトピックス ショート publish
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/Workspace/kamijodev/ai-voice-generator
+ExecStart=%h/Workspace/kamijodev/ai-voice-generator/scripts/publish-short.sh ai_news
+TimeoutStartSec=1800

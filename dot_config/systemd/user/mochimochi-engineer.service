@@ -1,0 +1,8 @@
+[Unit]
+Description=もちもちエンジニアトピックス publish
+
+[Service]
+Type=oneshot
+WorkingDirectory=%h/Workspace/kamijodev/ai-voice-generator
+ExecStart=%h/Workspace/kamijodev/ai-voice-generator/scripts/publish.sh engineer_news
+TimeoutStartSec=1800
