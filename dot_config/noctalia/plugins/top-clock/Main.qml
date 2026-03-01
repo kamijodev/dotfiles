@@ -15,6 +15,7 @@ Item {
     property int recordingSeconds: 0
     property var todayEvents: []
     property int calRefreshTick: 0
+    property bool kbdInhibited: true
 
     // Gruvbox Material Dark palette
     readonly property color gbFg:      "#d4be98"
@@ -68,6 +69,49 @@ Item {
     readonly property bool hasCalendarInfo: currentEvent !== null || nextEvent !== null
 
     property string weztermCwd: ""
+
+    FileView {
+        id: kbdStateFile
+        path: "/tmp/internal-kbd-state"
+        watchChanges: true
+        preload: true
+        onFileChanged: kbdStateFile.reload()
+        onLoaded: {
+            var content = kbdStateFile.text().trim();
+            root.kbdInhibited = (content === "1");
+        }
+    }
+
+    Process {
+        id: kbdToggle
+        command: ["pkexec", "/home/emacs/.local/bin/toggle-internal-kbd"]
+        onRunningChanged: {
+            if (!running) kbdStateUpdate.running = true
+        }
+    }
+
+    Process {
+        id: kbdStateUpdate
+        command: ["sh", "-c", "cat /sys/devices/platform/i8042/serio0/input/input3/inhibited > /tmp/internal-kbd-state"]
+    }
+
+    Process {
+        id: kanataStart
+        command: ["systemctl", "--user", "start", "kanata.service"]
+    }
+
+    Process {
+        id: kanataStop
+        command: ["systemctl", "--user", "stop", "kanata.service"]
+    }
+
+    onKbdInhibitedChanged: {
+        if (kbdInhibited) {
+            kanataStop.running = true;
+        } else {
+            kanataStart.running = true;
+        }
+    }
 
     FileView {
         id: cwdFile
@@ -237,6 +281,31 @@ Item {
                     anchors.centerIn: parent
                     spacing: Style.marginM
 
+                    Item {
+                        width: kbdIcon.implicitWidth + 8
+                        height: 28
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        Text {
+                            id: kbdIcon
+                            anchors.centerIn: parent
+                            text: root.kbdInhibited ? "󰌐" : "󰌌"
+                            font.family: "Hack Nerd Font"
+                            font.pixelSize: 18
+                            color: kbdMouse.containsMouse
+                                ? (root.kbdInhibited ? root.gbFg : root.gbAqua)
+                                : (root.kbdInhibited ? root.gbGrey : root.gbGreen)
+                        }
+
+                        MouseArea {
+                            id: kbdMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: kbdToggle.running = true
+                        }
+                    }
+
                     Text {
                         text: root.currentDate
                         font.family: "Maple Mono NF"
@@ -368,7 +437,7 @@ Item {
             required property ShellScreen modelData
             screen: modelData
 
-            visible: root.hasCalendarInfo
+            visible: true
 
             WlrLayershell.namespace: "top-cal"
             WlrLayershell.layer: WlrLayer.Top
@@ -407,7 +476,17 @@ Item {
                     NIcon {
                         icon: "calendar"
                         pointSize: 18
-                        color: root.gbYellow
+                        color: root.gbRed
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        visible: !root.hasCalendarInfo
+                        text: "予定なし"
+                        font.family: "Maple Mono NF"
+                        font.pixelSize: 18
+                        font.weight: Font.DemiBold
+                        color: root.gbGrey
                         anchors.verticalCenter: parent.verticalCenter
                     }
 

@@ -74,6 +74,7 @@ fsarchiver
 git
 github-cli
 glances
+godot
 grim
 grub
 grub-btrfs-support
