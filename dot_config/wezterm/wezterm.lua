@@ -1,12 +1,33 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
 
+-- Gruvbox Material Dark (medium contrast)
+local gb = {
+  bg_dim = "#1b1b1b",
+  bg0    = "#282828",
+  bg1    = "#32302f",
+  bg3    = "#45403d",
+  bg5    = "#5a524c",
+  fg0    = "#d4be98",
+  fg1    = "#ddc7a1",
+  red    = "#ea6962",
+  orange = "#e78a4e",
+  yellow = "#d8a657",
+  green  = "#a9b665",
+  aqua   = "#89b482",
+  blue   = "#7daea3",
+  purple = "#d3869b",
+  grey0  = "#7c6f64",
+  grey1  = "#928374",
+  grey2  = "#a89984",
+  sl3    = "#504945",
+}
+
 config.automatically_reload_config = true
 config.enable_wayland = false
-config.font_size = 12.0
+config.font_size = 10.0
 config.font = wezterm.font('Maple Mono NF')
 config.use_ime = true
-config.window_background_opacity = 0.95
 config.macos_window_background_blur = 20
 config.color_scheme = 'Gruvbox Material (Gogh)'
 config.pane_focus_follows_mouse = false
@@ -33,7 +54,7 @@ config.window_frame = {
 
 -- タブバーを背景色に合わせる
 config.window_background_gradient = {
-  colors = { "#151515" },
+  colors = { gb.bg0 },
 }
 
 -- タブの追加ボタンを非表示
@@ -44,10 +65,11 @@ config.show_new_tab_button_in_tab_bar = false
 
 -- タブ同士の境界線を非表示
 config.colors = {
+  background = gb.bg1,
   tab_bar = {
     inactive_tab_edge = "none",
   },
-  split = "#666666",
+  split = gb.sl3,
 }
 
 -- タブの形をカスタマイズ
@@ -57,12 +79,12 @@ local SOLID_LEFT_ARROW = wezterm.nerdfonts.ple_lower_right_triangle
 local SOLID_RIGHT_ARROW = wezterm.nerdfonts.ple_upper_left_triangle
 
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
-  local background = "#282c34"
-  local foreground = "#999999"
+  local background = gb.bg1
+  local foreground = gb.grey1
   local edge_background = "none"
   if tab.is_active then
-    background = "#862aa1"
-    foreground = "#ffffff"
+    background = gb.bg1
+    foreground = gb.fg0
   end
   local edge_foreground = background
   local title = "   " .. wezterm.truncate_right(tab.active_pane.title, max_width - 1) .. "   "
@@ -82,27 +104,6 @@ end)
 ----------------------------------------------------
 -- CWD export for Noctalia Shell plugin
 ----------------------------------------------------
-wezterm.on("update-status", function(window, pane)
-  local cwd_uri = pane:get_current_working_dir()
-  if cwd_uri then
-    local cwd = cwd_uri.file_path or tostring(cwd_uri):gsub("^file://[^/]*", "")
-    local f = io.open("/tmp/wezterm-cwd.txt", "w")
-    if f then
-      f:write(cwd)
-      f:close()
-    end
-  end
-end)
-
-wezterm.on("window-focus-changed", function(window, pane)
-  if not window:is_focused() then
-    local f = io.open("/tmp/wezterm-cwd.txt", "w")
-    if f then
-      f:write("")
-      f:close()
-    end
-  end
-end)
 
 ----------------------------------------------------
 -- Mouse

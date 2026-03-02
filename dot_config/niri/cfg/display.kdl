@@ -3,14 +3,14 @@
 // You will have to remove "/-" and edit it before it takes effect.
 // https://github.com/YaLTeR/niri/wiki/Configuration:-Outputs
 
-output "DP-1" {
-    mode "3440x1440@49.953"
-    scale 1
-    position x=0 y=0
+output "eDP-1" {
+    mode "2880x1800@60.000"
+    scale 1.5
+    position x=760 y=1440
 }
 
 output "HDMI-A-1" {
-    mode "2560x1440@59.951"
+    mode "3440x1440@84.957"
     scale 1
-    position x=3440 y=0
+    position x=0 y=0
 }

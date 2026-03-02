@@ -41,8 +41,8 @@ binds {
     // フォーカス移動（端まで行ったら隣のモニターに移動）
     Mod+A                               { focus-column-or-monitor-left; }
     Mod+D                               { focus-column-or-monitor-right; }
-    Mod+W                               { focus-workspace-up; }
-    Mod+S                               { focus-workspace-down; }
+    Mod+W                               { focus-monitor-up; }
+    Mod+S                               { focus-monitor-down; }
     Mod+Left                            { set-column-width "-10%"; }
     Mod+Right                           { set-column-width "+10%"; }
     Mod+Up                              { focus-workspace-up; }
@@ -51,8 +51,8 @@ binds {
     // ウィンドウ移動 (HJKL)
     Mod+H                               { move-column-left-or-to-monitor-left; }
     Mod+L                               { move-column-right-or-to-monitor-right; }
-    Mod+K                               { move-column-to-workspace-up; }
-    Mod+J                               { move-column-to-workspace-down; }
+    Mod+K                               { move-column-to-monitor-up; }
+    Mod+J                               { move-column-to-monitor-down; }
     Mod+CTRL+Left                       { move-column-left; }
     Mod+CTRL+Right                      { move-column-right; }
     Mod+CTRL+UP                         { move-column-to-workspace-up; }
@@ -122,6 +122,7 @@ binds {
     // ─── Modes ───
     Mod+F                               { toggle-window-floating; }
     Mod+R                               { spawn-sh "~/.local/bin/niri-toggle-maximize"; }
+    Mod+P                               { fullscreen-window; }
 
     // ─── Screenshots ───
     Mod+N                               hotkey-overlay-title="Screenshot: Region → Satty" { spawn-sh "f=~/Pictures/Screenshots/$(date +%Y-%m-%d_%H:%M:%S).png && grim -g \"$(slurp)\" \"$f\" && satty -f \"$f\""; }

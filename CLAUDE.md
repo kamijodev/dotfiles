@@ -50,3 +50,17 @@
 
 - **Google Calendar 通知**: gcalcli + systemd timer (1分毎) → `gcalcli-notify` で `notify-send -a 'Google Calendar'` + サウンド再生
 - **gcal-reminder プラグイン**: Noctalia Shell プラグイン。Google Calendar 通知をキャプチャし手動で閉じるまで保持。@3m以内でフルスクリーンアラート表示（バーウィジェット + パネル）
+
+## 大きな機能のPR分割ルール
+
+大きな機能を実装する際は、レイヤーごとにPRを分けて作成する。ブランチは前のブランチから続けて切る：
+
+```
+DB ブランチ作成 → PR作成（base: main）
+  └─ そのブランチから server ブランチ作成 → PR作成（base: DBブランチ）
+       └─ そのブランチから front ブランチ作成 → PR作成（base: serverブランチ）
+```
+
+- 各PRは1つの責務（DB/server/front）に限定する
+- PRのbaseブランチは直前のレイヤーのブランチに向ける
+- serverが不要な場合は `DB → front` のように適宜スキップする
