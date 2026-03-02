@@ -6,4 +6,6 @@ kanata-bin
 lotion
 maplemono-nf
 min-browser-bin
+slack-desktop-wayland
+wezterm-git
 wl-screenrec

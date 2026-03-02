@@ -71,6 +71,9 @@ ffmpegthumbnailer
 firefox
 firefox-i18n-ja
 fsarchiver
+ghostty
+ghostty-shell-integration
+ghostty-terminfo
 git
 github-cli
 glances
@@ -202,7 +205,6 @@ vpl-gpu-rt
 vulkan-intel
 vulkan-radeon
 websocat
-wezterm
 wget
 which
 wireless-regdb
@@ -215,4 +217,5 @@ xfsprogs
 xl2tpd
 yazi
 ydotool
+zellij
 zip
