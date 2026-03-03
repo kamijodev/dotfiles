@@ -1,4 +1,4 @@
-    prefer-no-csd
+    // prefer-no-csd
     screenshot-path null
 
     environment {
@@ -8,8 +8,6 @@
         XDG_SESSION_TYPE "wayland"
         XDG_CURRENT_DESKTOP "niri"
         QT_QPA_PLATFORMTHEME "gtk3"
-        GTK_IM_MODULE "fcitx"
-        QT_IM_MODULE "fcitx"
         XMODIFIERS "@im=fcitx"
     }
 

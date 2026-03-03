@@ -1,0 +1,123 @@
+// Gruvbox Material Dark theme
+themes {
+    gruvbox-material {
+        fg "#d4be98"
+        bg "#282828"
+        black "#32302f"
+        red "#ea6962"
+        green "#a9b665"
+        yellow "#d8a657"
+        blue "#7daea3"
+        magenta "#d3869b"
+        cyan "#89b482"
+        orange "#e78a4e"
+        white "#d4be98"
+    }
+}
+
+theme "gruvbox-material"
+default_shell "zsh"
+pane_frames false
+default_layout "compact"
+copy_command "wl-copy"
+copy_on_select true
+scrollback_editor "nvim"
+
+keybinds clear-defaults=true {
+    // Leader key: Ctrl+S → tmux mode
+    shared_except "tmux" "locked" {
+        bind "Ctrl s" { SwitchToMode "Tmux"; }
+    }
+
+    tmux {
+        // Resize mode
+        bind "Ctrl s" { SwitchToMode "Resize"; }
+        bind "Esc" { SwitchToMode "Normal"; }
+
+        // Tab
+        bind "t" { NewTab; SwitchToMode "Normal"; }
+        bind "w" { CloseTab; SwitchToMode "Normal"; }
+        bind "{" { MoveTab "Left"; SwitchToMode "Normal"; }
+        bind "}" { MoveTab "Right"; SwitchToMode "Normal"; }
+
+        // Pane split
+        bind "Ctrl d" { NewPane "Down"; SwitchToMode "Normal"; }
+        bind "Ctrl v" { NewPane "Right"; SwitchToMode "Normal"; }
+
+        // Pane close
+        bind "Ctrl x" { CloseFocus; SwitchToMode "Normal"; }
+
+        // Pane navigation
+        bind "Ctrl h" { MoveFocus "Left"; SwitchToMode "Normal"; }
+        bind "Ctrl l" { MoveFocus "Right"; SwitchToMode "Normal"; }
+        bind "Ctrl k" { MoveFocus "Up"; SwitchToMode "Normal"; }
+        bind "Ctrl j" { MoveFocus "Down"; SwitchToMode "Normal"; }
+
+        // Pane zoom
+        bind "z" { ToggleFocusFullscreen; SwitchToMode "Normal"; }
+
+        // Scroll/copy mode
+        bind "[" { SwitchToMode "Scroll"; }
+    }
+
+    resize {
+        bind "h" "Left" { Resize "Increase Left"; }
+        bind "l" "Right" { Resize "Increase Right"; }
+        bind "k" "Up" { Resize "Increase Up"; }
+        bind "j" "Down" { Resize "Increase Down"; }
+        bind "H" { Resize "Decrease Left"; }
+        bind "L" { Resize "Decrease Right"; }
+        bind "K" { Resize "Decrease Up"; }
+        bind "J" { Resize "Decrease Down"; }
+        bind "Enter" "Esc" { SwitchToMode "Normal"; }
+    }
+
+    scroll {
+        bind "j" "Down" { ScrollDown; }
+        bind "k" "Up" { ScrollUp; }
+        bind "Ctrl f" "PageDown" { PageScrollDown; }
+        bind "Ctrl b" "PageUp" { PageScrollUp; }
+        bind "d" { HalfPageScrollDown; }
+        bind "u" { HalfPageScrollUp; }
+        bind "G" { ScrollToBottom; }
+        bind "e" { EditScrollback; SwitchToMode "Normal"; }
+        bind "s" { SwitchToMode "EnterSearch"; SearchInput 0; }
+        bind "Esc" "q" { ScrollToBottom; SwitchToMode "Normal"; }
+    }
+
+    entersearch {
+        bind "Ctrl c" "Esc" { SwitchToMode "Scroll"; }
+        bind "Enter" { SwitchToMode "Search"; }
+    }
+
+    search {
+        bind "j" "Down" { ScrollDown; }
+        bind "k" "Up" { ScrollUp; }
+        bind "Ctrl f" "PageDown" { PageScrollDown; }
+        bind "Ctrl b" "PageUp" { PageScrollUp; }
+        bind "d" { HalfPageScrollDown; }
+        bind "u" { HalfPageScrollUp; }
+        bind "n" { Search "down"; }
+        bind "p" { Search "up"; }
+        bind "Esc" "q" { ScrollToBottom; SwitchToMode "Normal"; }
+    }
+
+    locked {
+        bind "Ctrl g" { SwitchToMode "Normal"; }
+    }
+
+    // Alt shortcuts for quick access (always available)
+    shared_except "locked" {
+        bind "Ctrl g" { SwitchToMode "Locked"; }
+        bind "Alt h" "Alt Left" { MoveFocusOrTab "Left"; }
+        bind "Alt l" "Alt Right" { MoveFocusOrTab "Right"; }
+        bind "Alt j" "Alt Down" { MoveFocus "Down"; }
+        bind "Alt k" "Alt Up" { MoveFocus "Up"; }
+        bind "Alt n" { NewPane; }
+        bind "Alt f" { ToggleFloatingPanes; }
+    }
+
+    shared_except "normal" "locked" "tmux" {
+        bind "Enter" "Esc" { SwitchToMode "Normal"; }
+    }
+}

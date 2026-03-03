@@ -12,7 +12,7 @@ return {
       local langs = {
         "typescript", "tsx", "javascript",
         "lua", "vue", "html", "css",
-        "json", "yaml", "markdown",
+        "json", "yaml", "markdown", "markdown_inline",
         "graphql", "prisma", "bash",
         "rust", "toml",
       }
@@ -54,20 +54,21 @@ return {
       { "<leader>ad", "<cmd>ClaudeCodeDiffDeny<cr>", desc = "差分を拒否" },
     },
   },
-  {
-    url = "git@github.com:kamijodev/daily-memo.nvim.git",
-    cmd = "DailyMemo",
-    keys = {
-      { "<leader>m", "<cmd>DailyMemo<cr>", desc = "Daily Memo" },
-    },
-    opts = { git = { enabled = false } },
-  },
+  -- {
+  --   url = "git@github.com:kamijodev/daily-memo.nvim.git",
+  --   cmd = "DailyMemo",
+  --   keys = {
+  --     { "<leader>m", "<cmd>DailyMemo<cr>", desc = "Daily Memo" },
+  --   },
+  --   opts = { git = { enabled = false } },
+  -- },
   {
     "zbirenbaum/copilot.lua",
     cmd = "Copilot",
     event = "InsertEnter",
     config = function()
       require("copilot").setup({
+        copilot_node_command = vim.fn.expand("~/.asdf/installs/nodejs/25.6.0/bin/node"),
         suggestion = {
           enabled = true,
           auto_trigger = true,

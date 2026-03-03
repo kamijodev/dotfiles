@@ -9,22 +9,22 @@ open_in_lotion() {
 
   # Lotionが既にリモートデバッグ付きで起動中か確認
   if curl -s --max-time 1 "http://127.0.0.1:$LOTION_DEBUG_PORT/json/version" > /dev/null 2>&1; then
-    # notion.soのタブを見つけてWebSocket URLを取得
-    local ws_url
-    ws_url=$(curl -s --max-time 2 "http://127.0.0.1:$LOTION_DEBUG_PORT/json/list" | python3 -c "
+    # tab-barページのWebSocket URLを取得
+    local tab_bar_ws
+    tab_bar_ws=$(curl -s --max-time 2 "http://127.0.0.1:$LOTION_DEBUG_PORT/json/list" | python3 -c "
 import sys, json
-tabs = json.load(sys.stdin)
-for t in tabs:
-    u = t.get('url', '')
-    if 'notion.so' in u and 'worker' not in u and '_assets' not in u:
+for t in json.load(sys.stdin):
+    if 'tab-bar' in t.get('url', ''):
         print(t['webSocketDebuggerUrl'])
         break
 " 2>/dev/null)
 
-    if [ -n "$ws_url" ]; then
-      # websocat経由でCDPナビゲーション
-      echo "{\"id\":1,\"method\":\"Page.navigate\",\"params\":{\"url\":\"$url\"}}" \
-        | websocat -t --no-close -1 "$ws_url" 2>/dev/null
+    if [ -n "$tab_bar_ws" ]; then
+      # LotionのtabBarAPI経由で新規タブを開く
+      local escaped_url
+      escaped_url=$(printf '%s' "$url" | sed 's/\\/\\\\/g; s/"/\\"/g')
+      echo "{\"id\":1,\"method\":\"Runtime.evaluate\",\"params\":{\"expression\":\"tabBarAPI.createTab({url: \\\"$escaped_url\\\"})\",\"awaitPromise\":true}}" \
+        | websocat -t --no-close -1 "$tab_bar_ws" 2>/dev/null
 
       # niriでLotionウィンドウにフォーカス
       local win_id

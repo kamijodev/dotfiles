@@ -24,8 +24,9 @@ local gb = {
 }
 
 config.automatically_reload_config = true
-config.enable_wayland = false
-config.font_size = 10.0
+config.enable_wayland = true
+config.tiling_desktop_environments = { "Wayland" }
+config.font_size = 14.0
 config.font = wezterm.font('Maple Mono NF')
 config.use_ime = true
 config.macos_window_background_blur = 20
@@ -37,33 +38,25 @@ config.window_padding = { left = 32, right = 32, top = 32, bottom = 32 }
 ----------------------------------------------------
 -- Tab
 ----------------------------------------------------
--- タイトルバーを非表示
-config.window_decorations = "TITLE | RESIZE"
--- タブバーの表示
+config.window_decorations = "NONE"
 config.show_tabs_in_tab_bar = true
--- タブが一つの時は非表示
 config.hide_tab_bar_if_only_one_tab = true
 -- falseにするとタブバーの透過が効かなくなる
 -- config.use_fancy_tab_bar = false
 
--- タブバーの透過
 config.window_frame = {
   inactive_titlebar_bg = "none",
   active_titlebar_bg = "none",
 }
 
--- タブバーを背景色に合わせる
 config.window_background_gradient = {
   colors = { gb.bg0 },
 }
 
--- タブの追加ボタンを非表示
 config.show_new_tab_button_in_tab_bar = false
 -- nightlyのみ使用可能
--- タブの閉じるボタンを非表示
 -- config.show_close_tab_button_in_tabs = false
 
--- タブ同士の境界線を非表示
 config.colors = {
   background = gb.bg1,
   tab_bar = {
@@ -73,9 +66,7 @@ config.colors = {
 }
 
 -- タブの形をカスタマイズ
--- タブの左側の装飾
 local SOLID_LEFT_ARROW = wezterm.nerdfonts.ple_lower_right_triangle
--- タブの右側の装飾
 local SOLID_RIGHT_ARROW = wezterm.nerdfonts.ple_upper_left_triangle
 
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
