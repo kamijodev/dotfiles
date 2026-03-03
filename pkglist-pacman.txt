@@ -186,6 +186,7 @@ strongswan
 sudo
 sysfsutils
 texinfo
+tree-sitter-cli
 ttf-bitstream-vera
 ttf-dejavu
 ttf-hack-nerd
