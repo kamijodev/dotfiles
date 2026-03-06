@@ -41,6 +41,7 @@ cantarell-fonts
 chezmoi
 chwd
 cliphist
+cloudflared
 cpupower
 cryptsetup
 device-mapper

@@ -83,6 +83,12 @@ return {
       vim.api.nvim_create_autocmd("ColorScheme", { callback = set_heading_bgs })
     end,
   },
+  -- カラーコードをインラインでプレビュー表示
+  {
+    "norcalli/nvim-colorizer.lua",
+    event = { "BufReadPost", "BufNewFile" },
+    opts = { "*" },
+  },
   -- deviconsの色をカラーテーマに合わせて自動調整
   {
     "rachartier/tiny-devicons-auto-colors.nvim",
@@ -102,21 +108,51 @@ return {
     },
     lazy = false,
     keys = {
-      { "<C-n>", "<cmd>NvimTreeToggle<CR>", desc = "ファイルツリー切り替え" },
+      { "<C-n>", function()
+        local api = require("nvim-tree.api")
+        if vim.bo.filetype == "NvimTree" then
+          vim.cmd("wincmd p")
+        else
+          api.tree.focus()
+        end
+      end, desc = "ツリー/エディタ間フォーカス切替" },
       -- { "<leader>o", "<cmd>NvimTreeFocus<CR>", desc = "NvimTree Focus" },
       -- { "<leader>f", "<cmd>NvimTreeFindFile<CR>", desc = "NvimTree Find File" },
       -- { "<leader>c", "<cmd>NvimTreeCollapse<CR>", desc = "NvimTree Collapse" },
     },
     opts = {
-      sync_root_with_cwd = true,  -- カレントディレクトリに追従
-      respect_buf_cwd = true,     -- バッファのcwdを尊重
+      sync_root_with_cwd = true,
+      respect_buf_cwd = true,
       update_focused_file = {
-        enable = true,            -- 開いたファイルを自動ハイライト
-        update_root = true,       -- ファイルに応じてルートも更新
+        enable = true,
+        update_root = true,
+      },
+      view = {
+        adaptive_size = true,
+        signcolumn = "yes",
+      },
+      renderer = {
+        indent_markers = {
+          enable = true,
+        },
+        icons = {
+          git_placement = "signcolumn",
+          show = {
+            file = true,
+            folder = true,
+            folder_arrow = true,
+            git = true,
+          },
+        },
+        highlight_git = "name",
+        highlight_opened_files = "name",
+      },
+      git = {
+        enable = true,
       },
       actions = {
         open_file = {
-          quit_on_open = true,    -- ファイルを開いたらツリーを閉じる
+          quit_on_open = false,
         },
       },
       on_attach = function(bufnr)
@@ -127,6 +163,12 @@ return {
     },
     config = function(_, opts)
       require("nvim-tree").setup(opts)
+
+      vim.api.nvim_create_autocmd("VimEnter", {
+        callback = function()
+          require("nvim-tree.api").tree.open()
+        end,
+      })
     end
   },
   -- ステータスライン
@@ -370,18 +412,18 @@ return {
     },
     config = function(_, opts)
       require("dropbar").setup(opts)
-      local dim = "#6e6e6e"
-      local function set_dropbar_hl()
-        vim.cmd("hi! WinBar guifg=" .. dim .. " guibg=NONE")
-        vim.cmd("hi! WinBarNC guifg=" .. dim .. " guibg=NONE")
-        vim.cmd("hi! DropBarIconKindFile guifg=" .. dim)
-        vim.cmd("hi! DropBarIconKindFolder guifg=" .. dim)
-        vim.cmd("hi! DropBarKindFile guifg=" .. dim)
-        vim.cmd("hi! DropBarKindFolder guifg=" .. dim)
-        vim.cmd("hi! DropBarIconUISeparator guifg=#505050")
-      end
-      set_dropbar_hl()
-      vim.api.nvim_create_autocmd("ColorScheme", { callback = set_dropbar_hl })
+      -- local dim = "#6e6e6e"
+      -- local function set_dropbar_hl()
+      --   vim.cmd("hi! WinBar guifg=" .. dim .. " guibg=NONE")
+      --   vim.cmd("hi! WinBarNC guifg=" .. dim .. " guibg=NONE")
+      --   vim.cmd("hi! DropBarIconKindFile guifg=" .. dim)
+      --   vim.cmd("hi! DropBarIconKindFolder guifg=" .. dim)
+      --   vim.cmd("hi! DropBarKindFile guifg=" .. dim)
+      --   vim.cmd("hi! DropBarKindFolder guifg=" .. dim)
+      --   vim.cmd("hi! DropBarIconUISeparator guifg=#505050")
+      -- end
+      -- set_dropbar_hl()
+      -- vim.api.nvim_create_autocmd("ColorScheme", { callback = set_dropbar_hl })
     end,
   },
 }

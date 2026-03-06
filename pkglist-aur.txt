@@ -5,6 +5,7 @@ google-chrome-canary
 kanata-bin
 lotion
 maplemono-nf
+maplemono-nf-cn
 min-browser-bin
 nordvpn-gui-bin
 slack-desktop-wayland

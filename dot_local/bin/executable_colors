@@ -1,0 +1,60 @@
+#!/bin/bash
+# Gruvbox Material Dark (Medium / Material) カラーパレット表示
+
+hex_to_rgb() {
+  local hex="${1#\#}"
+  printf "%d %d %d" "0x${hex:0:2}" "0x${hex:2:2}" "0x${hex:4:2}"
+}
+
+swatch() {
+  local hex="$1" name="$2" desc="$3"
+  local rgb
+  rgb=$(hex_to_rgb "$hex")
+  # shellcheck disable=SC2086
+  printf "  \033[48;2;%d;%d;%dm      \033[0m  %-8s %-7s %s\n" $rgb "$name" "$hex" "$desc"
+}
+
+section() {
+  printf "\n  \033[1m%s\033[0m\n\n" "$1"
+}
+
+section "基本色"
+swatch "#d4be98" "fg0"    "メイン前景色"
+swatch "#ddc7a1" "fg1"    "サブ前景色"
+swatch "#ea6962" "red"    "エラー、削除"
+swatch "#e78a4e" "orange" "警告、定数"
+swatch "#d8a657" "yellow" "注意、型"
+swatch "#a9b665" "green"  "成功、追加、文字列"
+swatch "#89b482" "aqua"   "ヒント、関数"
+swatch "#7daea3" "blue"   "情報、リンク"
+swatch "#d3869b" "purple" "キーワード"
+
+section "背景色"
+swatch "#1b1b1b" "bg_dim" "暗い背景"
+swatch "#282828" "bg0"    "メイン背景"
+swatch "#32302f" "bg1"    "カーソル行"
+swatch "#45403d" "bg3"    "ビジュアル選択"
+swatch "#5a524c" "bg5"    "ボーダー"
+
+section "グレースケール"
+swatch "#7c6f64" "grey0"  "コメント（暗）"
+swatch "#928374" "grey1"  "コメント（標準）"
+swatch "#a89984" "grey2"  "コメント（明）"
+
+section "ステータスライン"
+swatch "#32302f" "stl1"   "bg_statusline1"
+swatch "#3a3735" "stl2"   "bg_statusline2"
+swatch "#504945" "stl3"   "bg_statusline3"
+
+section "Diff / Visual"
+swatch "#402120" "d_red"  "bg_diff_red"
+swatch "#34381b" "d_green" "bg_diff_green"
+swatch "#0e363e" "d_blue" "bg_diff_blue"
+swatch "#4c3432" "v_red"  "bg_visual_red"
+swatch "#4f422e" "v_yel"  "bg_visual_yellow"
+swatch "#3b4439" "v_green" "bg_visual_green"
+swatch "#374141" "v_blue" "bg_visual_blue"
+swatch "#443840" "v_purp" "bg_visual_purple"
+swatch "#3c3836" "c_word" "bg_current_word"
+
+printf "\n"

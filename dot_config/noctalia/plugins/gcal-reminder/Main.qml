@@ -131,8 +131,8 @@ Item {
 
         var entry = {
             id: data.id || generateId(),
-            summary: data.summary || "",
-            body: data.body || "",
+            summary: decodeHtmlEntities(data.summary || ""),
+            body: decodeHtmlEntities(data.body || ""),
             appName: data.appName || "",
             urgency: data.urgency || 1,
             timestamp: notifTime,
@@ -238,6 +238,10 @@ Item {
             return match[1] + " 開始";
         }
         return "";
+    }
+
+    function decodeHtmlEntities(text) {
+        return text.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, "\"").replace(/&#39;/g, "'");
     }
 
     function extractTitle(summary) {

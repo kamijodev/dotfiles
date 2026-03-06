@@ -1,0 +1,3 @@
+#!/bin/sh
+niri msg action "$@"
+qs -c noctalia-shell ipc call plugin:window-map trigger

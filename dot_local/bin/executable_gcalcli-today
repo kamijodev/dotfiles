@@ -18,7 +18,8 @@ if grep -q "invalid_grant\|Token has been expired\|RefreshError" "$ERRFILE"; the
 fi
 
 $PYTHON -c "
-import sys, json
+import sys, json, re
+from html import unescape
 
 seen = set()
 events = []
@@ -28,6 +29,8 @@ for i, line in enumerate(sys.stdin):
     if len(parts) < 5: continue
     sd, st, ed, et, title = parts[:5]
     if not st or title in ('Busy',): continue
+    title = re.sub(r'^\[.*?\]\s*', '', title)
+    title = unescape(title)
     key = (st, et, title)
     if key in seen: continue
     seen.add(key)

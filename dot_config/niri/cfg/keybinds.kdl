@@ -38,15 +38,15 @@ binds {
     // ─── Window Movement and Focus ───
     Mod+Q                               { close-window; }
 
-    // フォーカス移動（端まで行ったら隣のモニターに移動）
-    Mod+A                               { focus-column-or-monitor-left; }
-    Mod+D                               { focus-column-or-monitor-right; }
-    Mod+W                               { focus-monitor-up; }
-    Mod+S                               { focus-monitor-down; }
+    // フォーカス移動（端まで行ったら隣のモニターに移動）+ window-map overlay
+    Mod+A                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-column-or-monitor-left"; }
+    Mod+D                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-column-or-monitor-right"; }
+    Mod+W                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-monitor-up"; }
+    Mod+S                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-monitor-down"; }
     Mod+Left                            { set-column-width "-10%"; }
     Mod+Right                           { set-column-width "+10%"; }
-    Mod+Up                              { focus-workspace-up; }
-    Mod+Down                            { focus-workspace-down; }
+    Mod+Up                              { spawn "/home/emacs/.local/bin/niri-focus" "focus-workspace-up"; }
+    Mod+Down                            { spawn "/home/emacs/.local/bin/niri-focus" "focus-workspace-down"; }
 
     // ウィンドウ移動 (HJKL)
     Mod+H                               { move-column-left-or-to-monitor-left; }
@@ -58,15 +58,15 @@ binds {
     Mod+CTRL+UP                         { move-column-to-workspace-up; }
     Mod+CTRL+Down                       { move-column-to-workspace-down; }
 
-    Mod+Home                            { focus-column-first; }
-    Mod+End                             { focus-column-last; }
+    Mod+Home                            { spawn "/home/emacs/.local/bin/niri-focus" "focus-column-first"; }
+    Mod+End                             { spawn "/home/emacs/.local/bin/niri-focus" "focus-column-last"; }
     Mod+CTRL+Home                       { move-column-to-first; }
     Mod+CTRL+End                        { move-column-to-last; }
 
-    Mod+Shift+Left                      { focus-monitor-left; }
-    Mod+Shift+Right                     { focus-monitor-right; }
-    Mod+Shift+UP                        { focus-monitor-up; }
-    Mod+Shift+Down                      { focus-monitor-down; }
+    Mod+Shift+Left                      { spawn "/home/emacs/.local/bin/niri-focus" "focus-monitor-left"; }
+    Mod+Shift+Right                     { spawn "/home/emacs/.local/bin/niri-focus" "focus-monitor-right"; }
+    Mod+Shift+UP                        { spawn "/home/emacs/.local/bin/niri-focus" "focus-monitor-up"; }
+    Mod+Shift+Down                      { spawn "/home/emacs/.local/bin/niri-focus" "focus-monitor-down"; }
 
     Mod+Shift+CTRL+Left                 { move-column-to-monitor-left; }
     Mod+Shift+CTRL+Right                { move-column-to-monitor-right; }
@@ -89,15 +89,15 @@ binds {
     Mod+CTRL+Shift+WheelScrollDown      { move-column-right; }
     Mod+CTRL+Shift+WheelScrollUp        { move-column-left; }
 
-    Mod+1                               { focus-workspace 1; }
-    Mod+2                               { focus-workspace 2; }
-    Mod+3                               { focus-workspace 3; }
-    Mod+4                               { focus-workspace 4; }
-    Mod+5                               { focus-workspace 5; }
-    Mod+6                               { focus-workspace 6; }
-    Mod+7                               { focus-workspace 7; }
-    Mod+8                               { focus-workspace 8; }
-    Mod+9                               { focus-workspace 9; }
+    Mod+1                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-workspace" "1"; }
+    Mod+2                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-workspace" "2"; }
+    Mod+3                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-workspace" "3"; }
+    Mod+4                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-workspace" "4"; }
+    Mod+5                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-workspace" "5"; }
+    Mod+6                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-workspace" "6"; }
+    Mod+7                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-workspace" "7"; }
+    Mod+8                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-workspace" "8"; }
+    Mod+9                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-workspace" "9"; }
 
     Mod+CTRL+1                          { move-column-to-workspace 1; }
     Mod+CTRL+2                          { move-column-to-workspace 2; }
@@ -109,7 +109,7 @@ binds {
     Mod+CTRL+8                          { move-column-to-workspace 8; }
     Mod+CTRL+9                          { move-column-to-workspace 9; }
 
-    Mod+TAB                             { focus-workspace-previous; }
+    Mod+TAB                             { spawn "/home/emacs/.local/bin/niri-focus" "focus-workspace-previous"; }
 
     // ─── Layout Controls ───
     Mod+CTRL+F                          { expand-column-to-available-width; }

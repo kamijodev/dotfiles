@@ -13,7 +13,8 @@
 
         focus-ring {
             width 2
-            active-color "rgba(255, 255, 255, 0.15)"
+            active-color "#d8a657"
+            inactive-color "#504945"
         }
 
         border {

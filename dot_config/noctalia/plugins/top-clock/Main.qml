@@ -30,6 +30,8 @@ Item {
     readonly property color gbAqua:    "#89b482"
     readonly property color gbBlue:    "#7daea3"
     readonly property color gbPurple:  "#d3869b"
+    readonly property color gbBgDim:   "#1b1b1b"
+    readonly property color gbBg5:     "#5a524c"
 
     readonly property var currentEvent: {
         void root.calRefreshTick;
@@ -68,7 +70,10 @@ Item {
 
     readonly property bool hasCalendarInfo: currentEvent !== null || nextEvent !== null
 
-    property string weztermCwd: ""
+    property real memTotal: 0
+    property real memUsed: 0
+    property real swapTotal: 0
+    property real swapUsed: 0
 
     FileView {
         id: kbdStateFile
@@ -113,16 +118,38 @@ Item {
         }
     }
 
-    FileView {
-        id: cwdFile
-        path: "/tmp/wezterm-cwd.txt"
-        watchChanges: true
-        preload: true
-        onFileChanged: cwdFile.reload()
-        onLoaded: {
-            var content = cwdFile.text().trim();
-            root.weztermCwd = content;
+    Process {
+        id: memInfoRead
+        command: ["cat", "/proc/meminfo"]
+        property real _memTotal: 0
+        property real _memAvail: 0
+        property real _swapTotal: 0
+        property real _swapFree: 0
+        stdout: SplitParser {
+            onRead: data => {
+                var parts = data.trim().split(/\s+/);
+                if (parts[0] === "MemTotal:") memInfoRead._memTotal = parseInt(parts[1]);
+                else if (parts[0] === "MemAvailable:") memInfoRead._memAvail = parseInt(parts[1]);
+                else if (parts[0] === "SwapTotal:") memInfoRead._swapTotal = parseInt(parts[1]);
+                else if (parts[0] === "SwapFree:") memInfoRead._swapFree = parseInt(parts[1]);
+            }
         }
+        onRunningChanged: {
+            if (!running) {
+                root.memTotal = _memTotal / 1048576;
+                root.memUsed = (_memTotal - _memAvail) / 1048576;
+                root.swapTotal = _swapTotal / 1048576;
+                root.swapUsed = (_swapTotal - _swapFree) / 1048576;
+            }
+        }
+    }
+
+    Timer {
+        running: true
+        repeat: true
+        interval: 3000
+        onTriggered: memInfoRead.running = true
+        Component.onCompleted: memInfoRead.running = true
     }
 
     FileView {
@@ -272,8 +299,8 @@ Item {
                 height: meterRow.height + Style.marginM * 2
                 anchors.centerIn: parent
                 radius: Style.radiusXS
-                color: Qt.alpha("#151515", 0.95)
-                border.color: "#666666"
+                color: Qt.alpha(root.gbBgDim, 0.95)
+                border.color: root.gbBg5
                 border.width: Style.borderS + 1
 
                 Row {
@@ -308,7 +335,7 @@ Item {
 
                     Text {
                         text: root.currentDate
-                        font.family: "Maple Mono NF"
+                        font.family: "Maple Mono NF CN"
                         font.pixelSize: 18
                         font.weight: Font.DemiBold
                         color: root.gbYellow
@@ -334,7 +361,7 @@ Item {
                                     visible: !parent.isColon
                                     radius: Style.radiusXXXS
                                     color: Color.mSurface
-                                    border.color: "#666666"
+                                    border.color: root.gbBg5
                                     border.width: Style.borderS
 
                                     Rectangle {
@@ -351,7 +378,7 @@ Item {
                                     Text {
                                         anchors.centerIn: parent
                                         text: "8"
-                                        font.family: "Maple Mono NF"
+                                        font.family: "Maple Mono NF CN"
                                         font.pixelSize: 18
                                         font.weight: Font.Bold
                                         color: Qt.alpha(root.gbFg, 0.08)
@@ -361,7 +388,7 @@ Item {
                                 Text {
                                     anchors.centerIn: parent
                                     text: parent.ch
-                                    font.family: "Maple Mono NF"
+                                    font.family: "Maple Mono NF CN"
                                     font.pixelSize: parent.isColon ? 16 : 20
                                     font.weight: Font.Bold
                                     color: Qt.alpha(root.gbFg, 0.3)
@@ -372,7 +399,7 @@ Item {
                                 Text {
                                     anchors.centerIn: parent
                                     text: parent.ch
-                                    font.family: "Maple Mono NF"
+                                    font.family: "Maple Mono NF CN"
                                     font.pixelSize: parent.isColon ? 16 : 18
                                     font.weight: Font.Bold
                                     color: root.gbFg
@@ -384,7 +411,7 @@ Item {
                     Text {
                         visible: root.vpnConnected
                         text: "VPN Connected"
-                        font.family: "Maple Mono NF"
+                        font.family: "Maple Mono NF CN"
                         font.pixelSize: Style.fontSizeS
                         font.weight: Font.DemiBold
                         color: root.gbGreen
@@ -417,7 +444,7 @@ Item {
                                 var s = root.recordingSeconds % 60;
                                 return "REC " + (m < 10 ? "0" : "") + m + ":" + (s < 10 ? "0" : "") + s;
                             }
-                            font.family: "Maple Mono NF"
+                            font.family: "Maple Mono NF CN"
                             font.pixelSize: Style.fontSizeS
                             font.weight: Font.DemiBold
                             color: root.gbRed
@@ -464,8 +491,8 @@ Item {
                 height: calRow.height + Style.marginM * 2
                 anchors.centerIn: parent
                 radius: Style.radiusXS
-                color: Qt.alpha("#151515", 0.95)
-                border.color: "#666666"
+                color: Qt.alpha(root.gbBgDim, 0.95)
+                border.color: root.gbBg5
                 border.width: Style.borderS + 1
 
                 Row {
@@ -483,7 +510,7 @@ Item {
                     Text {
                         visible: !root.hasCalendarInfo
                         text: "予定なし"
-                        font.family: "Maple Mono NF"
+                        font.family: "Maple Mono NF CN"
                         font.pixelSize: 18
                         font.weight: Font.DemiBold
                         color: root.gbGrey
@@ -493,7 +520,7 @@ Item {
                     Text {
                         visible: root.currentEvent !== null
                         text: root.currentEvent ? root.currentEvent.title + " (" + root.currentEvent.start + "〜" + root.currentEvent.end + ")" : ""
-                        font.family: "Maple Mono NF"
+                        font.family: "Maple Mono NF CN"
                         font.pixelSize: 18
                         font.weight: Font.DemiBold
                         color: root.gbYellow
@@ -503,7 +530,7 @@ Item {
                     Text {
                         visible: root.currentEvent !== null && root.nextEvent !== null
                         text: "→"
-                        font.family: "Maple Mono NF"
+                        font.family: "Maple Mono NF CN"
                         font.pixelSize: 18
                         font.weight: Font.DemiBold
                         color: root.gbGrey
@@ -513,7 +540,7 @@ Item {
                     Text {
                         visible: root.nextEvent !== null
                         text: root.nextEvent ? root.nextEvent.title + " (" + root.nextEvent.start + "〜" + root.nextEvent.end + ")" : ""
-                        font.family: "Maple Mono NF"
+                        font.family: "Maple Mono NF CN"
                         font.pixelSize: 18
                         font.weight: Font.DemiBold
                         color: root.gbFg
@@ -531,9 +558,9 @@ Item {
             required property ShellScreen modelData
             screen: modelData
 
-            visible: root.weztermCwd !== ""
+            visible: true
 
-            WlrLayershell.namespace: "top-cwd"
+            WlrLayershell.namespace: "top-mem"
             WlrLayershell.layer: WlrLayer.Top
             WlrLayershell.exclusionMode: ExclusionMode.Ignore
 
@@ -549,34 +576,52 @@ Item {
 
             color: "transparent"
 
-            width: cwdFrame.width + 2
-            height: cwdFrame.height + 2
+            width: memFrame.width + 2
+            height: memFrame.height + 2
 
             Rectangle {
-                id: cwdFrame
-                width: cwdRow.width + Style.marginL * 2
-                height: cwdRow.height + Style.marginM * 2
+                id: memFrame
+                width: memRow.width + Style.marginL * 2
+                height: memRow.height + Style.marginM * 2
                 anchors.centerIn: parent
                 radius: Style.radiusXS
-                color: Qt.alpha("#151515", 0.95)
-                border.color: "#666666"
+                color: Qt.alpha(root.gbBgDim, 0.95)
+                border.color: root.gbBg5
                 border.width: Style.borderS + 1
 
                 Row {
-                    id: cwdRow
+                    id: memRow
                     anchors.centerIn: parent
                     spacing: Style.marginM
 
-                    NIcon {
-                        icon: "folder"
-                        pointSize: 18
+                    Text {
+                        text: "󰍛"
+                        font.family: "Hack Nerd Font"
+                        font.pixelSize: 18
                         color: root.gbAqua
                         anchors.verticalCenter: parent.verticalCenter
                     }
 
                     Text {
-                        text: root.weztermCwd.replace(/^\/home\/[^/]+\//, "~/")
-                        font.family: "Maple Mono NF"
+                        text: root.memUsed.toFixed(1) + "/" + root.memTotal.toFixed(1) + " GiB"
+                        font.family: "Maple Mono NF CN"
+                        font.pixelSize: 18
+                        font.weight: Font.DemiBold
+                        color: root.gbFg
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        text: "󰓡"
+                        font.family: "Hack Nerd Font"
+                        font.pixelSize: 18
+                        color: root.gbBlue
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        text: root.swapUsed.toFixed(1) + "/" + root.swapTotal.toFixed(1) + " GiB"
+                        font.family: "Maple Mono NF CN"
                         font.pixelSize: 18
                         font.weight: Font.DemiBold
                         color: root.gbFg

@@ -1,0 +1,24 @@
+{
+  "id": "window-map",
+  "name": "Window Map",
+  "version": "1.0.0",
+  "minNoctaliaVersion": "4.0.0",
+  "author": "emacs",
+  "license": "MIT",
+  "description": "Shows window layout as icons in the bar",
+  "entryPoints": {
+    "main": "Main.qml",
+    "barWidget": "BarWidget.qml",
+    "settings": "Settings.qml"
+  },
+  "dependencies": {
+    "plugins": []
+  },
+  "metadata": {
+    "defaultSettings": {
+      "displayDuration": 1500,
+      "barIconSize": 16,
+      "overlayIconSize": 40
+    }
+  }
+}

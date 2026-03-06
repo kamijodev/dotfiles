@@ -63,6 +63,21 @@ F1 F2 F3 F4 F5 F6 F7 F8 F9 F10
 1  2  3  4  5  6  7  8  9  0
 ```
 
+## 内蔵デバイスの無効化
+
+外付けキーボード使用時に内蔵キーボード・トラックポイント・タッチパッドを無効化する udev ルール。
+
+- ファイル: `/etc/udev/rules.d/99-disable-internal-kbd.rules`
+
+```
+KERNEL=="event*", ATTRS{name}=="AT Translated Set 2 keyboard", RUN+="/bin/sh -c 'echo 1 > /sys%p/../inhibited'"
+KERNEL=="event*", ATTRS{name}=="TPPS/2 Elan TrackPoint", RUN+="/bin/sh -c 'echo 1 > /sys%p/../inhibited'"
+KERNEL=="event*", ATTRS{name}=="ELAN06D4:00 04F3:32B5 Touchpad", RUN+="/bin/sh -c 'echo 1 > /sys%p/../inhibited'"
+KERNEL=="event*", ATTRS{name}=="ELAN06D4:00 04F3:32B5 Mouse", RUN+="/bin/sh -c 'echo 1 > /sys%p/../inhibited'"
+```
+
+`inhibited` に `1` を書き込むことでデバイスを無効化している。有効に戻すには `0` を書き込む。
+
 ## 手動テスト
 
 ```bash

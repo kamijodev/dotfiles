@@ -1,0 +1,5 @@
+#!/bin/sh
+printf '{"windows":%s,"workspaces":%s,"outputs":%s}' \
+  "$(niri msg --json windows)" \
+  "$(niri msg --json workspaces)" \
+  "$(niri msg --json outputs)"
