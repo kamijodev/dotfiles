@@ -1,0 +1,11 @@
+[Unit]
+Description=Remap Copilot key combo to rightalt via evsieve
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/evsieve --input /dev/input/by-path/platform-i8042-serio-0-event-kbd grab --hook key:leftshift key:leftmeta key:f23 period=0.05 send-key=key:rightalt --withhold key:leftshift key:leftmeta key:f23 --output name="Internal Keyboard (evsieve)"
+Restart=on-failure
+RestartSec=3
+
+[Install]
+WantedBy=default.target

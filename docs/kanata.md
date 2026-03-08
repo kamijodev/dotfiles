@@ -23,13 +23,25 @@ echo 'KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinpu
 ## 自動起動
 
 ```bash
+systemctl --user enable --now evsieve-copilot.service
 systemctl --user enable --now kanata.service
 ```
+
+kanata は evsieve-copilot に依存（`Requires=`/`After=`）しているため、evsieve が先に起動する。
+
+## Copilotキーのリマップ (evsieve)
+
+ThinkPad の Copilot キーは `LeftShift+LeftMeta+F23` の3キーを同時送出するため、kanata 単体ではリマップできない。
+evsieve で物理キーボードを grab し、このコンボを `rightalt` に変換してから kanata に渡す。
+
+- **サービス**: `~/.config/systemd/user/evsieve-copilot.service`
+- **仕組み**: `--hook` で3キー同時押しを検知 → `--withhold` で元キーを保留 → `send-key=key:rightalt` で置換
+- **仮想デバイス名**: `"Internal Keyboard (evsieve)"` — kanata がこの名前で接続
 
 ## 設定ファイル
 
 - `~/.config/kanata/kanata.kbd`
-- 対象デバイス: `/dev/input/by-path/platform-i8042-serio-0-event-kbd` (内蔵キーボードのみ)
+- 対象デバイス: evsieve の仮想デバイス `"Internal Keyboard (evsieve)"`（`linux-dev-names-include` で指定）
 
 ## キーマップ概要
 
@@ -47,6 +59,7 @@ systemctl --user enable --now kanata.service
 - 変換 → 単押し: IME on / 長押し: Alt
 - カタカナひらがな → Layer 1 (ホールド)
 - 右Alt → 単押し: Enter / 長押し: Layer 2
+- Copilotキー → 右Altと同じ（evsieve経由）
 
 ### Layer 1 (記号)
 

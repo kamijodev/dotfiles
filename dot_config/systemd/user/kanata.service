@@ -1,6 +1,8 @@
 [Unit]
 Description=Kanata keyboard remapper
 Documentation=https://github.com/jtroo/kanata
+After=evsieve-copilot.service
+Requires=evsieve-copilot.service
 
 [Service]
 Type=simple
