@@ -16,6 +16,8 @@ Item {
     property var todayEvents: []
     property int calRefreshTick: 0
     property bool kbdInhibited: true
+    property bool tpInhibited: true
+    property bool padInhibited: true
 
     // Gruvbox Material Dark palette
     readonly property color gbFg:      "#d4be98"
@@ -87,17 +89,67 @@ Item {
         }
     }
 
+    FileView {
+        id: tpStateFile
+        path: "/tmp/internal-tp-state"
+        watchChanges: true
+        preload: true
+        onFileChanged: tpStateFile.reload()
+        onLoaded: {
+            var content = tpStateFile.text().trim();
+            root.tpInhibited = (content === "1");
+        }
+    }
+
+    FileView {
+        id: padStateFile
+        path: "/tmp/internal-pad-state"
+        watchChanges: true
+        preload: true
+        onFileChanged: padStateFile.reload()
+        onLoaded: {
+            var content = padStateFile.text().trim();
+            root.padInhibited = (content === "1");
+        }
+    }
+
     Process {
         id: kbdToggle
-        command: ["pkexec", "/home/emacs/.local/bin/toggle-internal-kbd"]
+        command: ["pkexec", "/home/emacs/.local/bin/toggle-internal-kbd", "kbd"]
         onRunningChanged: {
             if (!running) kbdStateUpdate.running = true
         }
     }
 
     Process {
+        id: tpToggle
+        command: ["pkexec", "/home/emacs/.local/bin/toggle-internal-kbd", "tp"]
+        onRunningChanged: {
+            if (!running) tpStateUpdate.running = true
+        }
+    }
+
+    Process {
+        id: padToggle
+        command: ["pkexec", "/home/emacs/.local/bin/toggle-internal-kbd", "pad"]
+        onRunningChanged: {
+            if (!running) padStateUpdate.running = true
+        }
+    }
+
+    Process {
         id: kbdStateUpdate
-        command: ["sh", "-c", "cat /sys/devices/platform/i8042/serio0/input/input3/inhibited > /tmp/internal-kbd-state"]
+        command: ["sh", "-c", "cat /sys/devices/platform/i8042/serio0/input/input*/inhibited > /tmp/internal-kbd-state"]
+    }
+
+    Process {
+        id: tpStateUpdate
+        command: ["sh", "-c", "cat /sys/devices/platform/i8042/serio1/input/input*/inhibited > /tmp/internal-tp-state"]
+    }
+
+    Process {
+        id: padStateUpdate
+        command: ["sh", "-c", "cat /sys/devices/pci0000:00/0000:00:15.3/i2c_designware.1/i2c-1/i2c-ELAN06D4:00/0018:04F3:32B5.*/input/input*/inhibited | head -1 > /tmp/internal-pad-state"]
     }
 
     Process {
@@ -260,11 +312,25 @@ Item {
         }
     }
 
+    Timer {
+        running: true
+        repeat: true
+        interval: 5000
+        onTriggered: {
+            kbdStateUpdate.running = true;
+            tpStateUpdate.running = true;
+            padStateUpdate.running = true;
+        }
+    }
+
     Component.onCompleted: {
         var now = new Date();
         currentTime = Qt.formatTime(now, "HH:mm:ss");
         currentDate = Qt.formatDate(now, "MM/dd (ddd)");
         vpnCheck.running = true;
+        kbdStateUpdate.running = true;
+        tpStateUpdate.running = true;
+        padStateUpdate.running = true;
     }
 
     Variants {
@@ -330,6 +396,56 @@ Item {
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
                             onClicked: kbdToggle.running = true
+                        }
+                    }
+
+                    Item {
+                        width: tpIcon.implicitWidth + 8
+                        height: 28
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        Text {
+                            id: tpIcon
+                            anchors.centerIn: parent
+                            text: root.tpInhibited ? "󰍽" : "󰍾"
+                            font.family: "Hack Nerd Font"
+                            font.pixelSize: 18
+                            color: tpMouse.containsMouse
+                                ? (root.tpInhibited ? root.gbFg : root.gbAqua)
+                                : (root.tpInhibited ? root.gbGrey : root.gbGreen)
+                        }
+
+                        MouseArea {
+                            id: tpMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: tpToggle.running = true
+                        }
+                    }
+
+                    Item {
+                        width: padIcon.implicitWidth + 8
+                        height: 28
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        Text {
+                            id: padIcon
+                            anchors.centerIn: parent
+                            text: root.padInhibited ? "󰟸" : "󰟹"
+                            font.family: "Hack Nerd Font"
+                            font.pixelSize: 18
+                            color: padMouse.containsMouse
+                                ? (root.padInhibited ? root.gbFg : root.gbAqua)
+                                : (root.padInhibited ? root.gbGrey : root.gbGreen)
+                        }
+
+                        MouseArea {
+                            id: padMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            onClicked: padToggle.running = true
                         }
                     }
 

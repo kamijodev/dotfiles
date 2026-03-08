@@ -12,5 +12,5 @@
 | ファイル | 用途 | 詳細 |
 |----------|------|------|
 | `30-zram.rules` | zram swappiness 変更 | [zram-swappiness.md](zram-swappiness.md) |
-| `99-disable-internal-kbd.rules` | 内蔵キーボード等の無効化 | [kanata.md](kanata.md) |
+| ~~`99-disable-internal-kbd.rules`~~ | 削除済み。デバイス追加時に毎回無効化されるため廃止 | [kanata.md](kanata.md) |
 | `99-uinput.rules` | kanata 用 uinput 権限 | [kanata.md](kanata.md) |

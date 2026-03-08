@@ -63,20 +63,32 @@ F1 F2 F3 F4 F5 F6 F7 F8 F9 F10
 1  2  3  4  5  6  7  8  9  0
 ```
 
-## 内蔵デバイスの無効化
+## 内蔵デバイスの制御
 
-外付けキーボード使用時に内蔵キーボード・トラックポイント・タッチパッドを無効化する udev ルール。
+内蔵キーボード・トラックポイント・タッチパッドの有効/無効を top-clock プラグインから切り替え可能。
 
-- ファイル: `/etc/udev/rules.d/99-disable-internal-kbd.rules`
+### 仕組み
 
-```
-KERNEL=="event*", ATTRS{name}=="AT Translated Set 2 keyboard", RUN+="/bin/sh -c 'echo 1 > /sys%p/../inhibited'"
-KERNEL=="event*", ATTRS{name}=="TPPS/2 Elan TrackPoint", RUN+="/bin/sh -c 'echo 1 > /sys%p/../inhibited'"
-KERNEL=="event*", ATTRS{name}=="ELAN06D4:00 04F3:32B5 Touchpad", RUN+="/bin/sh -c 'echo 1 > /sys%p/../inhibited'"
-KERNEL=="event*", ATTRS{name}=="ELAN06D4:00 04F3:32B5 Mouse", RUN+="/bin/sh -c 'echo 1 > /sys%p/../inhibited'"
-```
+- **トグルスクリプト**: `~/.local/bin/toggle-internal-kbd` — sysfs の `inhibited` を 0/1 で切り替え（pkexec で実行）
+- **状態ファイル**: `/tmp/internal-kbd-state`, `/tmp/internal-tp-state`, `/tmp/internal-pad-state` — プラグインが監視
+- **UI**: top-clock プラグインにアイコン表示、クリックでトグル
+- **kanata 連動**: キーボード無効化時に kanata.service を自動停止、有効化時に自動起動
 
-`inhibited` に `1` を書き込むことでデバイスを無効化している。有効に戻すには `0` を書き込む。
+### 起動時の有効化
+
+再起動時にデバイスを有効（on）にするため以下を設定：
+
+- **systemd サービス**: `/etc/systemd/system/init-internal-devices.service` — 起動時に `~/.local/bin/init-internal-devices` を実行
+- **pacman フック**: `/etc/pacman.d/hooks/99-enable-internal-input.hook` — パッケージ操作後に同スクリプトを実行（カーネルモジュール再読み込みでリセットされる対策）
+- **ポーリング**: top-clock プラグインが5秒ごとに sysfs の実際の状態を読み取りUIに反映
+
+### 対象デバイス
+
+| デバイス | sysfs パス |
+|----------|-----------|
+| キーボード | `/sys/devices/platform/i8042/serio0/input/input*/inhibited` |
+| トラックポイント | `/sys/devices/platform/i8042/serio1/input/input*/inhibited` |
+| タッチパッド | `/sys/devices/pci0000:00/0000:00:15.3/i2c_designware.1/i2c-1/i2c-ELAN06D4:00/0018:04F3:32B5.*/input/input*/inhibited` |
 
 ## 手動テスト
 

@@ -1,0 +1,15 @@
+#!/bin/sh
+KBD=$(echo /sys/devices/platform/i8042/serio0/input/input*/inhibited)
+TP=$(echo /sys/devices/platform/i8042/serio1/input/input*/inhibited)
+PADS=$(echo /sys/devices/pci0000:00/0000:00:15.3/i2c_designware.1/i2c-1/i2c-ELAN06D4:00/0018:04F3:32B5.*/input/input*/inhibited)
+
+echo 0 > "$KBD"
+echo 0 > "$TP"
+for pad in $PADS; do
+    echo 0 > "$pad"
+done
+
+echo 0 > /tmp/internal-kbd-state
+echo 0 > /tmp/internal-tp-state
+echo 0 > /tmp/internal-pad-state
+chmod 666 /tmp/internal-kbd-state /tmp/internal-tp-state /tmp/internal-pad-state
