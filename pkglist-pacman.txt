@@ -5,6 +5,7 @@ alsa-firmware
 alsa-plugins
 alsa-utils
 amd-ucode
+android-tools
 awesome-terminal-fonts
 aws-cli-v2
 base
@@ -71,6 +72,7 @@ fcitx5-qt
 ffmpegthumbnailer
 firefox
 firefox-i18n-ja
+flatpak
 fsarchiver
 ghostty
 ghostty-shell-integration
@@ -117,6 +119,7 @@ linux-cachyos-headers
 linux-cachyos-lts
 linux-cachyos-lts-headers
 linux-firmware
+localsend
 logrotate
 lsb-release
 lsscsi
@@ -172,6 +175,7 @@ rebuild-detector
 reflector
 ripgrep
 rsync
+rustup
 s-nail
 satty
 sddm
