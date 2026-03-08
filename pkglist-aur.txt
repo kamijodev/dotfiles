@@ -1,5 +1,6 @@
 1password
 asdf-vm
+evsieve
 fcitx5-skin-ori-git
 google-chrome-canary
 kanata-bin
