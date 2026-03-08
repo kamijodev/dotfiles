@@ -85,6 +85,22 @@ Item {
                     arr[i] = copy;
                 }
                 allWindows = arr;
+            } else if (ev.WindowLayoutsChanged) {
+                var changes = ev.WindowLayoutsChanged.changes;
+                var arr = allWindows.slice();
+                for (var c = 0; c < changes.length; c++) {
+                    var wid = changes[c][0];
+                    var newLayout = changes[c][1];
+                    for (var i = 0; i < arr.length; i++) {
+                        if (arr[i].id === wid) {
+                            var copy = Object.assign({}, arr[i]);
+                            copy.layout = newLayout;
+                            arr[i] = copy;
+                            break;
+                        }
+                    }
+                }
+                allWindows = arr;
             } else if (ev.WorkspaceActivated) {
                 var activatedId = ev.WorkspaceActivated.id;
                 var isFocused = ev.WorkspaceActivated.focused;
@@ -184,8 +200,10 @@ Item {
             if (!out || !out.logical) continue;
 
             if (!outputMap[ws.output]) {
+                var mode = out.modes && out.modes[out.current_mode];
+                var displayName = mode ? (mode.width + "x" + mode.height) : ws.output;
                 outputMap[ws.output] = {
-                    name: ws.output,
+                    name: displayName,
                     x: out.logical.x,
                     y: out.logical.y,
                     realWidth: out.logical.width,
@@ -310,6 +328,7 @@ Item {
                                     spacing: root.iconGap
 
                                     Text {
+                                        visible: root.mapModel.length > 1
                                         text: monDel.mon.name
                                         color: root.gbGrey
                                         font.pixelSize: 11

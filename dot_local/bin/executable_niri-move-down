@@ -1,0 +1,18 @@
+#!/bin/sh
+# 下にモニターがあればモニター移動、なければワークスペース下へ
+focused=$(niri msg --json focused-output 2>/dev/null)
+fy=$(echo "$focused" | jq '.logical.y')
+fh=$(echo "$focused" | jq '.logical.height')
+fbottom=$((fy + fh))
+fname=$(echo "$focused" | jq -r '.name')
+
+has_below=$(niri msg --json outputs 2>/dev/null | jq --arg name "$fname" --argjson bottom "$fbottom" '
+  to_entries | any(.[]; .key != $name and .value.logical.y >= $bottom)
+')
+
+if [ "$has_below" = "true" ]; then
+    niri msg action move-column-to-monitor-down
+else
+    niri msg action move-column-to-workspace-down
+fi
+qs -c noctalia-shell ipc call plugin:window-map trigger &

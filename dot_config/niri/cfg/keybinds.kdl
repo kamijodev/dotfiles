@@ -41,8 +41,8 @@ binds {
     // フォーカス移動（端まで行ったら隣のモニターに移動）+ window-map overlay
     Mod+A                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-column-or-monitor-left"; }
     Mod+D                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-column-or-monitor-right"; }
-    Mod+W                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-monitor-up"; }
-    Mod+S                               { spawn "/home/emacs/.local/bin/niri-focus" "focus-monitor-down"; }
+    Mod+W                               { spawn "/home/emacs/.local/bin/niri-focus-up"; }
+    Mod+S                               { spawn "/home/emacs/.local/bin/niri-focus-down"; }
     Mod+Left                            { set-column-width "-10%"; }
     Mod+Right                           { set-column-width "+10%"; }
     Mod+Up                              { spawn "/home/emacs/.local/bin/niri-focus" "focus-workspace-up"; }
@@ -51,8 +51,8 @@ binds {
     // ウィンドウ移動 (HJKL)
     Mod+H                               { move-column-left-or-to-monitor-left; }
     Mod+L                               { move-column-right-or-to-monitor-right; }
-    Mod+K                               { move-column-to-monitor-up; }
-    Mod+J                               { move-column-to-monitor-down; }
+    Mod+K                               { spawn "/home/emacs/.local/bin/niri-move-up"; }
+    Mod+J                               { spawn "/home/emacs/.local/bin/niri-move-down"; }
     Mod+CTRL+Left                       { move-column-left; }
     Mod+CTRL+Right                      { move-column-right; }
     Mod+CTRL+UP                         { move-column-to-workspace-up; }

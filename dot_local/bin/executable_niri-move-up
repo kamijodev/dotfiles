@@ -1,0 +1,10 @@
+#!/bin/sh
+# 上にワークスペースがあればワークスペース移動、なければ上のモニターへ
+current_ws_idx=$(niri msg --json workspaces 2>/dev/null | jq '[.[] | select(.is_focused)] | .[0].idx')
+
+if [ "$current_ws_idx" -gt 1 ] 2>/dev/null; then
+    niri msg action move-column-to-workspace-up
+else
+    niri msg action move-column-to-monitor-up
+fi
+qs -c noctalia-shell ipc call plugin:window-map trigger &
