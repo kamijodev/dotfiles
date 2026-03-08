@@ -52,6 +52,8 @@ return {
       -- ホバーウィンドウの背景を暗く
       vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#141414" })
       vim.api.nvim_set_hl(0, "FloatBorder", { bg = "#141414", fg = "#7daea3" })
+      -- パネル間ボーダーをbg0に
+      vim.api.nvim_set_hl(0, "WinSeparator", { fg = "#282828", bg = "NONE" })
     end,
   },
   -- one_monokai（テーマ選択用に残す）
@@ -70,14 +72,20 @@ return {
     },
     ft = { "markdown" },
     config = function()
-      require("render-markdown").setup({})
+      require("render-markdown").setup({
+        heading = {
+          sign = false,
+          icons = {},
+          position = 'inline',
+        },
+      })
       local function set_heading_bgs()
-        vim.api.nvim_set_hl(0, "RenderMarkdownH1Bg", { bg = "#3c2020" }) -- 赤系
-        vim.api.nvim_set_hl(0, "RenderMarkdownH2Bg", { bg = "#3c2818" }) -- オレンジ系
-        vim.api.nvim_set_hl(0, "RenderMarkdownH3Bg", { bg = "#3c3020" }) -- 黄系
-        vim.api.nvim_set_hl(0, "RenderMarkdownH4Bg", { bg = "#283020" }) -- 緑系
-        vim.api.nvim_set_hl(0, "RenderMarkdownH5Bg", { bg = "#203030" }) -- アクア系
-        vim.api.nvim_set_hl(0, "RenderMarkdownH6Bg", { bg = "#302830" }) -- 紫系
+        vim.api.nvim_set_hl(0, "RenderMarkdownH1Bg", { bg = "#3c2020" })
+        vim.api.nvim_set_hl(0, "RenderMarkdownH2Bg", { bg = "#3c2818" })
+        vim.api.nvim_set_hl(0, "RenderMarkdownH3Bg", { bg = "#3c3020" })
+        vim.api.nvim_set_hl(0, "RenderMarkdownH4Bg", { bg = "#283020" })
+        vim.api.nvim_set_hl(0, "RenderMarkdownH5Bg", { bg = "#203030" })
+        vim.api.nvim_set_hl(0, "RenderMarkdownH6Bg", { bg = "#302830" })
       end
       set_heading_bgs()
       vim.api.nvim_create_autocmd("ColorScheme", { callback = set_heading_bgs })

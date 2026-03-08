@@ -62,7 +62,7 @@ config.colors = {
   tab_bar = {
     inactive_tab_edge = "none",
   },
-  split = gb.sl3,
+  split = gb.bg1,
 }
 
 -- タブの形をカスタマイズ

@@ -10,6 +10,7 @@ opt.undofile = true
 opt.undolevels = 10000
 
 -- 見た目
+opt.fillchars = { eob = " " }
 opt.termguicolors = true
 opt.signcolumn = "yes" -- ファイルにgitとかの印
 opt.cursorline = true
