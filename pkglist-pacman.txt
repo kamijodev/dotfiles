@@ -73,6 +73,7 @@ ffmpegthumbnailer
 firefox
 firefox-i18n-ja
 flatpak
+fprintd
 fsarchiver
 ghostty
 ghostty-shell-integration
