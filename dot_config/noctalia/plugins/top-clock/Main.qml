@@ -72,10 +72,24 @@ Item {
 
     readonly property bool hasCalendarInfo: currentEvent !== null || nextEvent !== null
 
+    function truncTitle(t) {
+        var w = 0;
+        for (var i = 0; i < t.length; i++) {
+            w += t.charCodeAt(i) > 0x7F ? 2 : 1;
+            if (w > 16) return t.substring(0, i) + "...";
+        }
+        return t;
+    }
+
     property real memTotal: 0
     property real memUsed: 0
     property real swapTotal: 0
     property real swapUsed: 0
+    property real cpuUsage: 0
+    property real cpuTemp: 0
+
+    property var _prevCpuIdle: 0
+    property var _prevCpuTotal: 0
 
     FileView {
         id: kbdStateFile
@@ -196,12 +210,53 @@ Item {
         }
     }
 
+    FileView {
+        id: cpuTempFile
+        path: "/sys/class/thermal/thermal_zone9/temp"
+        watchChanges: false
+        preload: true
+        onLoaded: {
+            var v = parseInt(cpuTempFile.text().trim());
+            if (!isNaN(v)) root.cpuTemp = v / 1000;
+        }
+    }
+
+    Process {
+        id: cpuStatRead
+        command: ["head", "-1", "/proc/stat"]
+        stdout: SplitParser {
+            onRead: data => {
+                var parts = data.trim().split(/\s+/);
+                if (parts[0] !== "cpu") return;
+                var vals = [];
+                for (var i = 1; i < parts.length; i++) vals.push(parseInt(parts[i]));
+                var idle = vals[3] + (vals[4] || 0);
+                var total = 0;
+                for (var j = 0; j < vals.length; j++) total += vals[j];
+                var dIdle = idle - root._prevCpuIdle;
+                var dTotal = total - root._prevCpuTotal;
+                if (root._prevCpuTotal > 0 && dTotal > 0) {
+                    root.cpuUsage = (1 - dIdle / dTotal) * 100;
+                }
+                root._prevCpuIdle = idle;
+                root._prevCpuTotal = total;
+            }
+        }
+    }
+
     Timer {
         running: true
         repeat: true
         interval: 3000
-        onTriggered: memInfoRead.running = true
-        Component.onCompleted: memInfoRead.running = true
+        onTriggered: {
+            memInfoRead.running = true;
+            cpuStatRead.running = true;
+            cpuTempFile.reload();
+        }
+        Component.onCompleted: {
+            memInfoRead.running = true;
+            cpuStatRead.running = true;
+        }
     }
 
     FileView {
@@ -376,7 +431,7 @@ Item {
 
                     Item {
                         width: kbdIcon.implicitWidth + 8
-                        height: 28
+                        height: 20
                         anchors.verticalCenter: parent.verticalCenter
 
                         Text {
@@ -384,7 +439,7 @@ Item {
                             anchors.centerIn: parent
                             text: root.kbdInhibited ? "󰌐" : "󰌌"
                             font.family: "Hack Nerd Font"
-                            font.pixelSize: 18
+                            font.pixelSize: 16
                             color: kbdMouse.containsMouse
                                 ? (root.kbdInhibited ? root.gbFg : root.gbAqua)
                                 : (root.kbdInhibited ? root.gbGrey : root.gbGreen)
@@ -401,7 +456,7 @@ Item {
 
                     Item {
                         width: tpIcon.implicitWidth + 8
-                        height: 28
+                        height: 20
                         anchors.verticalCenter: parent.verticalCenter
 
                         Text {
@@ -409,7 +464,7 @@ Item {
                             anchors.centerIn: parent
                             text: root.tpInhibited ? "󰍽" : "󰍾"
                             font.family: "Hack Nerd Font"
-                            font.pixelSize: 18
+                            font.pixelSize: 16
                             color: tpMouse.containsMouse
                                 ? (root.tpInhibited ? root.gbFg : root.gbAqua)
                                 : (root.tpInhibited ? root.gbGrey : root.gbGreen)
@@ -426,7 +481,7 @@ Item {
 
                     Item {
                         width: padIcon.implicitWidth + 8
-                        height: 28
+                        height: 20
                         anchors.verticalCenter: parent.verticalCenter
 
                         Text {
@@ -434,7 +489,7 @@ Item {
                             anchors.centerIn: parent
                             text: root.padInhibited ? "󰟸" : "󰟹"
                             font.family: "Hack Nerd Font"
-                            font.pixelSize: 18
+                            font.pixelSize: 16
                             color: padMouse.containsMouse
                                 ? (root.padInhibited ? root.gbFg : root.gbAqua)
                                 : (root.padInhibited ? root.gbGrey : root.gbGreen)
@@ -452,76 +507,19 @@ Item {
                     Text {
                         text: root.currentDate
                         font.family: "Maple Mono NF CN"
-                        font.pixelSize: 18
+                        font.pixelSize: 16
                         font.weight: Font.DemiBold
                         color: root.gbYellow
                         anchors.verticalCenter: parent.verticalCenter
                     }
 
-                    Row {
-                        spacing: 2
-
-                        Repeater {
-                            model: 8
-
-                            delegate: Item {
-                                required property int index
-                                readonly property string ch: root.currentTime.charAt(index)
-                                readonly property bool isColon: index === 2 || index === 5
-
-                                width: isColon ? 10 : 24
-                                height: 28
-
-                                Rectangle {
-                                    anchors.fill: parent
-                                    visible: !parent.isColon
-                                    radius: Style.radiusXXXS
-                                    color: Color.mSurface
-                                    border.color: root.gbBg5
-                                    border.width: Style.borderS
-
-                                    Rectangle {
-                                        anchors.fill: parent
-                                        anchors.margins: 1
-                                        radius: Style.radiusXXXS
-                                        gradient: Gradient {
-                                            GradientStop { position: 0.0; color: Qt.rgba(1, 1, 1, 0.03) }
-                                            GradientStop { position: 0.35; color: "transparent" }
-                                            GradientStop { position: 1.0; color: "transparent" }
-                                        }
-                                    }
-
-                                    Text {
-                                        anchors.centerIn: parent
-                                        text: "8"
-                                        font.family: "Maple Mono NF CN"
-                                        font.pixelSize: 18
-                                        font.weight: Font.Bold
-                                        color: Qt.alpha(root.gbFg, 0.08)
-                                    }
-                                }
-
-                                Text {
-                                    anchors.centerIn: parent
-                                    text: parent.ch
-                                    font.family: "Maple Mono NF CN"
-                                    font.pixelSize: parent.isColon ? 16 : 20
-                                    font.weight: Font.Bold
-                                    color: Qt.alpha(root.gbFg, 0.3)
-                                    style: Text.Outline
-                                    styleColor: Qt.alpha(root.gbFg, 0.1)
-                                }
-
-                                Text {
-                                    anchors.centerIn: parent
-                                    text: parent.ch
-                                    font.family: "Maple Mono NF CN"
-                                    font.pixelSize: parent.isColon ? 16 : 18
-                                    font.weight: Font.Bold
-                                    color: root.gbFg
-                                }
-                            }
-                        }
+                    Text {
+                        text: root.currentTime
+                        font.family: "Maple Mono NF CN"
+                        font.pixelSize: 16
+                        font.weight: Font.DemiBold
+                        color: root.gbFg
+                        anchors.verticalCenter: parent.verticalCenter
                     }
 
                     Text {
@@ -618,7 +616,7 @@ Item {
 
                     NIcon {
                         icon: "calendar"
-                        pointSize: 18
+                        pointSize: 12
                         color: root.gbRed
                         anchors.verticalCenter: parent.verticalCenter
                     }
@@ -627,7 +625,7 @@ Item {
                         visible: !root.hasCalendarInfo
                         text: "予定なし"
                         font.family: "Maple Mono NF CN"
-                        font.pixelSize: 18
+                        font.pixelSize: 16
                         font.weight: Font.DemiBold
                         color: root.gbGrey
                         anchors.verticalCenter: parent.verticalCenter
@@ -635,9 +633,9 @@ Item {
 
                     Text {
                         visible: root.currentEvent !== null
-                        text: root.currentEvent ? root.currentEvent.title + " (" + root.currentEvent.start + "〜" + root.currentEvent.end + ")" : ""
+                        text: root.currentEvent ? root.truncTitle(root.currentEvent.title) + " (" + root.currentEvent.start + "〜" + root.currentEvent.end + ")" : ""
                         font.family: "Maple Mono NF CN"
-                        font.pixelSize: 18
+                        font.pixelSize: 16
                         font.weight: Font.DemiBold
                         color: root.gbYellow
                         anchors.verticalCenter: parent.verticalCenter
@@ -647,7 +645,7 @@ Item {
                         visible: root.currentEvent !== null && root.nextEvent !== null
                         text: "→"
                         font.family: "Maple Mono NF CN"
-                        font.pixelSize: 18
+                        font.pixelSize: 16
                         font.weight: Font.DemiBold
                         color: root.gbGrey
                         anchors.verticalCenter: parent.verticalCenter
@@ -655,9 +653,9 @@ Item {
 
                     Text {
                         visible: root.nextEvent !== null
-                        text: root.nextEvent ? root.nextEvent.title + " (" + root.nextEvent.start + "〜" + root.nextEvent.end + ")" : ""
+                        text: root.nextEvent ? root.truncTitle(root.nextEvent.title) + " (" + root.nextEvent.start + "〜" + root.nextEvent.end + ")" : ""
                         font.family: "Maple Mono NF CN"
-                        font.pixelSize: 18
+                        font.pixelSize: 16
                         font.weight: Font.DemiBold
                         color: root.gbFg
                         anchors.verticalCenter: parent.verticalCenter
@@ -711,36 +709,53 @@ Item {
                     spacing: Style.marginM
 
                     Text {
+                        text: "\ue266"
+                        font.family: "Hack Nerd Font"
+                        font.pixelSize: 16
+                        color: root.cpuUsage > 80 ? root.gbRed : root.cpuUsage > 50 ? root.gbYellow : root.gbFg
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        text: root.cpuUsage.toFixed(0) + "%"
+                        font.family: "Maple Mono NF CN"
+                        font.pixelSize: 16
+                        font.weight: Font.DemiBold
+                        color: root.cpuUsage > 80 ? root.gbRed : root.cpuUsage > 50 ? root.gbYellow : root.gbFg
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        text: "\uf2c9"
+                        font.family: "Hack Nerd Font"
+                        font.pixelSize: 16
+                        color: root.cpuTemp > 80 ? root.gbRed : root.cpuTemp > 60 ? root.gbYellow : root.gbFg
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
+                        text: root.cpuTemp.toFixed(0) + "°C"
+                        font.family: "Maple Mono NF CN"
+                        font.pixelSize: 16
+                        font.weight: Font.DemiBold
+                        color: root.cpuTemp > 80 ? root.gbRed : root.cpuTemp > 60 ? root.gbYellow : root.gbFg
+                        anchors.verticalCenter: parent.verticalCenter
+                    }
+
+                    Text {
                         text: "󰍛"
                         font.family: "Hack Nerd Font"
                         font.pixelSize: 18
-                        color: root.gbAqua
+                        color: root.memTotal > 0 && root.memUsed / root.memTotal > 0.8 ? root.gbRed : root.memTotal > 0 && root.memUsed / root.memTotal > 0.5 ? root.gbYellow : root.gbFg
                         anchors.verticalCenter: parent.verticalCenter
                     }
 
                     Text {
                         text: root.memUsed.toFixed(1) + "/" + root.memTotal.toFixed(1) + " GiB"
                         font.family: "Maple Mono NF CN"
-                        font.pixelSize: 18
+                        font.pixelSize: 16
                         font.weight: Font.DemiBold
-                        color: root.gbFg
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-
-                    Text {
-                        text: "󰓡"
-                        font.family: "Hack Nerd Font"
-                        font.pixelSize: 18
-                        color: root.gbBlue
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-
-                    Text {
-                        text: root.swapUsed.toFixed(1) + "/" + root.swapTotal.toFixed(1) + " GiB"
-                        font.family: "Maple Mono NF CN"
-                        font.pixelSize: 18
-                        font.weight: Font.DemiBold
-                        color: root.gbFg
+                        color: root.memTotal > 0 && root.memUsed / root.memTotal > 0.8 ? root.gbRed : root.memTotal > 0 && root.memUsed / root.memTotal > 0.5 ? root.gbYellow : root.gbFg
                         anchors.verticalCenter: parent.verticalCenter
                     }
                 }

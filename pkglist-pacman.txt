@@ -75,6 +75,7 @@ firefox-i18n-ja
 flatpak
 fprintd
 fsarchiver
+gamescope
 ghostty
 ghostty-shell-integration
 ghostty-terminfo
@@ -126,6 +127,7 @@ localsend
 logrotate
 lsb-release
 lsscsi
+lutris
 lvm2
 man-db
 man-pages
@@ -216,6 +218,8 @@ vulkan-radeon
 websocat
 wget
 which
+winboat
+winetricks
 wireless-regdb
 wireplumber
 wpa_supplicant

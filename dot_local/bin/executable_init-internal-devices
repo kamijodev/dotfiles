@@ -6,10 +6,10 @@ PADS=$(echo /sys/devices/pci0000:00/0000:00:15.3/i2c_designware.1/i2c-1/i2c-ELAN
 echo 0 > "$KBD"
 echo 0 > "$TP"
 for pad in $PADS; do
-    echo 0 > "$pad"
+    echo 1 > "$pad"
 done
 
 echo 0 > /tmp/internal-kbd-state
 echo 0 > /tmp/internal-tp-state
-echo 0 > /tmp/internal-pad-state
+echo 1 > /tmp/internal-pad-state
 chmod 666 /tmp/internal-kbd-state /tmp/internal-tp-state /tmp/internal-pad-state

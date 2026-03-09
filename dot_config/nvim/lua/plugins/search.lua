@@ -8,7 +8,7 @@ return {
     },
     config = function()
       require("grug-far").setup({
-        windowCreationCommand = "topleft vsplit",
+        windowCreationCommand = "botright split",
         startInInsertMode = false,
         keymaps = {
           replace = { n = "<localleader>r" },
@@ -28,6 +28,7 @@ return {
     dependencies = {
       "nvim-lua/plenary.nvim",
       { "nvim-telescope/telescope-fzf-native.nvim", build = "make" },
+      { "nvim-telescope/telescope-live-grep-args.nvim" },
     },
     cmd = "Telescope",
     keys = {
@@ -37,9 +38,9 @@ return {
       { "<leader>fr", "<cmd>Telescope oldfiles<cr>", desc = "最近のファイル" },
 
       -- テキスト検索
-      { "<C-f>", "<cmd>Telescope live_grep<cr>", desc = "テキスト検索" },
-      { "<C-t>", "<cmd>Telescope live_grep<cr>", desc = "正規表現検索" },
-      { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "テキスト検索 (grep)" },
+      { "<C-f>", function() require("telescope").extensions.live_grep_args.live_grep_args() end, desc = "テキスト検索" },
+      { "<C-t>", function() require("telescope").extensions.live_grep_args.live_grep_args() end, desc = "正規表現検索" },
+      { "<leader>fg", function() require("telescope").extensions.live_grep_args.live_grep_args() end, desc = "テキスト検索 (grep)" },
       { "<leader>fw", "<cmd>Telescope grep_string<cr>", desc = "カーソル下の単語を検索" },
 
       -- バッファ・その他
@@ -62,6 +63,8 @@ return {
     config = function()
       local telescope = require("telescope")
       local actions = require("telescope.actions")
+      local glob_filter = require("telescope-glob-filter")
+      glob_filter.setup()
 
       telescope.setup({
         defaults = {
@@ -84,8 +87,17 @@ return {
               ["<C-k>"] = actions.move_selection_previous,
               ["<C-q>"] = actions.send_selected_to_qflist + actions.open_qflist,
               ["<Esc>"] = actions.close,
-              ["<C-Up>"] = actions.cycle_history_prev,
-              ["<C-Down>"] = actions.cycle_history_next,
+              ["<C-p>"] = actions.cycle_history_prev,
+              ["<C-n>"] = actions.cycle_history_next,
+              ["<C-g>"] = function(prompt_bufnr)
+                local picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
+                local prompt_title = picker.prompt_title or ""
+                if prompt_title:match("Find Files") or prompt_title:match("find_files") then
+                  glob_filter.prompt_file_filter(prompt_bufnr)
+                else
+                  glob_filter.prompt_grep_filter(prompt_bufnr)
+                end
+              end,
             },
           },
         },
@@ -102,8 +114,9 @@ return {
         },
       })
 
-      -- fzf拡張を読み込み（高速化）
+      -- 拡張を読み込み
       pcall(telescope.load_extension, "fzf")
+      pcall(telescope.load_extension, "live_grep_args")
     end,
   },
 }

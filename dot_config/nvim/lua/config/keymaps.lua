@@ -54,3 +54,6 @@ end
 
 -- Inspect: カーソル位置のハイライト情報表示
 vim.keymap.set("n", "<leader>i", "<cmd>Inspect<cr>", { desc = "シンボル情報表示" })
+
+-- Ctrl+x Ctrl+x で終了
+vim.keymap.set({ "n", "i", "v" }, "<C-x><C-x>", "<cmd>qa<cr>", default_opts)

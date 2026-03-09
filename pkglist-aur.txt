@@ -10,5 +10,6 @@ maplemono-nf-cn
 min-browser-bin
 nordvpn-gui-bin
 slack-desktop-wayland
+visual-studio-code-bin
 wezterm-git
 wl-screenrec
