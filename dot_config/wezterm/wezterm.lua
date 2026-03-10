@@ -29,6 +29,7 @@ config.tiling_desktop_environments = { "Wayland" }
 config.font_size = 13.0
 config.font = wezterm.font('Maple Mono NF CN')
 config.use_ime = true
+config.normalize_output_to_unicode_nfc = true
 config.macos_window_background_blur = 20
 config.color_scheme = 'Gruvbox Material (Gogh)'
 config.pane_focus_follows_mouse = false
