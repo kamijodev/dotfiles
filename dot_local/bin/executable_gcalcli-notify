@@ -35,4 +35,4 @@ else
 fi
 
 notify-send -u critical -a 'Google Calendar' -i /home/emacs/.local/share/icons/gcal-alarm.svg "$title ${label} ~${start_time}"
-setsid pw-play --volume=0.15 ~/.local/share/sounds/custom/calendar-notify.mp3 &
+setsid paplay --volume=19660 ~/.local/share/sounds/custom/calendar-notify.ogg &
