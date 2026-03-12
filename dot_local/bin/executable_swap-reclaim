@@ -1,0 +1,31 @@
+#!/bin/bash
+# メモリに余裕がある場合のみswapを解放する
+
+set -euo pipefail
+
+read_meminfo() {
+    awk -v key="$1" '$1 == key ":" { print $2 }' /proc/meminfo
+}
+
+swap_used=$(read_meminfo SwapTotal)
+swap_free=$(read_meminfo SwapFree)
+swap_used_kb=$((swap_used - swap_free))
+mem_available=$(read_meminfo MemAvailable)
+
+if [[ $swap_used_kb -eq 0 ]]; then
+    echo "swap未使用、スキップ"
+    exit 0
+fi
+
+# 空きメモリがswap使用量の1.2倍以上あれば安全と判断
+required_kb=$((swap_used_kb * 120 / 100))
+
+if [[ $mem_available -ge $required_kb ]]; then
+    echo "swap解放: swap使用=${swap_used_kb}kB, メモリ空き=${mem_available}kB"
+    swapoff -a
+    echo 1 > /sys/block/zram0/reset
+    systemctl start systemd-zram-setup@zram0.service dev-zram0.swap
+    echo "完了"
+else
+    echo "メモリ不足でスキップ: swap使用=${swap_used_kb}kB, メモリ空き=${mem_available}kB (必要=${required_kb}kB)"
+fi

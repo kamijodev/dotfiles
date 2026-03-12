@@ -6,6 +6,7 @@ alsa-plugins
 alsa-utils
 amd-ucode
 android-tools
+antimicrox
 awesome-terminal-fonts
 aws-cli-v2
 base
@@ -135,6 +136,7 @@ mdadm
 meld
 mesa-utils
 micro
+mingw-w64-gcc
 mkinitcpio
 modemmanager
 moonlight-qt
@@ -218,7 +220,6 @@ vulkan-radeon
 websocat
 wget
 which
-winboat
 winetricks
 wireless-regdb
 wireplumber
