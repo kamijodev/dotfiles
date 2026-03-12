@@ -5,4 +5,5 @@ Description=Google Calendar Reminder
 Type=oneshot
 KillMode=process
 Environment=DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/%U/bus
+Environment=XDG_RUNTIME_DIR=/run/user/%U
 ExecStart=/home/emacs/.local/bin/gcalcli-remind

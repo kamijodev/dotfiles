@@ -155,6 +155,9 @@ return {
         highlight_git = "name",
         highlight_opened_files = "name",
       },
+      filters = {
+        git_ignored = false,
+      },
       git = {
         enable = true,
       },
@@ -233,7 +236,7 @@ return {
       { "<leader>g", "<cmd>CodeDiff<cr>", desc = "Git diff" },
     },
     opts = {
-      explorer = { view_mode = "tree" },
+      explorer = { view_mode = "tree", focus_on_select = true },
     },
     config = function(_, opts)
       require("codediff").setup(opts)

@@ -5,7 +5,7 @@
 - **Shell UI**: Noctalia Shell (バー・ランチャー・通知・クリップボード・ロック画面・壁紙を統合)
 - **Terminal**: WezTerm (メイン) / Alacritty (サブ)
 - **Shell**: zsh + starship + sheldon
-- **Editor**: Neovim (LazyVim)
+- **Editor**: Neovim (lazy.nvim)
 - **Browser**: Google Chrome Canary
 - **IME**: fcitx5 + Mozc (テーマ: Ori dark)
 - **Audio**: PipeWire + WirePlumber
