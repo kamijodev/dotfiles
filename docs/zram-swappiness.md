@@ -20,17 +20,22 @@ udev ルールが後から実行されるため、sysctl.d の設定は実質無
 # vendor ルールをコピー
 sudo cp /usr/lib/udev/rules.d/30-zram.rules /etc/udev/rules.d/30-zram.rules
 
-# swappiness の値を編集（例: 10 に変更）
-sudo sed -i 's/vm.swappiness}="150"/vm.swappiness}="10"/' /etc/udev/rules.d/30-zram.rules
+# swappiness の値を編集（例: 1 に変更）
+sudo sed -i 's/vm.swappiness}="10"/vm.swappiness}="1"/' /etc/udev/rules.d/30-zram.rules
 
 # 即時反映
-sudo sysctl vm.swappiness=10
+sudo sysctl -w vm.swappiness=1
 ```
 
 ## 現在の設定
 
 - ファイル: `/etc/udev/rules.d/30-zram.rules`
-- swappiness: 10（変更後）
+- swappiness: 1（変更後）
+
+## 変更履歴
+
+- 150 → 10: 初回調整
+- 10 → 1: メモリに余裕があるのに kswapd0/kcompactd が暴走し、毎秒200MB近く swap out する問題が発生。zram はカーネルから「コストが低い」と判断されるため swappiness=10 でも積極的に swap される。1 に下げることで解消。
 
 ## 注意
 
