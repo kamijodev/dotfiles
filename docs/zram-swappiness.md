@@ -29,13 +29,14 @@ sudo sysctl -w vm.swappiness=1
 
 ## 現在の設定
 
-- ファイル: `/etc/udev/rules.d/30-zram.rules`
-- swappiness: 1（変更後）
+- swappiness: 1（`/etc/udev/rules.d/30-zram.rules`）
+- zram サイズ: 8GB（`/etc/systemd/zram-generator.conf`）
 
 ## 変更履歴
 
 - 150 → 10: 初回調整
 - 10 → 1: メモリに余裕があるのに kswapd0/kcompactd が暴走し、毎秒200MB近く swap out する問題が発生。zram はカーネルから「コストが低い」と判断されるため swappiness=10 でも積極的に swap される。1 に下げることで解消。
+- zram-size: ram → 8192: 30GBのzramだとswappiness=1でも15GB以上溜まり、圧縮データのRAM消費（5-6GB）+ kswapd/kcompactd のCPU負荷で体感が悪化。8GBに制限して圧縮後のRAM消費を最大3-4GBに抑制。OOMクラッシュ防止のためswap自体は残す。
 
 ## 注意
 
